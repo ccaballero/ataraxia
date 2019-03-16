@@ -1,52 +1,54 @@
 {
-    "name":"mangaread"
-  , "version":"0.0.1"
-  , "private":true
-  , "description":"comic and manga reader"
-  , "main":"main.js"
-  , "scripts":{
-        "start":"electron ."
-    }
-  , "repository":{
-        "type":"git"
-      , "url":"git+https://github.com/ccaballero/mangaread.git"
-    }
-  , "keywords":["cbr","manga","comic","reader"]
-  , "author":"Carlos E. Caballero B."
-  , "license":"ISC"
-  , "bugs":{
-        "url":"https://github.com/ccaballero/mangaread/issues"
-    }
-  , "homepage":"https://github.com/ccaballero/mangaread#readme"
-  , "devDependencies":{
-        "electron":"^4.1.0"
-    }
-  , "dependencies":{
-        "concurrently":"^4.1.0"
-      , "electron":"^4.1.0"
-      , "electron-builder":"^20.39.0"
-      , "electron-is-dev":"^1.0.1"
-      , "react":"^16.8.4"
-      , "react-dom":"^16.8.4"
-      , "react-scripts":"2.1.8"
-      , "wait-on":"^3.2.0"
-    }
-   ,"scripts":{
-        "start":"react-scripts start"
-      , "build":"react-scripts build"
-      , "test":"react-scripts test"
-      , "eject":"react-scripts eject"
-      , "electron:dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\""
-    }
-  , "eslintConfig":{
-        "extends":"react-app"
-    }
-  , "browserslist":[
-        ">0.2%"
-      , "not dead"
-      , "not ie <= 11"
-      , "not op_mini all"
+    "name": "mangaread",
+    "version": "0.0.1",
+    "private": true,
+    "description": "comic and manga reader",
+    "main": "main.js",
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "electron:dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\""
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ccaballero/mangaread.git"
+    },
+    "keywords": [
+        "cbr",
+        "manga",
+        "comic",
+        "reader"
+    ],
+    "author": "Carlos E. Caballero B.",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/ccaballero/mangaread/issues"
+    },
+    "homepage": "https://github.com/ccaballero/mangaread#readme",
+    "devDependencies": {
+        "electron": "^4.1.0",
+        "electron-devtools-installer": "^2.2.4"
+    },
+    "dependencies": {
+        "concurrently": "^4.1.0",
+        "electron": "^4.1.0",
+        "electron-builder": "^20.39.0",
+        "electron-is-dev": "^1.0.1",
+        "semantic-ui-react": "^0.86.0",
+        "react": "^16.8.4",
+        "react-dom": "^16.8.4",
+        "react-scripts": "2.1.8",
+        "wait-on": "^3.2.0"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
     ]
-  , "main":"main.js"
 }
-

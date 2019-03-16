@@ -1,34 +1,68 @@
-.App {
-    text-align: center;
+body {
+    background-color: rgb(27, 28, 29);
 }
 
-.App-logo {
-    animation: App-logo-spin infinite 20s linear;
-    height: 40vmin;
-    pointer-events: none;
+#wrapper {
+    width: 100vw;
+    height: 100vh;
 }
 
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
+.toolbar {
+    height: 40px;
+}
+
+.container {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    margin-top: 40px;
+    margin-bottom: 25px;
+
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    flex-wrap: nowrap;
     justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+    align-items: stretch;
+    align-content: center;
+
+    overflow: hidden;
 }
 
-.App-link {
-    color: #61dafb;
+.container img {
+    height: 100%;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+.footer {
+    position: absolute;
+    bottom: 0;
+    height: 25px;
+    width: 100%;
+
+    background-color: #202020;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.footer>.column {
+    font-size: 14px;
+    color: #ffffff;
+    line-height: 25px;
+    padding: 0 12px;
+}
+
+.footer>.column:nth-child(1){ width: 20%; overflow: hidden; }
+.footer>.column:nth-child(2){ width: 40%; overflow: hidden; border-left: 1px solid #ffffff; }
+.footer>.column:nth-child(3){ width: 40%; overflow: hidden; border-left: 1px solid #ffffff; }
+
+.divider {
+    width: 53.5px;
+}
+
+.clearfix {
+    clear: both;
 }
 

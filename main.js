@@ -1,16 +1,53 @@
-const {app,BrowserWindow}=require('electron')
+const {app,BrowserWindow,Menu,dialog}=require('electron')
   , path=require('path')
-  , url=require('url')
   , isDev=require('electron-is-dev');
 
 let window
   , create_window=()=>{
+        Menu.setApplicationMenu(Menu.buildFromTemplate([{
+            label:'File'
+          , submenu:[{
+                label:'Open'
+              , accelerator:'CmdOrCtrl+O'
+              , click:()=>{
+                    dialog.showOpenDialog(null,{
+                        title:'Open File'
+                      , buttonLabel:'Open'
+                      , filters:[{
+                            name:'CBR File'
+                          , extensions:['cbr']
+                        }]
+                      , properties:['openFile']
+                    },(filepaths)=>{
+                        console.log('FILES:',filepaths);
+                    });
+                }
+            },{
+                label:'Collection'
+              , accelerator:'CmdOrCtrl+C'
+            },{
+                type:'separator'
+            },{
+                label:'Close'
+              , accelerator:'CmdOrCtrl+W'
+            },{
+                label:'Quit'
+              , accelerator:'CmdOrCtrl+Q'
+              , click:()=>{
+                    app.quit();
+                }
+            }]
+        }]));
+
         window=new BrowserWindow({
             width:900
           , height:680
         });
 
-        window.loadURL(isDev?'http://localhost:3000':`file://${path.join(__dirname, '../build/index.html')}`);
+        window.loadURL(isDev?
+            'http://localhost:3000':
+            `file://${path.join(__dirname, '../build/index.html')}`
+        );
         window.on('closed',()=>{
             window=null
         });
