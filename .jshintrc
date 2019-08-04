@@ -1,0 +1,18 @@
+{
+    "esversion":9
+  , "laxcomma":true
+  , "node":true
+  , "undef":true
+  , "unused":true
+  , "predef":[
+        "window"
+      , "navigator"
+      , "URL"
+      , "fetch"
+      , "describe"
+      , "it"
+      , "before"
+      , "after"
+    ]
+}
+
