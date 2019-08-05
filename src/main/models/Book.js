@@ -1,10 +1,23 @@
-const exists=require('../utils/exists')
+const fs=require('fs')
+  , path=require('path')
+  , exists=require('../utils/exists')
   , extract=require('../utils/extract')
   , list=require('../utils/list')
   , resolution=require('../utils/resolution')
-  , sort=require('../utils/sort');
+  , sort=require('../utils/sort')
+  , config=require('../../../config');
 
 class Book {
+    constructor(){
+        if(!!Book.instance){
+            return Book.instance;
+        }
+
+        Book.instance=this;
+
+        return this;
+    }
+
     load(filepath){
         return Promise.resolve({
             filepath:filepath
@@ -24,7 +37,34 @@ class Book {
                 };
             });
 
-            return Promise.resolve(this);
+            return Promise.resolve();
+        });
+    }
+
+    close(){
+        return new Promise((resolve,reject)=>{
+            this._pages
+            .filter((item)=>{
+                return 'hash' in item;
+            })
+            .reduce((sum,item)=>{
+                return sum.then(()=>{
+                    return new Promise((resolve)=>{
+                        fs.unlink(path.resolve(config.pages,item.hash),()=>{
+                            resolve();
+                        });
+                    });
+                });
+            },Promise.resolve())
+            .then(()=>{
+                this._filepath=undefined;
+                this._pages=undefined;
+
+                resolve();
+            })
+            .catch((error)=>{
+                reject(error);
+            });
         });
     }
 
@@ -40,52 +80,54 @@ class Book {
         return this._current;
     }
 
-    hash(index){
-        if(this._pages.hash){
-            return Promise.resolve(this._pages.hash);
-        }else{
-            return Promise.resolve({
-                filepath:this._filepath
-              , item:this._pages[index].name
-            })
-            .then(extract)
-            .then(resolution)
-            .then((args)=>{
-                this._pages[index].hash=args.hash;
-                this._pages[index].width=args.width;
-                this._pages[index].height=args.height;
+    set current(current){
+        this._current=current;
+    }
 
-                return Promise.resolve(args.hash);
+    pages(args){
+        console.log('0 ==>',JSON.stringify(args,null,'\t'));
+        return args.pages.reduce((sum,item)=>{
+            return sum.then(()=>{
+                if(!('id' in item)){
+                    return Promise.resolve(args);
+                }
+
+                if(item.id>=this._pages.length){
+                    return Promise.resolve(args);
+                }
+
+                if(this._pages[item.id].hash){
+                    item.hash=this._pages[item.id].hash;
+                    item.width=this._pages[item.id].width;
+                    item.height=this._pages[item.id].height;
+
+                    return Promise.resolve(args);
+                }else{
+                    return Promise.resolve({
+                        filepath:this._filepath
+                      , item:this._pages[item.id].name
+                    })
+                    .then(extract)
+                    .then(resolution)
+                    .then((args1)=>{
+                        this._pages[item.id].hash=args1.hash;
+                        this._pages[item.id].width=args1.width;
+                        this._pages[item.id].height=args1.height;
+
+                        item.hash=args1.hash;
+                        item.width=args1.width;
+                        item.height=args1.height;
+
+                        return Promise.resolve(args);
+                    })
+                    .catch((error)=>{
+                        console.log(error);
+
+                        return Promise.resolve(args);
+                    });
+                }
             });
-        }
-    }
-
-    first(){
-        this._current=0;
-
-        return this.hash(0);
-    }
-
-    next(){
-        if(this._current<this.total-1){
-            this._current++;
-        }
-
-        return this.hash(this._current);
-    }
-
-    prev(){
-        if(this._current>0){
-            this._current--;
-        }
-
-        return this.hash(this._current);
-    }
-
-    last(){
-        this._current=this.total-1;
-
-        return this.hash(this._current);
+        },Promise.resolve());
     }
 }
 

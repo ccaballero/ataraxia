@@ -3,14 +3,6 @@
     "version": "0.0.1",
     "private": true,
     "description": "comic and manga reader",
-    "main": "src/main.js",
-    "scripts": {
-        "start": "react-scripts start",
-        "build": "react-scripts build",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "electron:dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\""
-    },
     "repository": {
         "type": "git",
         "url": "git+https://github.com/ccaballero/mangaread.git"
@@ -27,26 +19,36 @@
         "url": "https://github.com/ccaballero/mangaread/issues"
     },
     "homepage": "https://github.com/ccaballero/mangaread#readme",
-    "devDependencies": {
-        "electron": "^6.0.0",
-        "electron-devtools-installer": "^2.2.4",
-        "should": "^13.2.3"
+    "main": "src/main.js",
+    "scripts": {
+        "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
+        "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 3000 --config=./webpack.dev.config.js",
+        "build": "webpack --config webpack.build.config.js",
+        "package": "webpack --config webpack.build.config.js",
+        "postpackage": "electron-packager ./ --out=./builds"
     },
-    "dependencies": {
-        "concurrently": "^4.1.1",
+    "devDependencies": {
+        "babel-core": "^6.24.1",
+        "babel-loader": "^7.1.2",
+        "babel-preset-react": "^6.24.1",
+        "babili-webpack-plugin": "^0.1.2",
+        "css-loader": "^3.1.0",
         "electron": "^6.0.0",
-        "electron-builder": "^21.2.0",
-        "electron-is-dev": "^1.1.0",
-        "image-size": "^0.7.4",
+        "electron-packager": "^14.0.4",
+        "extract-text-webpack-plugin": "^3.0.2",
+        "file-loader": "^4.1.0",
+        "html-webpack-plugin": "^3.2.0",
         "react": "^16.8.6",
         "react-dom": "^16.8.6",
-        "react-scripts": "3.0.1",
-        "semantic-ui-react": "^0.87.3",
-        "uuid": "^3.3.2",
-        "wait-on": "^3.3.0"
+        "should": "^13.2.3",
+        "style-loader": "^0.23.1",
+        "webpack": "^4.39.1",
+        "webpack-cli": "^3.3.6",
+        "webpack-dev-server": "^3.7.2"
     },
-    "eslintConfig": {
-        "extends": "react-app"
+    "dependencies": {
+        "image-size": "^0.7.4",
+        "uuid": "^3.3.2"
     },
     "browserslist": [
         ">0.2%",

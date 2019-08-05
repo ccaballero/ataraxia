@@ -1,0 +1,23 @@
+module.exports={
+    OPEN_FILE:'open-file'
+  , OPEN_COLLECTION:'open-collection'
+  , CLOSE_FILE:'close-file'
+  , CLOSE_COLLECTION:'close-collection'
+  , QUIT:'quit'
+  , VIEW_TOOLBAR:'view-toolbar'
+  , VIEW_STATUSBAR:'view-statusbar'
+  , FULLSCREEN:'fullscreen'
+  , DOUBLE_PAGE:'double-page'
+  , MANGA_MODE:'manga-mode'
+  , FIT_BEST:'fit-best'
+  , FIT_WIDTH:'fit-width'
+  , FIT_HEIGHT:'fit-height'
+  , ROTATE_CW:'rotate-cw'
+  , ROTATE_CCW:'rotate-ccw'
+  , FIRST_PAGE:'first-page'
+  , PREVIOUS_PAGE:'previous-page'
+  , NEXT_PAGE:'next-page'
+  , LAST_PAGE:'last-page'
+  , SET_STATE:'set-state'
+};
+

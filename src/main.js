@@ -1,27 +1,70 @@
 const {app,BrowserWindow}=require('electron')
   , path=require('path')
-  , isDev=require('electron-is-dev');
+  , url=require('url')
+  , Events=require('./main/Events')
+  , Menu=require('./main/Menu')
+  , Book=require('./main/models/Book');
 
-let main_window
-  , create_window=()=>{
-        main_window=new BrowserWindow({
-            width:1900
-          , height:680
+let mainWindow
+  , event
+  , book=new Book()
+  , dev=false;
+
+
+if(process.defaultApp||
+    /[\\/]electron-prebuilt[\\/]/.test(process.execPath)||
+    /[\\/]electron[\\/]/.test(process.execPath)){
+    dev=true;
+}
+
+function init(){
+    mainWindow=new BrowserWindow({
+        width:1280
+      , height:720
+      , show:false
+      , center:true
+      , webPreferences:{
+            nodeIntegration:true
+        }
+    });
+
+    let indexPath;
+
+    if(dev&&process.argv.indexOf('--noDevServer')===-1){
+        indexPath=url.format({
+            protocol:'http'
+          , host:'localhost:3000'
+          , pathname:'index.html'
+          , slashes:true
         });
-
-        main_window.loadURL(isDev?
-            'http://localhost:3000':
-            'file://'+path.join(__dirname,'../build/index.html')
-        );
-
-        main_window.webContents.openDevTools();
-
-        main_window.on('closed',()=>{
-            main_window=null;
+    }else{
+        indexPath=url.format({
+            protocol:'file'
+          , pathname:path.join(__dirname,'dist','index.html')
+          , slashes:true
         });
-    };
+    }
 
-app.on('ready',create_window);
+    event=new Events(app,mainWindow,book);
+
+    Menu.load(app,event);
+    mainWindow.loadURL(indexPath);
+
+    mainWindow.once('ready-to-show',()=>{
+        mainWindow.show();
+
+        if(dev){
+            //mainWindow.webContents.openDevTools();
+        }
+    });
+
+    mainWindow.on('closed',()=>{
+        mainWindow=null;
+    });
+}
+
+
+app.on('ready',init);
 
 app.on('window-all-closed',()=>{
     if(process.platform!=='darwin'){
@@ -30,8 +73,8 @@ app.on('window-all-closed',()=>{
 });
 
 app.on('activate',()=>{
-    if(main_window===null){
-        create_window();
+    if(mainWindow===null){
+        init();
     }
 });
 
