@@ -1,4 +1,4 @@
-const {dialog}=require('electron')
+const {dialog,ipcMain}=require('electron')
   , {
         OPEN_FILE
       , CLOSE_FILE
@@ -31,13 +31,61 @@ class Events {
         this._fullscreen=false;
         this._doublepage=true;
         this._mangamode=false;
+
+        ipcMain.on(FIRST_PAGE,()=>{
+            return this.handle(FIRST_PAGE)();
+        });
+
+        ipcMain.on(PREVIOUS_PAGE,()=>{
+            return this.handle(PREVIOUS_PAGE)();
+        });
+
+        ipcMain.on(NEXT_PAGE,()=>{
+            return this.handle(NEXT_PAGE)();
+        });
+
+        ipcMain.on(LAST_PAGE,()=>{
+            return this.handle(LAST_PAGE)();
+        });
+
+        ipcMain.on(FULLSCREEN,()=>{
+            return this.handle(FULLSCREEN)();
+        });
+
+        ipcMain.on(ROTATE_CW,()=>{
+            return this.handle(ROTATE_CW)();
+        });
+
+        ipcMain.on(ROTATE_CCW,()=>{
+            return this.handle(ROTATE_CCW)();
+        });
+
+        ipcMain.on(FIT_BEST,()=>{
+            return this.handle(FIT_BEST)();
+        });
+
+        ipcMain.on(FIT_WIDTH,()=>{
+            return this.handle(FIT_WIDTH)();
+        });
+
+        ipcMain.on(FIT_HEIGHT,()=>{
+            return this.handle(FIT_HEIGHT)();
+        });
+
+        ipcMain.on(DOUBLE_PAGE,()=>{
+            return this.handle(DOUBLE_PAGE)();
+        });
+
+        ipcMain.on(MANGA_MODE,()=>{
+            return this.handle(MANGA_MODE)();
+        });
     }
 
     status(){
         return Promise.resolve({
             toolbar:this._toolbar
           , statusbar:this._statusbar
-          , fullscreen:this._statusbar
+          , fullscreen:this._fullscreen
           , doublepage:this._doublepage
           , mangamode:this._mangamode
         });

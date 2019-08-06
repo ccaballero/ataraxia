@@ -1,44 +1,73 @@
 // jshint ignore: start
 
-import React,{Component} from 'react';
+import React from 'react';
+import { ipcRenderer } from 'electron';
 
 import '../assets/css/App.css';
 
-import HelloWorld from '../components/HelloWorld';
+import Toolbar from '../components/Toolbar';
+import Statusbar from '../components/Statusbar';
 
-class App extends Component {
+import {
+    FIT_BEST
+  , FIT_WIDTH
+  , FIT_HEIGHT
+  , ROTATE_CW
+  , ROTATE_CCW
+  , SET_STATE
+} from '../../constants';
+
+class App extends React.Component {
+    constructor(props){
+        super(props);
+
+        console.log('PUBLIC URL',process.env);
+        this.state={
+            toolbar:true
+          , statusbar:true
+          , fullscreen:false
+          , doublepage:true
+          , mangamode:false
+          , fitmode:'best'
+          , rotation:0
+          , current:0
+          , total:0
+          , pages:[]
+        };
+    }
+
+    componentDidMount(){
+        ipcRenderer.on(SET_STATE,this.handleState.bind(this));
+    }
+
+    componentWillUnmount(){
+        ipcRenderer.removeListener(SET_STATE,this.handleState.bind(this));
+    }
+
+    handleState(event,data){
+        this.setState(data);
+    }
+
     render(){
+        let container_classes=['container'];
+
+        if(this.state.pages.length==0||!this.state.toolbar){
+            console.log('notoolbar');
+            container_classes.push('notoolbar');
+        }
+
+        if(this.state.pages.length==0||!this.state.statusbar){
+            container_classes.push('nostatusbar');
+        }
+
         return (
             <div id="wrapper">
-                <div class="toolbar">
-                    <div class="ui menu floated left inverted">
-                        <a class="item"><i aria-hidden="true" class="icon angle double left"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon angle left"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon angle right"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon angle double right"></i></a>
-                        <div class="divider"></div>
-                        <a class="item"><i aria-hidden="true" class="icon expand arrows alternate"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon redo"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon undo"></i></a>
-                    </div>
-                    <div class="ui menu floated right inverted">
-                        <a class="item"><i aria-hidden="true" class="icon arrows alternate"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon arrows alternate horizontal"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon arrows alternate vertical"></i></a>
-                        <a class="item"><i aria-hidden="true" class="icon columns"></i></a>
-                        <a class="item active"><i aria-hidden="true" class="icon exchange"></i></a>
-                    </div>
-                    <div class="clearfix"></div>
+                {this.state.pages.length==0||!this.state.toolbar?null:<Toolbar />}
+                <div className={container_classes.join(' ')}>
+                    <img alt="" src={'/pages/a.jpg'} />
+                    <img alt="" src={'/pages/b.jpg'} />
                 </div>
-                <div class="container">
-                    <img alt="" src={process.env.PUBLIC_URL} />
-                    <img alt="" src={process.env.PUBLIC_URL} />
-                </div>
-                <div class="footer">
-                    <div class="column">2,3 / 175</div>
-                    <div class="column">735x1100 (64.5%)  727x1100 (64.4%)</div>
-                    <div class="column">Tomo 03.cbr</div>
-                </div>
+                {this.state.pages.length==0||!this.state.statusbar?null:<Statusbar />}
             </div>
         );
     }

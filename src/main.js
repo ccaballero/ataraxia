@@ -54,7 +54,7 @@ function init(){
         mainWindow.show();
 
         if(dev){
-            //mainWindow.webContents.openDevTools();
+            mainWindow.webContents.openDevTools();
         }
     });
 
