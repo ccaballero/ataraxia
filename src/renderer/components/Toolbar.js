@@ -37,6 +37,32 @@ class Toolbar extends React.Component {
     handleMangaMode(){  ipcRenderer.send(MANGA_MODE,{}); }
 
     render(){
+        let fitbest=['item']
+          , fitwidth=['item']
+          , fitheight=['item']
+          , doublepage=['item']
+          , mangamode=['item'];
+
+        switch(this.props.value.fitmode){
+            case 'best':
+                fitbest.push('active');
+                break;
+            case 'width':
+                fitwidth.push('active');
+                break;
+            case 'height':
+                fitheight.push('active');
+                break;
+        }
+
+        if(this.props.value.doublepage){
+            doublepage.push('active');
+        }
+
+        if(this.props.value.mangamode){
+            mangamode.push('active');
+        }
+
         return (
             <div className="toolbar">
                 <div className="ui menu floated left inverted">
@@ -64,19 +90,19 @@ class Toolbar extends React.Component {
                         className="icon undo"></i></button>
                 </div>
                 <div className="ui menu floated right inverted">
-                    <button className="item"
+                    <button className={fitbest.join(' ')}
                         onClick={this.handleFitBest}><i aria-hidden="true"
                         className="icon arrows alternate"></i></button>
-                    <button className="item"
+                    <button className={fitwidth.join(' ')}
                         onClick={this.handleFitWidth}><i aria-hidden="true"
                         className="icon arrows alternate horizontal"></i></button>
-                    <button className="item" 
+                    <button className={fitheight.join(' ')}
                         onClick={this.handleFitHeight}><i aria-hidden="true"
                         className="icon arrows alternate vertical"></i></button>
-                    <button className="item"
+                    <button className={doublepage.join(' ')}
                         onClick={this.handleDoublePage}><i aria-hidden="true"
                         className="icon columns"></i></button>
-                    <button className="item"
+                    <button className={mangamode.join(' ')}
                         onClick={this.handleMangaMode}><i aria-hidden="true"
                         className="icon exchange"></i></button>
                 </div>

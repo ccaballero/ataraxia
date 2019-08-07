@@ -21,9 +21,9 @@ class App extends React.Component {
     constructor(props){
         super(props);
 
-        console.log('PUBLIC URL',process.env);
         this.state={
-            toolbar:true
+            filepath:''
+          , toolbar:true
           , statusbar:true
           , fullscreen:false
           , doublepage:true
@@ -45,29 +45,46 @@ class App extends React.Component {
     }
 
     handleState(event,data){
+        //console.log('=>',data);
         this.setState(data);
     }
 
-    render(){
-        let container_classes=['container'];
+    renderPage(index){
+        if(this.state.pages[index-1]){
+            let image='/pages/'+this.state.pages[index-1].hash;
 
-        if(this.state.pages.length==0||!this.state.toolbar){
-            console.log('notoolbar');
+            return (
+                <img alt="" src={image} />
+            );
+        }else{
+            return;
+        }
+
+    }
+
+    render(){
+        let container_classes=['container']
+          , hide_toolbar=this.state.pages.length==0||
+                !this.state.toolbar||this.state.fullscreen
+          , hide_statusbar=this.state.pages.length==0||
+                !this.state.statusbar||this.state.fullscreen;
+
+        if(hide_toolbar){
             container_classes.push('notoolbar');
         }
 
-        if(this.state.pages.length==0||!this.state.statusbar){
+        if(hide_statusbar){
             container_classes.push('nostatusbar');
         }
 
         return (
             <div id="wrapper">
-                {this.state.pages.length==0||!this.state.toolbar?null:<Toolbar />}
+                {hide_toolbar?null:<Toolbar value={this.state} />}
                 <div className={container_classes.join(' ')}>
-                    <img alt="" src={'/pages/a.jpg'} />
-                    <img alt="" src={'/pages/b.jpg'} />
+                    {this.renderPage(1)}
+                    {this.renderPage(2)}
                 </div>
-                {this.state.pages.length==0||!this.state.statusbar?null:<Statusbar />}
+                {hide_statusbar?null:<Statusbar value={this.state} />}
             </div>
         );
     }

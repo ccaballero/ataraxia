@@ -8,24 +8,21 @@ class Statusbar extends React.Component {
     }
 
     info_pages(){
-        return '--';
-        /*if(this.two_pages){
-            return this.page1.count+' , '+this.page2.count+
-                ' / '+this.total_pages;
-        }else{
-            return this.page1.count+
-                ' / '+this.total_pages;
-        }*/
+        return this.props.value.pages.filter((i)=>{
+            return i.hash;
+        })
+        .map((j)=>{
+            return j.id+1;
+        }).join(', ')+' / '+this.props.value.total;
     };
 
     info_resolutions(){
-        return '--';
-        /*if(this.two_pages){
-            return this.page1.width+'x'+this.page1.height+'  '+
-                this.page2.width+'x'+this.page2.height;
-        }else{
-            return this.page1.width+'x'+this.page1.height;
-        }*/
+        return this.props.value.pages.filter((i)=>{
+            return i.hash;
+        })
+        .map((j)=>{
+            return j.width+'x'+j.height;
+        }).join(' | ');
     };
 
     render(){
@@ -33,7 +30,7 @@ class Statusbar extends React.Component {
             <div className="footer">
                 <div className="column">{this.info_pages()}</div>
                 <div className="column">{this.info_resolutions()}</div>
-                <div className="column">{this.book}</div>
+                <div className="column">{this.props.value.filepath}</div>
             </div>
         );
     }

@@ -27,10 +27,6 @@ class Menu {
                 label:'Open'
               , accelerator:'CmdOrCtrl+O'
               , click:events.handle(OPEN_FILE)
-//            },{
-//                label:'Collection'
-//              , accelerator:'CmdOrCtrl+C'
-//              , click:events.handle('open-collection')
             },{
                 type:'separator'
             },{
@@ -60,6 +56,7 @@ class Menu {
                 label:'Double page'
               , accelerator:'D'
               , type:'checkbox'
+              , checked:true
               , click:events.handle(DOUBLE_PAGE)
             },{
                 label:'Manga mode'
@@ -98,19 +95,19 @@ class Menu {
             label:'Navigation'
           , submenu:[{
                 label:'First page'
-              , accelerator:'Home'
+              , accelerator:'Up'
               , click:events.handle(FIRST_PAGE)
             },{
                 label:'Previous page'
-              , accelerator:'PageUp'
+              , accelerator:'Left'
               , click:events.handle(PREVIOUS_PAGE)
             },{
                 label:'Next page'
-              , accelerator:'PageDown'
+              , accelerator:'Right'
               , click:events.handle(NEXT_PAGE)
             },{
                 label:'Last page'
-              , accelerator:'End'
+              , accelerator:'Down'
               , click:events.handle(LAST_PAGE)
             }]
         }]));

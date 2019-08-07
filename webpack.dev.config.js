@@ -5,6 +5,7 @@ const webpack=require('webpack')
 
 const SRC_DIR=path.resolve(__dirname,'src')
   , OUTPUT_DIR=path.resolve(__dirname,'dist')
+  , PUBLIC_DIR=path.resolve(__dirname,'public')
   , defaultInclude=[SRC_DIR];
 
 module.exports={
@@ -55,7 +56,7 @@ module.exports={
     ]
   , devtool:'cheap-source-map'
   , devServer:{
-        contentBase:OUTPUT_DIR
+        contentBase:PUBLIC_DIR
       , stats:{
             colors:true
           , chunks:false
