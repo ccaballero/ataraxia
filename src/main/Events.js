@@ -1,4 +1,5 @@
-const {dialog,ipcMain}=require('electron')
+const {app,dialog,ipcMain}=require('electron')
+  , dirname=require('path').dirname
   , {
         OPEN_FILE
       , CLOSE_FILE
@@ -27,11 +28,11 @@ class Events {
         this._book=book;
         this._store=store;
 
-        this._toolbar=store.get('toolbar');
-        this._statusbar=store.get('statusbar');
-        this._fullscreen=store.get('fullscreen');
-        this._doublepage=store.get('doublepage');
-        this._mangamode=store.get('mangamode');
+        this._toolbar=store.get('toolbar',true);
+        this._statusbar=store.get('statusbar',true);
+        this._fullscreen=store.get('fullscreen',false);
+        this._doublepage=store.get('doublepage',false);
+        this._mangamode=store.get('mangamode',false);
 
         ipcMain.on(FIRST_PAGE,()=>{
             return this.handle(FIRST_PAGE)();
@@ -124,8 +125,8 @@ class Events {
             args.filepath=this._book.filepath;
 
             this._store.set({
-                opened:args.filepath
-              , current:0
+                filepath:args.filepath
+              , page:0
             });
 
 //console.log('OPEN FILE:SEND =>',JSON.stringify(args,null,'\t'));
@@ -133,6 +134,7 @@ class Events {
         })
         .catch((error)=>{
             console.log(error);
+
             dialog.showMessageBox(this._mainWindow,{
                 type:'error'
               , buttons:['OK']
@@ -143,7 +145,7 @@ class Events {
     }
 
     goto(current){
-console.log('CURRENT: %s',current);
+//console.log('CURRENT: %s',current);
         return this.status.bind(this)()
         .then((args)=>{
             if(args.doublepage){
@@ -193,8 +195,17 @@ console.log('CURRENT: %s',current);
         return (()=>{
             switch(command){
                 case OPEN_FILE:
+                    let filepath=this._store.get('filepath');
+
+                    if(filepath){
+                        filepath=dirname(filepath);
+                    }else{
+                        filepath=app.getPath('home');
+                    }
+
                     dialog.showOpenDialog(this._mainWindow,{
                         title:'Open File'
+                      , defaultPath:filepath
                       , buttonLabel:'Open'
                       , filters:[{
                             name:'CBR File'
@@ -202,7 +213,9 @@ console.log('CURRENT: %s',current);
                         }]
                       , properties:['openFile']
                     },(filepaths)=>{
-                        return this.open(filepaths[0]);
+                        if(filepaths.length==1){
+                            return this.open(filepaths[0]);
+                        }
                     });
 
                     break;

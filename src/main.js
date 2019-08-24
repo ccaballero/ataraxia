@@ -4,12 +4,13 @@ const {app,BrowserWindow}=require('electron')
   , url=require('url')
   , Events=require('./main/Events')
   , Menu=require('./main/Menu')
-  , Book=require('./main/models/Book');
+  , Book=require('./main/models/Book')
+  , exists=require('./main/utils/exists');
 
 let mainWindow
   , event
   , store=new Store({
-        opened:{
+        filepath:{
             type:'string'
         }
       , page:{
@@ -96,16 +97,33 @@ function init(){
         if(dev){
             mainWindow.webContents.openDevTools();
         }
-    });
 
-    if(store.has('opened')){
-        console.log('open book: %s',store.get('opened'));
-        event.open(store.get('opened'))
-        .then(()=>{
-            console.log('on page number: %s',store.get('page'));
-            return event.goto(store.get('page'));
-        });
-    }
+        if(store.has('filepath')){
+            let filepath=store.get('filepath')
+              , page=store.get('page');
+
+            console.log('open book: %s\npage: %s',filepath,page);
+
+            exists({
+                filepath:filepath
+            })
+            .then((args)=>{
+                if(args.check){
+                    return event.open(filepath)
+                    .then(()=>{
+                        if(store.has('fullscreen')){
+                            mainWindow.setFullScreen(
+                                store.get('fullscreen',false));
+                        }
+
+                        return event.goto(page);
+                    });
+                }else{
+                    console.log('file not found');
+                }
+            });
+        }
+    });
 
     mainWindow.on('closed',()=>{
         mainWindow=null;

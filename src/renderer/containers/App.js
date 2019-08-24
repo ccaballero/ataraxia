@@ -46,6 +46,7 @@ class App extends React.Component {
 
     handleState(event,data){
         //console.log('=>',data);
+
         this.setState(data);
     }
 
@@ -54,7 +55,9 @@ class App extends React.Component {
             let image='/pages/'+this.state.pages[index-1].hash;
 
             return (
-                <img alt="" src={image} />
+                <div className='page'>
+                    <img alt="" src={image} />
+                </div>
             );
         }else{
             return;

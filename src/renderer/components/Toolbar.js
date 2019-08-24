@@ -63,6 +63,21 @@ class Toolbar extends React.Component {
             mangamode.push('active');
         }
 
+                    /*<button className="item"
+                        onClick={this.handleRotateCW}><i aria-hidden="true"
+                        className="icon redo"></i></button>
+                    <button className="item"
+                        onClick={this.handleRotateCCW}><i aria-hidden="true"
+                        className="icon undo"></i></button>*/
+                    /*<button className={fitbest.join(' ')}
+                        onClick={this.handleFitBest}><i aria-hidden="true"
+                        className="icon arrows alternate"></i></button>
+                    <button className={fitwidth.join(' ')}
+                        onClick={this.handleFitWidth}><i aria-hidden="true"
+                        className="icon arrows alternate horizontal"></i></button>
+                    <button className={fitheight.join(' ')}
+                        onClick={this.handleFitHeight}><i aria-hidden="true"
+                        className="icon arrows alternate vertical"></i></button>*/
         return (
             <div className="toolbar">
                 <div className="ui menu floated left inverted">
@@ -82,23 +97,8 @@ class Toolbar extends React.Component {
                     <button className="item"
                         onClick={this.handleFullscreen}><i aria-hidden="true"
                         className="icon expand arrows alternate"></i></button>
-                    <button className="item"
-                        onClick={this.handleRotateCW}><i aria-hidden="true"
-                        className="icon redo"></i></button>
-                    <button className="item"
-                        onClick={this.handleRotateCCW}><i aria-hidden="true"
-                        className="icon undo"></i></button>
                 </div>
                 <div className="ui menu floated right inverted">
-                    <button className={fitbest.join(' ')}
-                        onClick={this.handleFitBest}><i aria-hidden="true"
-                        className="icon arrows alternate"></i></button>
-                    <button className={fitwidth.join(' ')}
-                        onClick={this.handleFitWidth}><i aria-hidden="true"
-                        className="icon arrows alternate horizontal"></i></button>
-                    <button className={fitheight.join(' ')}
-                        onClick={this.handleFitHeight}><i aria-hidden="true"
-                        className="icon arrows alternate vertical"></i></button>
                     <button className={doublepage.join(' ')}
                         onClick={this.handleDoublePage}><i aria-hidden="true"
                         className="icon columns"></i></button>

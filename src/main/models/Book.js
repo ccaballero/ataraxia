@@ -61,8 +61,8 @@ class Book {
                 });
             },Promise.resolve())
             .then(()=>{
-                this._filepath=undefined;
-                this._pages=undefined;
+                delete this._filepath;
+                delete this._pages;
 
                 resolve();
             })

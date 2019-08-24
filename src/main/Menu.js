@@ -8,11 +8,11 @@ const menu=require('electron').Menu
       , FULLSCREEN
       , DOUBLE_PAGE
       , MANGA_MODE
-      , FIT_BEST
-      , FIT_WIDTH
-      , FIT_HEIGHT
-      , ROTATE_CW
-      , ROTATE_CCW
+//      , FIT_BEST
+//      , FIT_WIDTH
+//      , FIT_HEIGHT
+//      , ROTATE_CW
+//      , ROTATE_CCW
       , FIRST_PAGE
       , PREVIOUS_PAGE
       , NEXT_PAGE
@@ -63,7 +63,7 @@ class Menu {
               , accelerator:'M'
               , type:'checkbox'
               , click:events.handle(MANGA_MODE)
-            },{
+/*            },{
                 type:'separator'
             },{
                 label:'Best fit mode'
@@ -89,7 +89,7 @@ class Menu {
             },{
                 label:'Rotate 90 degrees CCW'
               , accelerator:'Shift+R'
-              , click:events.handle(ROTATE_CCW)
+              , click:events.handle(ROTATE_CCW)*/
             }]
         },{
             label:'Navigation'
