@@ -21,16 +21,17 @@ const {dialog,ipcMain}=require('electron')
     }=require('../constants');
 
 class Events {
-    constructor(app,mainWindow,book){
+    constructor(app,mainWindow,store,book){
         this._app=app;
         this._mainWindow=mainWindow;
         this._book=book;
+        this._store=store;
 
-        this._toolbar=true;
-        this._statusbar=true;
-        this._fullscreen=false;
-        this._doublepage=true;
-        this._mangamode=false;
+        this._toolbar=store.get('toolbar');
+        this._statusbar=store.get('statusbar');
+        this._fullscreen=store.get('fullscreen');
+        this._doublepage=store.get('doublepage');
+        this._mangamode=store.get('mangamode');
 
         ipcMain.on(FIRST_PAGE,()=>{
             return this.handle(FIRST_PAGE)();
@@ -91,6 +92,103 @@ class Events {
         });
     }
 
+    open(filepath){
+        return (()=>{
+            if(this._book.filepath){
+                return this._book.close();
+            }else{
+                return Promise.resolve();
+            }
+        })()
+        .then(()=>{
+            return this._book.load(filepath);
+        })
+        .then(this.status.bind(this))
+        .then((args)=>{
+            if(args.doublepage){
+                if(args.mangamode){
+                    args.pages=[{id:1},{id:0}];
+                }else{
+                    args.pages=[{id:0},{id:1}];
+                }
+            }else{
+                args.pages=[{id:0}];
+            }
+
+            args.current=this._book.current;
+            args.total=this._book.total;
+
+            return this._book.pages(args);
+        })
+        .then((args)=>{
+            args.filepath=this._book.filepath;
+
+            this._store.set({
+                opened:args.filepath
+              , current:0
+            });
+
+//console.log('OPEN FILE:SEND =>',JSON.stringify(args,null,'\t'));
+            this._mainWindow.send(SET_STATE,args);
+        })
+        .catch((error)=>{
+            console.log(error);
+            dialog.showMessageBox(this._mainWindow,{
+                type:'error'
+              , buttons:['OK']
+              , title:'Error'
+              , message:'The file could not be opened'
+            });
+        });
+    }
+
+    goto(current){
+console.log('CURRENT: %s',current);
+        return this.status.bind(this)()
+        .then((args)=>{
+            if(args.doublepage){
+                let skip=false;
+
+                if(current<this._book.total-2){
+                    this._book.current=current;
+                }else if(current<this._book.total-1){
+                    this._book.current=this._book.total+1;
+                    skip=true;
+                }
+
+                if(args.mangamode){
+                    args.pages=[{
+                        id:skip?null:this._book.current+1
+                    },{
+                        id:this._book.current
+                    }];
+                }else{
+                    args.pages=[{
+                        id:this._book.current
+                    },{
+                        id:skip?null:this._book.current+1
+                    }];
+                }
+            }else{
+                if(this._book.current<this._book.total-1){
+                    this._book.current=current;
+                }
+
+                args.pages=[{id:this._book.current}];
+            }
+
+            args.current=this._book.current;
+            args.total=this._book.total;
+
+            return this._book.pages(args);
+        })
+        .then((args)=>{
+//console.log('NEXT PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+            this._store.set('page',this._book.current);
+            this._mainWindow.send(SET_STATE,args);
+        });
+    }
+
     handle(command){
         return (()=>{
             switch(command){
@@ -104,48 +202,7 @@ class Events {
                         }]
                       , properties:['openFile']
                     },(filepaths)=>{
-                        (()=>{
-                            if(this._book.filepath){
-                                return this._book.close();
-                            }else{
-                                return Promise.resolve();
-                            }
-                        })()
-                        .then(()=>{
-                            return this._book.load(filepaths[0]);
-                        })
-                        .then(this.status.bind(this))
-                        .then((args)=>{
-                            if(args.doublepage){
-                                if(args.mangamode){
-                                    args.pages=[{id:1},{id:0}];
-                                }else{
-                                    args.pages=[{id:0},{id:1}];
-                                }
-                            }else{
-                                args.pages=[{id:0}];
-                            }
-
-                            args.current=this._book.current;
-                            args.total=this._book.total;
-
-                            return this._book.pages(args);
-                        })
-                        .then((args)=>{
-                            args.filepath=this._book.filepath;
-
-                            //console.log('OPEN FILE:SEND =>',JSON.stringify(args,null,'\t'));
-                            this._mainWindow.send(SET_STATE,args);
-                        })
-                        .catch((error)=>{
-                            console.log(error);
-                            dialog.showMessageBox(this._mainWindow,{
-                                type:'error'
-                              , buttons:['OK']
-                              , title:'Error'
-                              , message:'The file could not be opened'
-                            });
-                        });
+                        return this.open(filepaths[0]);
                     });
 
                     break;
@@ -157,7 +214,9 @@ class Events {
                         args.total=0;
                         args.pages=[];
 
-                        //console.log('CLOSE FILE:SEND =>',JSON.stringify(args,null,'\t'));
+                        this._store.clear();
+
+//console.log('CLOSE FILE:SEND =>',JSON.stringify(args,null,'\t'));
                         this._mainWindow.send(SET_STATE,args);
                     });
 
@@ -173,17 +232,23 @@ class Events {
 
                     break;
                 case VIEW_TOOLBAR:
+                    this._toolbar=!this._toolbar;
+
                     this.status.bind(this)()
                     .then((args)=>{
-                        //console.log('VIEW TOOLBAR:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('VIEW TOOLBAR:SEND =>',JSON.stringify(args,null,'\t'));
+                        this._store.set('toolbar',this._toolbar);
                         this._mainWindow.send(SET_STATE,args);
                     });
 
                     break;
                 case VIEW_STATUSBAR:
+                    this._statusbar=!this._statusbar;
+
                     this.status.bind(this)()
                     .then((args)=>{
-                        //console.log('VIEW STATUSBAR:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('VIEW STATUSBAR:SEND =>',JSON.stringify(args,null,'\t'));
+                        this._store.set('statusbar',this._statusbar);
                         this._mainWindow.send(SET_STATE,args);
                     });
 
@@ -194,7 +259,8 @@ class Events {
 
                     this.status.bind(this)()
                     .then((args)=>{
-                        //console.log('FULLSCREEN:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('FULLSCREEN:SEND =>',JSON.stringify(args,null,'\t'));
+                        this._store.set('fullscreen',this._fullscreen);
                         this._mainWindow.send(SET_STATE,args);
                     });
 
@@ -228,7 +294,8 @@ class Events {
                         return this._book.pages(args);
                     })
                     .then((args)=>{
-                        //console.log('DOUBLE PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('DOUBLE PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+                        this._store.set('doublepage',this._doublepage);
                         this._mainWindow.send(SET_STATE,args);
                     });
 
@@ -262,33 +329,34 @@ class Events {
                         return this._book.pages(args);
                     })
                     .then((args)=>{
-                        //console.log('MANGA MODE:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('MANGA MODE:SEND =>',JSON.stringify(args,null,'\t'));
+                        this._store.set('mangamode',this._mangamode);
                         this._mainWindow.send(SET_STATE,args);
                     });
 
                     break;
                 case FIT_BEST:
-                    //console.log('FIT BEST:SEND =>',JSON.stringify({},null,'\t'));
+//console.log('FIT BEST:SEND =>',JSON.stringify({},null,'\t'));
                     this._mainWindow.send(FIT_BEST,{});
 
                     break;
                 case FIT_WIDTH:
-                    //console.log('FIT WIDTH:SEND =>',JSON.stringify({},null,'\t'));
+//console.log('FIT WIDTH:SEND =>',JSON.stringify({},null,'\t'));
                     this._mainWindow.send(FIT_WIDTH,{});
 
                     break;
                 case FIT_HEIGHT:
-                    //console.log('FIT HEIGHT:SEND =>',JSON.stringify({},null,'\t'));
+//console.log('FIT HEIGHT:SEND =>',JSON.stringify({},null,'\t'));
                     this._mainWindow.send(FIT_HEIGHT,{});
 
                     break;
                 case ROTATE_CW:
-                    //console.log('ROTATE CW:SEND =>',JSON.stringify({},null,'\t'));
+//console.log('ROTATE CW:SEND =>',JSON.stringify({},null,'\t'));
                     this._mainWindow.send(ROTATE_CW,{});
 
                     break;
                 case ROTATE_CCW:
-                    //console.log('ROTATE CCW:SEND =>',JSON.stringify({},null,'\t'));
+//console.log('ROTATE CCW:SEND =>',JSON.stringify({},null,'\t'));
                     this._mainWindow.send(ROTATE_CCW,{});
 
                     break;
@@ -314,7 +382,8 @@ class Events {
                             return this._book.pages(args);
                         })
                         .then((args)=>{
-                            //console.log('FIRST PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('FIRST PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+                            this._store.set('page',this._book.current);
                             this._mainWindow.send(SET_STATE,args);
                         });
                     }
@@ -337,7 +406,8 @@ class Events {
                                 if(args.mangamode){
                                     args.pages=[{
                                         id:skip?
-                                            this._book.current:this._book.current+1
+                                            this._book.current:
+                                            this._book.current+1
                                     },{
                                         id:skip?null:this._book.current
                                     }];
@@ -346,7 +416,8 @@ class Events {
                                         id:skip?null:this._book.current
                                     },{
                                         id:skip?
-                                            this._book.current:this._book.current+1
+                                            this._book.current:
+                                            this._book.current+1
                                     }];
                                 }
                             }else{
@@ -363,7 +434,8 @@ class Events {
                             return this._book.pages(args);
                         })
                         .then((args)=>{
-                            //console.log('PREVIOUS PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('PREVIOUS PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+                            this._store.set('page',this._book.current);
                             this._mainWindow.send(SET_STATE,args);
                         });
                     }
@@ -410,7 +482,8 @@ class Events {
                             return this._book.pages(args);
                         })
                         .then((args)=>{
-                            //console.log('NEXT PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('NEXT PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+                            this._store.set('page',this._book.current);
                             this._mainWindow.send(SET_STATE,args);
                         });
                     }
@@ -450,7 +523,8 @@ class Events {
                             return this._book.pages(args);
                         })
                         .then((args)=>{
-                            //console.log('LAST PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+//console.log('LAST PAGE:SEND =>',JSON.stringify(args,null,'\t'));
+                            this._store.set('page',this._book.current);
                             this._mainWindow.send(SET_STATE,args);
                         });
                     }

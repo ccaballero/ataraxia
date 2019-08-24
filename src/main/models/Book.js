@@ -42,6 +42,10 @@ class Book {
     }
 
     close(){
+        if(!this._pages){
+            return Promise.resolve();
+        }
+
         return new Promise((resolve,reject)=>{
             this._pages
             .filter((item)=>{

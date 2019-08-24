@@ -22,7 +22,7 @@
     "main": "src/main.js",
     "scripts": {
         "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
-        "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 3000 --config=./webpack.dev.config.js",
+        "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 2999 --config=./webpack.dev.config.js",
         "build": "webpack --config webpack.build.config.js",
         "package": "webpack --config webpack.build.config.js",
         "postpackage": "electron-packager ./ --out=./builds"
@@ -47,6 +47,7 @@
         "webpack-dev-server": "^3.7.2"
     },
     "dependencies": {
+        "electron-store": "^4.0.0",
         "image-size": "^0.7.4",
         "uuid": "^3.3.2"
     },
