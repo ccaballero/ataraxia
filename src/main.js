@@ -94,9 +94,9 @@ function init(){
     mainWindow.once('ready-to-show',()=>{
         mainWindow.show();
 
-        if(dev){
+        /*if(dev){
             mainWindow.webContents.openDevTools();
-        }
+        }*/
 
         if(store.has('filepath')){
             let filepath=store.get('filepath')

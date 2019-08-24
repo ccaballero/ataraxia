@@ -21,9 +21,9 @@
     "homepage": "https://github.com/ccaballero/mangaread#readme",
     "main": "src/main.js",
     "scripts": {
-        "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
-        "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 2999 --config=./webpack.dev.config.js",
+        "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 2999 --config webpack.dev.config.js",
         "build": "webpack --config webpack.build.config.js",
+        "prod": "webpack --config webpack.build.config.js && electron --noDevServer .",
         "package": "webpack --config webpack.build.config.js",
         "postpackage": "electron-packager ./ --out=./builds"
     },
@@ -43,7 +43,7 @@
         "should": "^13.2.3",
         "style-loader": "^0.23.1",
         "webpack": "^4.39.1",
-        "webpack-cli": "^3.3.6",
+        "webpack-cli": "^3.3.7",
         "webpack-dev-server": "^3.7.2"
     },
     "dependencies": {

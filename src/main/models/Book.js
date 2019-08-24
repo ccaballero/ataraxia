@@ -89,7 +89,6 @@ class Book {
     }
 
     pages(args){
-        //console.log('0 ==>',JSON.stringify(args,null,'\t'));
         return args.pages.reduce((sum,item)=>{
             return sum.then(()=>{
                 if(!('id' in item)){

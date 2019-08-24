@@ -104,33 +104,10 @@ class Events {
         .then(()=>{
             return this._book.load(filepath);
         })
-        .then(this.status.bind(this))
-        .then((args)=>{
-            if(args.doublepage){
-                if(args.mangamode){
-                    args.pages=[{id:1},{id:0}];
-                }else{
-                    args.pages=[{id:0},{id:1}];
-                }
-            }else{
-                args.pages=[{id:0}];
-            }
+        .then(()=>{
+            this._store.set('filepath',filepath);
 
-            args.current=this._book.current;
-            args.total=this._book.total;
-
-            return this._book.pages(args);
-        })
-        .then((args)=>{
-            args.filepath=this._book.filepath;
-
-            this._store.set({
-                filepath:args.filepath
-              , page:0
-            });
-
-//console.log('OPEN FILE:SEND =>',JSON.stringify(args,null,'\t'));
-            this._mainWindow.send(SET_STATE,args);
+            return this.goto(0);
         })
         .catch((error)=>{
             console.log(error);
@@ -144,39 +121,46 @@ class Events {
         });
     }
 
-    goto(current){
-//console.log('CURRENT: %s',current);
+    goto(current,direction=1){
         return this.status.bind(this)()
         .then((args)=>{
+            this._book.current=current;
+            this._last=current;
+
+            args.pages=[{
+                id:this._book.current
+            }];
+
             if(args.doublepage){
-                let skip=false;
+                if(direction==1){
+                    if(current<this._book.total-1){
+                        this._last=current+1;
+                        this._book.current=current;
 
-                if(current<this._book.total-2){
-                    this._book.current=current;
-                }else if(current<this._book.total-1){
-                    this._book.current=this._book.total+1;
-                    skip=true;
+                        args.pages.push({
+                            id:current+1
+                        });
+
+                        if(args.mangamode){
+                            args.pages.reverse();
+                        }
+                    }
                 }
 
-                if(args.mangamode){
-                    args.pages=[{
-                        id:skip?null:this._book.current+1
-                    },{
-                        id:this._book.current
-                    }];
-                }else{
-                    args.pages=[{
-                        id:this._book.current
-                    },{
-                        id:skip?null:this._book.current+1
-                    }];
-                }
-            }else{
-                if(this._book.current<this._book.total-1){
-                    this._book.current=current;
-                }
+                if(direction==-1){
+                    if(current>0){
+                        this._last=current;
+                        this._book.current=current-1;
 
-                args.pages=[{id:this._book.current}];
+                        args.pages.unshift({
+                            id:current-1
+                        });
+
+                        if(args.mangamode){
+                            args.pages.reverse();
+                        }
+                    }
+                }
             }
 
             args.current=this._book.current;
@@ -185,7 +169,6 @@ class Events {
             return this._book.pages(args);
         })
         .then((args)=>{
-//console.log('NEXT PAGE:SEND =>',JSON.stringify(args,null,'\t'));
             this._store.set('page',this._book.current);
             this._mainWindow.send(SET_STATE,args);
         });
@@ -228,8 +211,6 @@ class Events {
                         args.pages=[];
 
                         this._store.clear();
-
-//console.log('CLOSE FILE:SEND =>',JSON.stringify(args,null,'\t'));
                         this._mainWindow.send(SET_STATE,args);
                     });
 
@@ -249,7 +230,6 @@ class Events {
 
                     this.status.bind(this)()
                     .then((args)=>{
-//console.log('VIEW TOOLBAR:SEND =>',JSON.stringify(args,null,'\t'));
                         this._store.set('toolbar',this._toolbar);
                         this._mainWindow.send(SET_STATE,args);
                     });
@@ -260,7 +240,6 @@ class Events {
 
                     this.status.bind(this)()
                     .then((args)=>{
-//console.log('VIEW STATUSBAR:SEND =>',JSON.stringify(args,null,'\t'));
                         this._store.set('statusbar',this._statusbar);
                         this._mainWindow.send(SET_STATE,args);
                     });
@@ -272,7 +251,6 @@ class Events {
 
                     this.status.bind(this)()
                     .then((args)=>{
-//console.log('FULLSCREEN:SEND =>',JSON.stringify(args,null,'\t'));
                         this._store.set('fullscreen',this._fullscreen);
                         this._mainWindow.send(SET_STATE,args);
                     });
@@ -280,72 +258,14 @@ class Events {
                     break;
                 case DOUBLE_PAGE:
                     this._doublepage=!this._doublepage;
-
-                    this.status.bind(this)()
-                    .then((args)=>{
-                        if(args.doublepage){
-                            if(args.mangamode){
-                                args.pages=[{
-                                    id:this._book.current+1
-                                },{
-                                    id:this._book.current
-                                }];
-                            }else{
-                                args.pages=[{
-                                    id:this._book.current
-                                },{
-                                    id:this._book.current+1
-                                }];
-                            }
-                        }else{
-                            args.pages=[{id:this._book.current}];
-                        }
-
-                        args.current=this._book.current;
-                        args.total=this._book.total;
-
-                        return this._book.pages(args);
-                    })
-                    .then((args)=>{
-//console.log('DOUBLE PAGE:SEND =>',JSON.stringify(args,null,'\t'));
-                        this._store.set('doublepage',this._doublepage);
-                        this._mainWindow.send(SET_STATE,args);
-                    });
+                    this._store.set('doublepage',this._doublepage);
+                    this.goto(this._book.current);
 
                     break;
                 case MANGA_MODE:
                     this._mangamode=!this._mangamode;
-
-                    this.status.bind(this)()
-                    .then((args)=>{
-                        if(args.doublepage){
-                            if(args.mangamode){
-                                args.pages=[{
-                                    id:this._book.current+1
-                                },{
-                                    id:this._book.current
-                                }];
-                            }else{
-                                args.pages=[{
-                                    id:this._book.current
-                                },{
-                                    id:this._book.current+1
-                                }];
-                            }
-                        }else{
-                            args.pages=[{id:this._book.current}];
-                        }
-
-                        args.current=this._book.current;
-                        args.total=this._book.total;
-
-                        return this._book.pages(args);
-                    })
-                    .then((args)=>{
-//console.log('MANGA MODE:SEND =>',JSON.stringify(args,null,'\t'));
-                        this._store.set('mangamode',this._mangamode);
-                        this._mainWindow.send(SET_STATE,args);
-                    });
+                    this._store.set('mangamode',this._mangamode);
+                    this.goto(this._book.current);
 
                     break;
                 case FIT_BEST:
@@ -375,171 +295,25 @@ class Events {
                     break;
                 case FIRST_PAGE:
                     if(this._book.filepath){
-                        this.status.bind(this)()
-                        .then((args)=>{
-                            this._book.current=0;
-
-                            args.current=this._book.current;
-                            args.total=this._book.total;
-
-                            if(args.doublepage){
-                                if(args.mangamode){
-                                    args.pages=[{id:1},{id:0}];
-                                }else{
-                                    args.pages=[{id:0},{id:1}];
-                                }
-                            }else{
-                                args.pages=[{id:0}];
-                            }
-
-                            return this._book.pages(args);
-                        })
-                        .then((args)=>{
-//console.log('FIRST PAGE:SEND =>',JSON.stringify(args,null,'\t'));
-                            this._store.set('page',this._book.current);
-                            this._mainWindow.send(SET_STATE,args);
-                        });
+                        this.goto(0);
                     }
 
                     break;
                 case PREVIOUS_PAGE:
-                    if(this._book.filepath){
-                        this.status.bind(this)()
-                        .then((args)=>{
-                            if(args.doublepage){
-                                let skip=false;
-
-                                if(this._book.current>1){
-                                    this._book.current=this._book.current-2;
-                                }else if(this._book.current>0){
-                                    this._book.current=0;
-                                    skip=true;
-                                }
-
-                                if(args.mangamode){
-                                    args.pages=[{
-                                        id:skip?
-                                            this._book.current:
-                                            this._book.current+1
-                                    },{
-                                        id:skip?null:this._book.current
-                                    }];
-                                }else{
-                                    args.pages=[{
-                                        id:skip?null:this._book.current
-                                    },{
-                                        id:skip?
-                                            this._book.current:
-                                            this._book.current+1
-                                    }];
-                                }
-                            }else{
-                                if(this._book.current>0){
-                                    this._book.current--;
-                                }
-
-                                args.pages=[{id:this._book.current}];
-                            }
-
-                            args.current=this._book.current;
-                            args.total=this._book.total;
-
-                            return this._book.pages(args);
-                        })
-                        .then((args)=>{
-//console.log('PREVIOUS PAGE:SEND =>',JSON.stringify(args,null,'\t'));
-                            this._store.set('page',this._book.current);
-                            this._mainWindow.send(SET_STATE,args);
-                        });
+                    if(this._book.filepath&&this._book.current>0){
+                        this.goto(this._book.current-1,-1);
                     }
 
                     break;
                 case NEXT_PAGE:
-                    if(this._book.filepath){
-                        this.status.bind(this)()
-                        .then((args)=>{
-                            if(args.doublepage){
-                                let skip=false;
-
-                                if(this._book.current<this._book.total-3){
-                                    this._book.current=this._book.current+2;
-                                }else if(this._book.current<this._book.total-2){
-                                    this._book.current=this._book.total+1;
-                                    skip=true;
-                                }
-
-                                if(args.mangamode){
-                                    args.pages=[{
-                                        id:skip?null:this._book.current+1
-                                    },{
-                                        id:this._book.current
-                                    }];
-                                }else{
-                                    args.pages=[{
-                                        id:this._book.current
-                                    },{
-                                        id:skip?null:this._book.current+1
-                                    }];
-                                }
-                            }else{
-                                if(this._book.current<this._book.total-1){
-                                    this._book.current++;
-                                }
-
-                                args.pages=[{id:this._book.current}];
-                            }
-
-                            args.current=this._book.current;
-                            args.total=this._book.total;
-
-                            return this._book.pages(args);
-                        })
-                        .then((args)=>{
-//console.log('NEXT PAGE:SEND =>',JSON.stringify(args,null,'\t'));
-                            this._store.set('page',this._book.current);
-                            this._mainWindow.send(SET_STATE,args);
-                        });
+                    if(this._book.filepath&&this._last<this._book.total-1){
+                        this.goto(this._last+1,1);
                     }
 
                     break;
                 case LAST_PAGE:
                     if(this._book.filepath){
-                        this.status.bind(this)()
-                        .then((args)=>{
-                            if(args.doublepage){
-                                this._book.current=this._book.total-2;
-
-                                if(args.mangamode){
-                                    args.pages=[{
-                                        id:this._book.current
-                                    },{
-                                        id:this._book.current-1
-                                    }];
-                                }else{
-                                    args.pages=[{
-                                        id:this._book.current-1
-                                    },{
-                                        id:this._book.current
-                                    }];
-                                }
-                            }else{
-                                this._book.current=this._book.total-1;
-
-                                args.pages=[{
-                                    id:this._book.current
-                                }];
-                            }
-
-                            args.current=this._book.current;
-                            args.total=this._book.total;
-
-                            return this._book.pages(args);
-                        })
-                        .then((args)=>{
-//console.log('LAST PAGE:SEND =>',JSON.stringify(args,null,'\t'));
-                            this._store.set('page',this._book.current);
-                            this._mainWindow.send(SET_STATE,args);
-                        });
+                        this.goto(this._book.total-1,-1);
                     }
 
                     break;
