@@ -1,11 +1,11 @@
 {
-    "name": "mangaread",
+    "name": "ataraxia",
     "version": "0.0.1",
     "private": true,
     "description": "comic and manga reader",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ccaballero/mangaread.git"
+        "url": "git+https://github.com/ccaballero/ataraxia.git"
     },
     "keywords": [
         "cbr",
@@ -16,9 +16,9 @@
     "author": "Carlos E. Caballero B.",
     "license": "ISC",
     "bugs": {
-        "url": "https://github.com/ccaballero/mangaread/issues"
+        "url": "https://github.com/ccaballero/ataraxia/issues"
     },
-    "homepage": "https://github.com/ccaballero/mangaread#readme",
+    "homepage": "https://github.com/ccaballero/ataraxia#readme",
     "main": "src/main.js",
     "scripts": {
         "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 2999 --config webpack.dev.config.js",

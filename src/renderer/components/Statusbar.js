@@ -29,7 +29,6 @@ class Statusbar extends React.Component {
     };
 
     render(){
-        console.log(this.props.value);
         return (
             <div className="footer">
                 <div className="column">{this.info_pages()}</div>
