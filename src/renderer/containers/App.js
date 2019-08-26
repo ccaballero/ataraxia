@@ -9,12 +9,7 @@ import Toolbar from '../components/Toolbar';
 import Statusbar from '../components/Statusbar';
 
 import {
-    FIT_BEST
-  , FIT_WIDTH
-  , FIT_HEIGHT
-  , ROTATE_CW
-  , ROTATE_CCW
-  , SET_STATE
+    SET_STATE
 } from '../../constants';
 
 class App extends React.Component {
@@ -33,62 +28,135 @@ class App extends React.Component {
           , current:0
           , total:0
           , pages:[]
+          , width:0
+          , height:0
+          , scale:[0,0]
         };
+
+        this.updateWindowDimensions=this.updateWindowDimensions.bind(this);
     }
 
     componentDidMount(){
+        this.updateWindowDimensions();
+        window.addEventListener('resize',this.updateWindowDimensions);
+
         ipcRenderer.on(SET_STATE,this.handleState.bind(this));
     }
 
     componentWillUnmount(){
+        window.removeEventListener('resize',this.updateWindowDimensions);
+
         ipcRenderer.removeListener(SET_STATE,this.handleState.bind(this));
     }
 
-    handleState(event,data){
-        //console.log('=>',data);
+    updateWindowDimensions(){
+        this.setState({
+            width:this.container.clientWidth
+          , height:this.container.clientHeight
+        });
+    }
 
+    handleState(event,data){
         this.setState(data);
     }
 
-    renderPage(index){
+    renderToolbar(){
+        if(this.state.toolbar&&!this.state.fullscreen){
+            return (
+                <Toolbar value={this.state} />
+            );
+        }
+    }
+
+    renderStatusbar(){
+        if(this.state.statusbar&&!this.state.fullscreen){
+            return (
+                <Statusbar value={this.state} />
+            );
+        }
+    }
+
+    renderPage(index,width,height,sum){
         if(this.state.pages[index-1]){
-            let image='/pages/'+this.state.pages[index-1].hash;
+            const image='/pages/'+this.state.pages[index-1].hash
+              , style={
+                    width:width
+                  , height:height
+                  , marginTop:this.state.height>height?
+                        (this.state.height-height)/2:0
+                  , marginLeft:(index==1&&this.state.width>sum)?
+                        (this.state.width-sum)/2:0
+                };
+
+            this.state.scale[index-1]=width;
 
             return (
-                <div className='page'>
-                    <img alt="" src={image} />
-                </div>
+                <img src={image} style={style} />
             );
-        }else{
-            return;
         }
-
     }
 
     render(){
-        let container_classes=['container']
-          , hide_toolbar=this.state.pages.length==0||
-                !this.state.toolbar||this.state.fullscreen
-          , hide_statusbar=this.state.pages.length==0||
-                !this.state.statusbar||this.state.fullscreen;
+        let x1=0,y1=0,x2=0,y2=0
+          , X1=0,Y1=0,X2=0,Y2=0
+          , w=this.state.width
+          , h=this.state.height;
 
-        if(hide_toolbar){
-            container_classes.push('notoolbar');
+        switch(this.state.pages.length){
+            case 1:
+                x1=this.state.pages[0].width;
+                y1=this.state.pages[0].height;
+                x2=0;
+                y2=1;
+
+                break;
+            case 2:
+                x1=this.state.pages[0].width;
+                y1=this.state.pages[0].height;
+                x2=this.state.pages[1].width;
+                y2=this.state.pages[1].height;
+
+                break;
         }
 
-        if(hide_statusbar){
-            container_classes.push('nostatusbar');
+        let y=Math.max(y1,y2)
+          , fitmode=this.state.fitmode;
+
+        if(fitmode=='best'){
+            if(((x1+x2)*h)/y>w){
+                fitmode='width';
+            }else{
+                fitmode='height';
+            }
+        }
+
+        switch(fitmode){
+            case 'width':
+                X1=(w*x1*y2)/((x1*y2)+(x2*y1));
+                Y1=(w*y1*y2)/((x1*y2)+(x2*y1));
+                X2=(w*x2*y1)/((x1*y2)+(x2*y1));
+                Y2=(w*y1*y2)/((x1*y2)+(x2*y1));
+
+                break;
+            case 'height':
+                X1=(h*x1)/y1;
+                Y1=h;
+                X2=(h*x2)/y2;
+                Y2=h;
+
+                break;
         }
 
         return (
-            <div id="wrapper">
-                {hide_toolbar?null:<Toolbar value={this.state} />}
-                <div className={container_classes.join(' ')}>
-                    {this.renderPage(1)}
-                    {this.renderPage(2)}
+            <React.Fragment>
+                {this.renderToolbar()}
+                <div className="container"
+                    ref={(container)=>this.container=container}>
+                    {this.renderPage(1,X1,Y1,X1+X2)}
+                    {this.renderPage(2,X2,Y2,X1+X2)}
                 </div>
-                {hide_statusbar?null:<Statusbar value={this.state} />}
-            </div>
+                {this.renderStatusbar()}
+            </React.Fragment>
         );
     }
 }

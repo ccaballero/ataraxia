@@ -33,6 +33,7 @@ class Events {
         this._fullscreen=store.get('fullscreen',false);
         this._doublepage=store.get('doublepage',false);
         this._mangamode=store.get('mangamode',false);
+        this._fitmode=store.get('fitmode','best');
 
         ipcMain.on(FIRST_PAGE,()=>{
             return this.handle(FIRST_PAGE)();
@@ -85,11 +86,13 @@ class Events {
 
     status(){
         return Promise.resolve({
-            toolbar:this._toolbar
+            filepath:this._book.filepath
+          , toolbar:this._toolbar
           , statusbar:this._statusbar
           , fullscreen:this._fullscreen
           , doublepage:this._doublepage
           , mangamode:this._mangamode
+          , fitmode:this._fitmode
         });
     }
 
@@ -269,18 +272,33 @@ class Events {
 
                     break;
                 case FIT_BEST:
-//console.log('FIT BEST:SEND =>',JSON.stringify({},null,'\t'));
-                    this._mainWindow.send(FIT_BEST,{});
+                    this._fitmode='best';
+
+                    this.status.bind(this)()
+                    .then((args)=>{
+                        this._store.set('fitmode',this._fitmode);
+                        this._mainWindow.send(SET_STATE,args);
+                    });
 
                     break;
                 case FIT_WIDTH:
-//console.log('FIT WIDTH:SEND =>',JSON.stringify({},null,'\t'));
-                    this._mainWindow.send(FIT_WIDTH,{});
+                    this._fitmode='width';
+
+                    this.status.bind(this)()
+                    .then((args)=>{
+                        this._store.set('fitmode',this._fitmode);
+                        this._mainWindow.send(SET_STATE,args);
+                    });
 
                     break;
                 case FIT_HEIGHT:
-//console.log('FIT HEIGHT:SEND =>',JSON.stringify({},null,'\t'));
-                    this._mainWindow.send(FIT_HEIGHT,{});
+                    this._fitmode='height';
+
+                    this.status.bind(this)()
+                    .then((args)=>{
+                        this._store.set('fitmode',this._fitmode);
+                        this._mainWindow.send(SET_STATE,args);
+                    });
 
                     break;
                 case ROTATE_CW:
