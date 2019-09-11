@@ -2,7 +2,7 @@ const webpack=require('webpack')
   , path=require('path')
   , HtmlWebpackPlugin=require('html-webpack-plugin')
   , BabiliPlugin=require('babili-webpack-plugin')
-  , ExtractTextPlugin=require('extract-text-webpack-plugin');
+  , MiniCssExtractPlugin=require('mini-css-extract-plugin');
 
 const SRC_DIR=path.resolve(__dirname,'src')
   , OUTPUT_DIR=path.resolve(__dirname,'dist')
@@ -18,10 +18,7 @@ module.exports={
   , module:{
         rules:[{
             test:/\.css$/
-          , use:ExtractTextPlugin.extract({
-                fallback:'style-loader'
-              , use:'css-loader'
-            })
+          , use:[MiniCssExtractPlugin.loader,'css-loader']
           , include:defaultInclude
         },{
             test:/\.jsx?$/
@@ -46,7 +43,9 @@ module.exports={
   , target:'electron-renderer'
   , plugins:[
         new HtmlWebpackPlugin()
-      , new ExtractTextPlugin('bundle.css')
+      , new MiniCssExtractPlugin({
+            filename:'bundle.css'
+        })
       , new webpack.DefinePlugin({
             'process.env.NODE_ENV':JSON.stringify('production')
         })
