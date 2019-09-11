@@ -5,7 +5,7 @@ const {app,BrowserWindow}=require('electron')
   , Events=require('./main/Events')
   , Menu=require('./main/Menu')
   , Book=require('./main/models/Book')
-  , exists=require('./main/utils/exists');
+  , Exists=require('./main/utils/Exists');
 
 let mainWindow
   , event
@@ -81,7 +81,7 @@ function init(){
     }else{
         indexPath=url.format({
             protocol:'file'
-          , pathname:path.join(__dirname,'dist','index.html')
+          , pathname:path.join(__dirname,'..','dist','index.html')
           , slashes:true
         });
     }
@@ -104,7 +104,7 @@ function init(){
 
             console.log('open book: %s\npage: %s',filepath,page);
 
-            exists({
+            Exists.exists({
                 filepath:filepath
             })
             .then((args)=>{

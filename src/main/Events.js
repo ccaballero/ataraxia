@@ -1,4 +1,4 @@
-const {app,dialog,ipcMain}=require('electron')
+const {app,dialog,ipcMain,Menu}=require('electron')
   , dirname=require('path').dirname
   , {
         OPEN_FILE
@@ -108,6 +108,23 @@ class Events {
             return this._book.load(filepath);
         })
         .then(()=>{
+            var menu=Menu.getApplicationMenu();
+
+            menu.items[0].submenu.items[1].enabled=true;
+            menu.items[0].submenu.items[2].enabled=true;
+            menu.items[0].submenu.items[3].enabled=true;
+            menu.items[1].submenu.items[4].enabled=true;
+            menu.items[1].submenu.items[5].enabled=true;
+            menu.items[1].submenu.items[6].enabled=true;
+            menu.items[1].submenu.items[7].enabled=true;
+            menu.items[1].submenu.items[8].enabled=true;
+            menu.items[1].submenu.items[8].enabled=true;
+            menu.items[1].submenu.items[9].enabled=true;
+            menu.items[2].submenu.items[0].enabled=true;
+            menu.items[2].submenu.items[1].enabled=true;
+            menu.items[2].submenu.items[2].enabled=true;
+            menu.items[2].submenu.items[3].enabled=true;
+
             this._store.set('filepath',filepath);
 
             return this.goto(0);
@@ -209,6 +226,23 @@ class Events {
                     this._book.close()
                     .then(this.status.bind(this))
                     .then((args)=>{
+                        var menu=Menu.getApplicationMenu();
+
+                        menu.items[0].submenu.items[1].enabled=false;
+                        menu.items[0].submenu.items[2].enabled=false;
+                        menu.items[0].submenu.items[3].enabled=false;
+                        menu.items[1].submenu.items[4].enabled=false;
+                        menu.items[1].submenu.items[5].enabled=false;
+                        menu.items[1].submenu.items[6].enabled=false;
+                        menu.items[1].submenu.items[7].enabled=false;
+                        menu.items[1].submenu.items[8].enabled=false;
+                        menu.items[1].submenu.items[8].enabled=false;
+                        menu.items[1].submenu.items[9].enabled=false;
+                        menu.items[2].submenu.items[0].enabled=false;
+                        menu.items[2].submenu.items[1].enabled=false;
+                        menu.items[2].submenu.items[2].enabled=false;
+                        menu.items[2].submenu.items[3].enabled=false;
+
                         args.current=0;
                         args.total=0;
                         args.pages=[];

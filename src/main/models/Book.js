@@ -1,10 +1,10 @@
 const fs=require('fs')
   , path=require('path')
-  , exists=require('../utils/exists')
-  , extract=require('../utils/extract')
-  , list=require('../utils/list')
-  , resolution=require('../utils/resolution')
-  , sort=require('../utils/sort')
+  , Exists=require('../utils/Exists')
+  , Extract=require('../utils/Extract')
+  , List=require('../utils/List')
+  , Resolution=require('../utils/Resolution')
+  , Sort=require('../utils/Sort')
   , config=require('../../../config');
 
 class Book {
@@ -22,9 +22,9 @@ class Book {
         return Promise.resolve({
             filepath:filepath
         })
-        .then(exists)
-        .then(list)
-        .then(sort)
+        .then(Exists.exists)
+        .then(List.list)
+        .then(Sort.sort)
         .then((args)=>{
             this._filepath=args.filepath;
             this._current=0;
@@ -110,8 +110,8 @@ class Book {
                         filepath:this._filepath
                       , item:this._pages[item.id].name
                     })
-                    .then(extract)
-                    .then(resolution)
+                    .then(Extract.extract)
+                    .then(Resolution.resolution)
                     .then((args1)=>{
                         this._pages[item.id].hash=args1.hash;
                         this._pages[item.id].width=args1.width;

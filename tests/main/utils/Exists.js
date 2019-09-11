@@ -1,11 +1,11 @@
 require('should');
 
-const exists=require('../../../src/main/utils/exists')
+const Exists=require('../../../src/main/utils/Exists')
   , config=require('../../../config');
 
-describe('exists',()=>{
+describe('Exists',()=>{
     it('positive case',(done)=>{
-        exists({
+        Exists.exists({
             filepath:config.testcase.folder+config.testcase.books[0]
         })
         .then((args)=>{
@@ -15,7 +15,7 @@ describe('exists',()=>{
     });
 
     it('negative case',(done)=>{
-        exists({
+        Exists.exists({
             filepath:config.testcase.folder+'/nofile'
         })
         .catch((error)=>{

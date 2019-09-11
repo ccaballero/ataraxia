@@ -8,12 +8,14 @@ class Statusbar extends React.Component {
     }
 
     info_pages(){
-        return this.props.value.pages.filter((i)=>{
-            return i.hash;
-        })
-        .map((j)=>{
-            return j.id+1;
-        }).join(', ')+' / '+this.props.value.total;
+        if(this.props.value.pages.length){
+            return this.props.value.pages.filter((i)=>{
+                return i.hash;
+            })
+            .map((j)=>{
+                return j.id+1;
+            }).join(', ')+' / '+this.props.value.total;
+        }
     };
 
     info_resolutions(){

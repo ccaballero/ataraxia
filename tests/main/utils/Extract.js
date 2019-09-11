@@ -2,28 +2,26 @@ require('should');
 
 const fs=require('fs')
   , path=require('path')
-  , extract=require('../../../src/main/utils/extract')
-  , list=require('../../../src/main/utils/list')
-  , resolution=require('../../../src/main/utils/resolution')
+  , Extract=require('../../../src/main/utils/Extract')
+  , List=require('../../../src/main/utils/List')
   , config=require('../../../config');
 
-describe('resolution',()=>{
+describe('Extract',()=>{
     it('case 1',(done)=>{
-        list({
+        List.list({
             filepath:config.testcase.folder+config.testcase.books[0]
         })
         .then((args)=>{
-            return extract({
+            return Extract.extract({
                 ...args
               , ...{
                     item:args.list[0]
                 }
             });
         })
-        .then(resolution)
         .then((args)=>{
-            args.should.have.property('width').and.be.eql(899);
-            args.should.have.property('height').and.be.eql(1300);
+            args.should.have.property('hash')
+                .and.be.String().and.not.empty();
 
             fs.unlink(path.resolve(config.pages,args.hash),()=>{
                 done();
@@ -32,21 +30,20 @@ describe('resolution',()=>{
     });
 
     it('case 2',(done)=>{
-        list({
+        List.list({
             filepath:config.testcase.folder+config.testcase.books[1]
         })
         .then((args)=>{
-            return extract({
+            return Extract.extract({
                 ...args
               , ...{
                     item:args.list[0]
                 }
             });
         })
-        .then(resolution)
         .then((args)=>{
-            args.should.have.property('width').and.be.eql(1160);
-            args.should.have.property('height').and.be.eql(826);
+            args.should.have.property('hash')
+                .and.be.String().and.not.empty();
 
             fs.unlink(path.resolve(config.pages,args.hash),()=>{
                 done();

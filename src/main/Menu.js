@@ -1,7 +1,10 @@
 const menu=require('electron').Menu
   , {
         OPEN_FILE
+      , SAVE_FILE
       , CLOSE_FILE
+      , OPEN_COLLECTION
+//      , CLOSE_COLLECTION
       , QUIT
       , VIEW_TOOLBAR
       , VIEW_STATUSBAR
@@ -11,8 +14,8 @@ const menu=require('electron').Menu
       , FIT_BEST
       , FIT_WIDTH
       , FIT_HEIGHT
-//      , ROTATE_CW
-//      , ROTATE_CCW
+      , ROTATE_CW
+      , ROTATE_CCW
       , FIRST_PAGE
       , PREVIOUS_PAGE
       , NEXT_PAGE
@@ -26,6 +29,10 @@ const menu=require('electron').Menu
     3 => fit width
     4 => fit height
 
+    { => rotate cw
+    } => rotate ccw
+
+    c => open collection
     d => double page
     f => fullscreen
     h => previous page
@@ -33,9 +40,10 @@ const menu=require('electron').Menu
     m => manga mode
     o => open file
     q => quit
-    s => view statusbar
+    s => save book
     t => view toolbar
     w => close file
+    y => view statusbar
 
  */
 
@@ -48,11 +56,24 @@ class Menu {
               , accelerator:'o'
               , click:events.handle(OPEN_FILE)
             },{
-                type:'separator'
+                label:'Save'
+              , accelerator:'s'
+              , enabled:false
+              , click:events.handle(SAVE_FILE)
             },{
                 label:'Close'
               , accelerator:'w'
+              , enabled:false
               , click:events.handle(CLOSE_FILE)
+            },{
+                type:'separator'
+            },{
+                label:'Open Collection'
+              , accelerator:'c'
+              , enabled:false
+              , click:events.handle(OPEN_COLLECTION)
+            },{
+                type:'separator'
             },{
                 label:'Quit'
               , accelerator:'q'
@@ -66,7 +87,7 @@ class Menu {
               , click:events.handle(VIEW_TOOLBAR)
             },{
                 label:'Statusbar'
-              , accelerator:'s'
+              , accelerator:'y'
               , click:events.handle(VIEW_STATUSBAR)
             },{
                 type:'separator'
@@ -77,12 +98,14 @@ class Menu {
             },{
                 label:'Double page'
               , accelerator:'d'
+              , enabled:false
               , type:'checkbox'
-              , checked:true
+              , checked:false
               , click:events.handle(DOUBLE_PAGE)
             },{
                 label:'Manga mode'
               , accelerator:'m'
+              , enabled:false
               , type:'checkbox'
               , click:events.handle(MANGA_MODE)
             },{
@@ -90,46 +113,55 @@ class Menu {
             },{
                 label:'Best fit mode'
               , accelerator:'2'
+              , enabled:false
               , type:'radio'
               , click:events.handle(FIT_BEST)
             },{
                 label:'Fit width mode'
               , accelerator:'3'
+              , enabled:false
               , type:'radio'
               , click:events.handle(FIT_WIDTH)
             },{
                 label:'Fit height mode'
               , accelerator:'4'
+              , enabled:false
               , type:'radio'
               , click:events.handle(FIT_HEIGHT)
-/*            },{
+            },{
                 type:'separator'
             },{
                 label:'Rotate 90 degrees CW'
-              , accelerator:'R'
+              , accelerator:'{'
+              , enabled:false
               , click:events.handle(ROTATE_CW)
             },{
                 label:'Rotate 90 degrees CCW'
-              , accelerator:'Shift+R'
-              , click:events.handle(ROTATE_CCW)*/
+              , accelerator:'}'
+              , enabled:false
+              , click:events.handle(ROTATE_CCW)
             }]
         },{
             label:'Navigation'
           , submenu:[{
                 label:'First page'
               , accelerator:'1'
+              , enabled:false
               , click:events.handle(FIRST_PAGE)
             },{
                 label:'Previous page'
               , accelerator:'h'
+              , enabled:false
               , click:events.handle(PREVIOUS_PAGE)
             },{
                 label:'Next page'
               , accelerator:'l'
+              , enabled:false
               , click:events.handle(NEXT_PAGE)
             },{
                 label:'Last page'
               , accelerator:'0'
+              , enabled:false
               , click:events.handle(LAST_PAGE)
             }]
         }]));

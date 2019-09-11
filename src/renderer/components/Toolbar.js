@@ -37,74 +37,78 @@ class Toolbar extends React.Component {
     handleMangaMode(){  ipcRenderer.send(MANGA_MODE,{}); }
 
     render(){
-        let fitbest=['item']
-          , fitwidth=['item']
-          , fitheight=['item']
-          , doublepage=['item']
-          , mangamode=['item'];
-
-        switch(this.props.value.fitmode){
-            case 'best':
-                fitbest.push('active');
-                break;
-            case 'width':
-                fitwidth.push('active');
-                break;
-            case 'height':
-                fitheight.push('active');
-                break;
-        }
-
-        if(this.props.value.doublepage){
-            doublepage.push('active');
-        }
-
-        if(this.props.value.mangamode){
-            mangamode.push('active');
-        }
-
-                    /*<button className="item"
-                        onClick={this.handleRotateCW}><i aria-hidden="true"
-                        className="icon redo"></i></button>
-                    <button className="item"
-                        onClick={this.handleRotateCCW}><i aria-hidden="true"
-                        className="icon undo"></i></button>*/
         return (
             <div className="toolbar">
-                <div className="ui menu floated left inverted">
-                    <button className="item"
-                        onClick={this.handleFirst}><i aria-hidden="true"
-                        className="icon angle double left"></i></button>
-                    <button className="item"
-                        onClick={this.handlePrevious}><i aria-hidden="true"
-                        className="icon angle left"></i></button>
-                    <button className="item"
-                        onClick={this.handleNext}><i aria-hidden="true"
-                        className="icon angle right"></i></button>
-                    <button className="item"
-                        onClick={this.handleLast}><i aria-hidden="true"
-                        className="icon angle double right"></i></button>
-                    <div className="divider"></div>
-                    <button className="item"
-                        onClick={this.handleFullscreen}><i aria-hidden="true"
-                        className="icon expand arrows alternate"></i></button>
-                    <button className={fitbest.join(' ')}
-                        onClick={this.handleFitBest}><i aria-hidden="true"
-                        className="icon arrows alternate"></i></button>
-                    <button className={fitwidth.join(' ')}
-                        onClick={this.handleFitWidth}><i aria-hidden="true"
-                        className="icon arrows alternate horizontal"></i></button>
-                    <button className={fitheight.join(' ')}
-                        onClick={this.handleFitHeight}><i aria-hidden="true"
-                        className="icon arrows alternate vertical"></i></button>
+                <div className="ui menu inverted floated left mini">
+                    <button className={"item"+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleFirst}>
+                        <i className="icon angle double left"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handlePrevious}>
+                        <i className="icon angle left"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleNext}>
+                        <i className="icon angle right"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleLast}>
+                        <i className="icon angle double right"></i>
+                    </button>
                 </div>
-                <div className="ui menu floated right inverted">
-                    <button className={doublepage.join(' ')}
-                        onClick={this.handleDoublePage}><i aria-hidden="true"
-                        className="icon columns"></i></button>
-                    <button className={mangamode.join(' ')}
-                        onClick={this.handleMangaMode}><i aria-hidden="true"
-                        className="icon exchange"></i></button>
+                <div className="ui menu inverted floated right mini">
+                    <button className={"item"}
+                        onClick={this.handleFullscreen}>
+                        <i className="icon expand arrows alternate"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.fitmode=="best"?" active":"")+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleFitBest}>
+                        <i className="icon arrows alternate"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.fitmode=="width"?" active":"")+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleFitWidth}>
+                        <i className="icon arrows alternate horizontal"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.fitmode=="height"?" active":"")+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleFitHeight}>
+                        <i className="icon arrows alternate vertical"></i>
+                    </button>
+                    <div className="divider"></div>
+                    <button className={"item"+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleRotateCW}>
+                        <i className="icon redo"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleRotateCCW}>
+                        <i aria-hidden="true"
+                        className="icon undo"></i>
+                    </button>
+                    <div className="divider"></div>
+                    <button className={"item"+
+                        (this.props.value.doublepage?" active":"")+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleDoublePage}>
+                        <i className="icon columns"></i>
+                    </button>
+                    <button className={"item"+
+                        (this.props.value.mangamode?" active":"")+
+                        (this.props.value.filepath?"":" disabled")}
+                        onClick={this.handleMangaMode}>
+                        <i className="icon exchange"></i>
+                    </button>
                 </div>
                 <div className="clearfix"></div>
             </div>

@@ -1,15 +1,13 @@
 require('should');
 
-const list=require('../../../src/main/utils/list')
-  , sort=require('../../../src/main/utils/sort')
+const List=require('../../../src/main/utils/List')
   , config=require('../../../config');
 
-describe('sort',()=>{
+describe('List',()=>{
     it('case 1',(done)=>{
-        list({
+        List.list({
             filepath:config.testcase.folder+config.testcase.books[0]
         })
-        .then(sort)
         .then((args)=>{
             args.list.length.should.be.eql(188);
 
@@ -18,10 +16,9 @@ describe('sort',()=>{
     });
 
     it('case 2',(done)=>{
-        list({
+        List.list({
             filepath:config.testcase.folder+config.testcase.books[1]
         })
-        .then(sort)
         .then((args)=>{
             args.list.length.should.be.eql(134);
 

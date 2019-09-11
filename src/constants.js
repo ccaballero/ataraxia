@@ -1,7 +1,8 @@
 module.exports={
     OPEN_FILE:'open-file'
-  , OPEN_COLLECTION:'open-collection'
+  , SAVE_FILE:'save-file'
   , CLOSE_FILE:'close-file'
+  , OPEN_COLLECTION:'open-collection'
   , CLOSE_COLLECTION:'close-collection'
   , QUIT:'quit'
   , VIEW_TOOLBAR:'view-toolbar'
