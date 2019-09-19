@@ -30,16 +30,6 @@ let mainWindow
             type:'boolean'
           , default:false
         }
-      , rotation:{
-            type:'number'
-          , minimum:0
-          , maximum:270
-          , default:0
-        }
-      , fit:{
-            type:'string'
-          , default:'height'
-        }
       , doublepage:{
             type:'boolean'
           , default:false
@@ -47,6 +37,16 @@ let mainWindow
       , mangamode:{
             type:'boolean'
           , default:false
+        }
+      , fitmode:{
+            type:'string'
+          , default:'best'
+        }
+      , rotation:{
+            type:'number'
+          , minimum:0
+          , maximum:270
+          , default:0
         }
     })
   , book=new Book()

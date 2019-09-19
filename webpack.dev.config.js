@@ -6,7 +6,10 @@ const webpack=require('webpack')
 const SRC_DIR=path.resolve(__dirname,'src')
   , OUTPUT_DIR=path.resolve(__dirname,'dist')
   , PUBLIC_DIR=path.resolve(__dirname,'public')
-  , defaultInclude=[SRC_DIR];
+  , defaultInclude=[
+        SRC_DIR
+      , path.resolve(__dirname,'node_modules')
+    ];
 
 module.exports={
     entry:SRC_DIR+'/renderer/index.js'

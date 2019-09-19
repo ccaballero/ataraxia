@@ -1,7 +1,7 @@
 // jshint ignore: start
 
-import React from 'react';
-import { ipcRenderer } from 'electron';
+import React,{Component,Fragment} from 'react';
+import {ipcRenderer} from 'electron';
 
 import '../assets/css/App.css';
 
@@ -12,7 +12,7 @@ import {
     SET_STATE
 } from '../../constants';
 
-class App extends React.Component {
+class App extends Component {
     constructor(props){
         super(props);
 
@@ -76,22 +76,35 @@ class App extends React.Component {
         }
     }
 
-    renderPage(index,width,height,sum){
+    renderPage(index,width,height,sum,rotation){
         if(this.state.pages[index-1]){
             const image='/pages/'+this.state.pages[index-1].hash
-              , style={
-                    width:width
+              , style1={
+                    backgroundColor:'hsl('+(15+(index*50))+',100%,50%)'
+                  , width:width
                   , height:height
                   , marginTop:this.state.height>height?
                         (this.state.height-height)/2:0
                   , marginLeft:(index==1&&this.state.width>sum)?
                         (this.state.width-sum)/2:0
+                }
+              , style2={
+                    width:rotation%180==0?width:height
+                  , height:rotation%180==0?height:width
+                  , transform:'rotate('+this.state.rotation+'deg)'
+                  , transformOrigin:'0px 0px'
+                  , marginLeft:rotation==0?
+                        0:rotation==90?width:rotation==180?width:0
+                  , marginTop:rotation==0?
+                        0:rotation==90?0:rotation==180?height:height
                 };
 
             this.state.scale[index-1]=width;
 
             return (
-                <img src={image} style={style} />
+                <div style={style1}>
+                    <img src={image} style={style2} />
+                </div>
             );
         }
     }
@@ -100,21 +113,50 @@ class App extends React.Component {
         let x1=0,y1=0,x2=0,y2=0
           , X1=0,Y1=0,X2=0,Y2=0
           , w=this.state.width
-          , h=this.state.height;
+          , h=this.state.height
+          , rotation=this.state.rotation;
 
         switch(this.state.pages.length){
             case 1:
-                x1=this.state.pages[0].width;
-                y1=this.state.pages[0].height;
-                x2=0;
-                y2=1;
+                switch(this.state.rotation){
+                    case 0:
+                    case 180:
+                        x1=this.state.pages[0].width;
+                        y1=this.state.pages[0].height;
+                        x2=0;
+                        y2=1;
+
+                        break;
+                    case 90:
+                    case 270:
+                        y1=this.state.pages[0].width;
+                        x1=this.state.pages[0].height;
+                        x2=0;
+                        y2=1;
+
+                        break;
+                }
 
                 break;
             case 2:
-                x1=this.state.pages[0].width;
-                y1=this.state.pages[0].height;
-                x2=this.state.pages[1].width;
-                y2=this.state.pages[1].height;
+                switch(this.state.rotation){
+                    case 0:
+                    case 180:
+                        x1=this.state.pages[0].width;
+                        y1=this.state.pages[0].height;
+                        x2=this.state.pages[1].width;
+                        y2=this.state.pages[1].height;
+
+                        break;
+                    case 90:
+                    case 270:
+                        y1=this.state.pages[0].width;
+                        x1=this.state.pages[0].height;
+                        y2=this.state.pages[1].width;
+                        x2=this.state.pages[1].height;
+
+                        break;
+                }
 
                 break;
         }
@@ -148,15 +190,15 @@ class App extends React.Component {
         }
 
         return (
-            <React.Fragment>
+            <Fragment>
                 {this.renderToolbar()}
-                <div className="container"
+                <div className='container'
                     ref={(container)=>this.container=container}>
-                    {this.renderPage(1,X1,Y1,X1+X2)}
-                    {this.renderPage(2,X2,Y2,X1+X2)}
+                    {this.renderPage(1,X1,Y1,X1+X2,rotation)}
+                    {this.renderPage(2,X2,Y2,X1+X2,rotation)}
                 </div>
                 {this.renderStatusbar()}
-            </React.Fragment>
+            </Fragment>
         );
     }
 }

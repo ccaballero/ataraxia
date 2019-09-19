@@ -34,6 +34,7 @@ class Events {
         this._doublepage=store.get('doublepage',false);
         this._mangamode=store.get('mangamode',false);
         this._fitmode=store.get('fitmode','best');
+        this._rotation=store.get('rotation',0);
 
         ipcMain.on(FIRST_PAGE,()=>{
             return this.handle(FIRST_PAGE)();
@@ -93,6 +94,7 @@ class Events {
           , doublepage:this._doublepage
           , mangamode:this._mangamode
           , fitmode:this._fitmode
+          , rotation:this._rotation
         });
     }
 
@@ -111,15 +113,14 @@ class Events {
             var menu=Menu.getApplicationMenu();
 
             menu.items[0].submenu.items[1].enabled=true;
-            menu.items[0].submenu.items[2].enabled=true;
-            menu.items[0].submenu.items[3].enabled=true;
+            menu.items[1].submenu.items[3].enabled=true;
             menu.items[1].submenu.items[4].enabled=true;
             menu.items[1].submenu.items[5].enabled=true;
-            menu.items[1].submenu.items[6].enabled=true;
             menu.items[1].submenu.items[7].enabled=true;
             menu.items[1].submenu.items[8].enabled=true;
-            menu.items[1].submenu.items[8].enabled=true;
             menu.items[1].submenu.items[9].enabled=true;
+            menu.items[1].submenu.items[11].enabled=true;
+            menu.items[1].submenu.items[12].enabled=true;
             menu.items[2].submenu.items[0].enabled=true;
             menu.items[2].submenu.items[1].enabled=true;
             menu.items[2].submenu.items[2].enabled=true;
@@ -229,20 +230,20 @@ class Events {
                         var menu=Menu.getApplicationMenu();
 
                         menu.items[0].submenu.items[1].enabled=false;
-                        menu.items[0].submenu.items[2].enabled=false;
-                        menu.items[0].submenu.items[3].enabled=false;
+                        menu.items[1].submenu.items[3].enabled=false;
                         menu.items[1].submenu.items[4].enabled=false;
                         menu.items[1].submenu.items[5].enabled=false;
-                        menu.items[1].submenu.items[6].enabled=false;
                         menu.items[1].submenu.items[7].enabled=false;
                         menu.items[1].submenu.items[8].enabled=false;
-                        menu.items[1].submenu.items[8].enabled=false;
                         menu.items[1].submenu.items[9].enabled=false;
+                        menu.items[1].submenu.items[11].enabled=false;
+                        menu.items[1].submenu.items[12].enabled=false;
                         menu.items[2].submenu.items[0].enabled=false;
                         menu.items[2].submenu.items[1].enabled=false;
                         menu.items[2].submenu.items[2].enabled=false;
                         menu.items[2].submenu.items[3].enabled=false;
 
+                        args.filepath='';
                         args.current=0;
                         args.total=0;
                         args.pages=[];
@@ -336,13 +337,27 @@ class Events {
 
                     break;
                 case ROTATE_CW:
-//console.log('ROTATE CW:SEND =>',JSON.stringify({},null,'\t'));
-                    this._mainWindow.send(ROTATE_CW,{});
+                    this._rotation=(this._rotation+90)%360;
+
+                    this.status.bind(this)()
+                    .then((args)=>{
+                        this._store.set('rotation',this._rotation);
+                        this._mainWindow.send(SET_STATE,args);
+                    });
 
                     break;
                 case ROTATE_CCW:
-//console.log('ROTATE CCW:SEND =>',JSON.stringify({},null,'\t'));
-                    this._mainWindow.send(ROTATE_CCW,{});
+                    this._rotation=(this._rotation-90)%360;
+
+                    if(this._rotation<0){
+                        this._rotation=360+this._rotation;
+                    }
+
+                    this.status.bind(this)()
+                    .then((args)=>{
+                        this._store.set('rotation',this._rotation);
+                        this._mainWindow.send(SET_STATE,args);
+                    });
 
                     break;
                 case FIRST_PAGE:

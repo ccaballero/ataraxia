@@ -1,8 +1,8 @@
 // jshint ignore: start
 
-import React from 'react';
+import React,{Component} from 'react';
 
-class Statusbar extends React.Component {
+class Statusbar extends Component {
     constructor(props){
         super(props);
     }
@@ -19,23 +19,25 @@ class Statusbar extends React.Component {
     };
 
     info_resolutions(){
-        return this.props.value.pages.filter((i)=>{
-            return i.hash;
-        })
-        .map((j,i)=>{
-            const proportion=this.props.value.scale[i]*100/j.width;
+        return (this.props.value.pages.length?
+                '(∠ '+this.props.value.rotation+'°) | ':'')+
+            this.props.value.pages.filter((i)=>{
+                return i.hash;
+            })
+            .map((j,i)=>{
+                const proportion=this.props.value.scale[i]*100/j.width;
 
-            return j.width+'x'+j.height+' ('+
-                (Math.round(proportion*100)/100)+' %)'
-        }).join(' | ');
+                return j.width+'x'+j.height+' ('+
+                    (Math.round(proportion*100)/100)+' %)'
+            }).join(' | ');
     };
 
     render(){
         return (
-            <div className="footer">
-                <div className="column">{this.info_pages()}</div>
-                <div className="column">{this.info_resolutions()}</div>
-                <div className="column">{this.props.value.filepath}</div>
+            <div className='footer'>
+                <div className='column'>{this.info_pages()}</div>
+                <div className='column'>{this.info_resolutions()}</div>
+                <div className='column'>{this.props.value.filepath}</div>
             </div>
         );
     }

@@ -1,7 +1,8 @@
 // jshint ignore: start
 
-import React from 'react';
-import { ipcRenderer } from 'electron';
+import {ipcRenderer} from 'electron';
+import React,{Component} from 'react';
+import {Icon,Menu} from 'semantic-ui-react';
 
 import {
     FIRST_PAGE
@@ -18,7 +19,7 @@ import {
   , MANGA_MODE
 } from '../../constants';
 
-class Toolbar extends React.Component {
+class Toolbar extends Component {
     constructor(props){
         super(props);
     }
@@ -28,7 +29,7 @@ class Toolbar extends React.Component {
     handleNext(){       ipcRenderer.send(NEXT_PAGE,{}); }
     handleLast(){       ipcRenderer.send(LAST_PAGE,{}); }
     handleFullscreen(){ ipcRenderer.send(FULLSCREEN,{}); }
-    handleRotatecW(){   ipcRenderer.send(ROTATE_CW,{}); }
+    handleRotateCW(){   ipcRenderer.send(ROTATE_CW,{}); }
     handleRotateCCW(){  ipcRenderer.send(ROTATE_CCW,{}); }
     handleFitBest(){    ipcRenderer.send(FIT_BEST,{}); }
     handleFitWidth(){   ipcRenderer.send(FIT_WIDTH,{}); }
@@ -38,79 +39,94 @@ class Toolbar extends React.Component {
 
     render(){
         return (
-            <div className="toolbar">
-                <div className="ui menu inverted floated left mini">
-                    <button className={"item"+
-                        (this.props.value.filepath?"":" disabled")}
+            <div className='toolbar'>
+                <Menu inverted compact floated size='mini' className='left'>
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handleFirst}>
-                        <i className="icon angle double left"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='angle double left' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handlePrevious}>
-                        <i className="icon angle left"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='angle left' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handleNext}>
-                        <i className="icon angle right"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='angle right' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handleLast}>
-                        <i className="icon angle double right"></i>
-                    </button>
-                </div>
-                <div className="ui menu inverted floated right mini">
-                    <button className={"item"}
+                        <Icon name='angle double right' />
+                    </Menu.Item>
+                </Menu>
+                <Menu inverted compact floated size='mini' className='right'>
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handleFullscreen}>
-                        <i className="icon expand arrows alternate"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.fitmode=="best"?" active":"")+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='expand arrows alternate' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={
+                            (this.props.value.filepath?'':'disabled')+
+                            (this.props.value.filepath&&
+                             this.props.value.fitmode=='best'?' active':'')
+                        }
                         onClick={this.handleFitBest}>
-                        <i className="icon arrows alternate"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.fitmode=="width"?" active":"")+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='arrows alternate' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={
+                            (this.props.value.filepath?'':'disabled')+
+                            (this.props.value.filepath&&
+                             this.props.value.fitmode=='width'?' active':'')
+                        }
                         onClick={this.handleFitWidth}>
-                        <i className="icon arrows alternate horizontal"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.fitmode=="height"?" active":"")+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='arrows alternate horizontal' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={
+                            (this.props.value.filepath?'':'disabled')+
+                            (this.props.value.filepath&&
+                             this.props.value.fitmode=='height'?' active':'')
+                        }
                         onClick={this.handleFitHeight}>
-                        <i className="icon arrows alternate vertical"></i>
-                    </button>
-                    <div className="divider"></div>
-                    <button className={"item"+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='arrows alternate vertical' />
+                    </Menu.Item>
+
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handleRotateCW}>
-                        <i className="icon redo"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='redo' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={(this.props.value.filepath?'':'disabled')}
                         onClick={this.handleRotateCCW}>
-                        <i aria-hidden="true"
-                        className="icon undo"></i>
-                    </button>
-                    <div className="divider"></div>
-                    <button className={"item"+
-                        (this.props.value.doublepage?" active":"")+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='undo' />
+                    </Menu.Item>
+
+                    <Menu.Item
+                        className={
+                            (this.props.value.filepath?'':'disabled')+
+                            (this.props.value.filepath&&
+                             this.props.value.doublepage?' active':'')
+                        }
                         onClick={this.handleDoublePage}>
-                        <i className="icon columns"></i>
-                    </button>
-                    <button className={"item"+
-                        (this.props.value.mangamode?" active":"")+
-                        (this.props.value.filepath?"":" disabled")}
+                        <Icon name='columns' />
+                    </Menu.Item>
+                    <Menu.Item
+                        className={
+                            (this.props.value.filepath?'':'disabled')+
+                            (this.props.value.filepath&&
+                             this.props.value.mangamode?' active':'')
+                        }
                         onClick={this.handleMangaMode}>
-                        <i className="icon exchange"></i>
-                    </button>
-                </div>
-                <div className="clearfix"></div>
+                        <Icon name='exchange' />
+                    </Menu.Item>
+                </Menu>
+                <div className='clearfix'></div>
             </div>
         );
     }

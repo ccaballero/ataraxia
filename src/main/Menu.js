@@ -1,9 +1,9 @@
 const menu=require('electron').Menu
   , {
         OPEN_FILE
-      , SAVE_FILE
+//      , SAVE_FILE
       , CLOSE_FILE
-      , OPEN_COLLECTION
+//      , OPEN_COLLECTION
 //      , CLOSE_COLLECTION
       , QUIT
       , VIEW_TOOLBAR
@@ -55,11 +55,11 @@ class Menu {
                 label:'Open'
               , accelerator:'o'
               , click:events.handle(OPEN_FILE)
-            },{
+/*            },{
                 label:'Save'
               , accelerator:'s'
               , enabled:false
-              , click:events.handle(SAVE_FILE)
+              , click:events.handle(SAVE_FILE)*/
             },{
                 label:'Close'
               , accelerator:'w'
@@ -67,11 +67,11 @@ class Menu {
               , click:events.handle(CLOSE_FILE)
             },{
                 type:'separator'
-            },{
+/*            },{
                 label:'Open Collection'
               , accelerator:'c'
               , enabled:false
-              , click:events.handle(OPEN_COLLECTION)
+              , click:events.handle(OPEN_COLLECTION)*/
             },{
                 type:'separator'
             },{
