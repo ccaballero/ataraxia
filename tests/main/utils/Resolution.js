@@ -5,7 +5,7 @@ const fs=require('fs')
   , Extract=require('../../../src/main/utils/Extract')
   , List=require('../../../src/main/utils/List')
   , Resolution=require('../../../src/main/utils/Resolution')
-  , config=require('../../../config');
+  , config=require('../../config');
 
 describe('resolution',()=>{
     it('case 1',(done)=>{
@@ -16,14 +16,17 @@ describe('resolution',()=>{
             return Extract.extract({
                 ...args
               , ...{
-                    item:args.list[0]
+                    config:{
+                        pages:config.pages
+                    }
+                  , item:args.list[0]
                 }
             });
         })
         .then(Resolution.resolution)
         .then((args)=>{
-            args.should.have.property('width').and.be.eql(899);
-            args.should.have.property('height').and.be.eql(1300);
+            args.should.have.property('width').and.be.eql(656);
+            args.should.have.property('height').and.be.eql(1034);
 
             fs.unlink(path.resolve(config.pages,args.hash),()=>{
                 done();
@@ -39,7 +42,10 @@ describe('resolution',()=>{
             return Extract.extract({
                 ...args
               , ...{
-                    item:args.list[0]
+                    config:{
+                        pages:config.pages
+                    }
+                  , item:args.list[0]
                 }
             });
         })

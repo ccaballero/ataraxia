@@ -1,7 +1,7 @@
 require('should');
 
 const List=require('../../../src/main/utils/List')
-  , config=require('../../../config');
+  , config=require('../../config');
 
 describe('List',()=>{
     it('case 1',(done)=>{
@@ -9,7 +9,7 @@ describe('List',()=>{
             filepath:config.testcase.folder+config.testcase.books[0]
         })
         .then((args)=>{
-            args.list.length.should.be.eql(188);
+            args.list.length.should.be.eql(230);
 
             done();
         });

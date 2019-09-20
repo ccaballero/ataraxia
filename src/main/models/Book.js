@@ -4,16 +4,27 @@ const fs=require('fs')
   , Extract=require('../utils/Extract')
   , List=require('../utils/List')
   , Resolution=require('../utils/Resolution')
-  , Sort=require('../utils/Sort')
-  , config=require('../../../config');
+  , Sort=require('../utils/Sort');
 
 class Book {
-    constructor(){
+    constructor(env){
         if(!!Book.instance){
             return Book.instance;
         }
 
         Book.instance=this;
+
+        if(env=='development'){
+            Book.config_cache=
+                path.join(__dirname,'..','..','..','public','cache');
+            Book.config_pages=
+                path.join(__dirname,'..','..','..','public','pages');
+        }else{
+            Book.config_cache=
+                path.join(__dirname,'..','..','..','dist','cache');
+            Book.config_pages=
+                path.join(__dirname,'..','..','..','dist','pages');
+        }
 
         return this;
     }
@@ -54,7 +65,8 @@ class Book {
             .reduce((sum,item)=>{
                 return sum.then(()=>{
                     return new Promise((resolve)=>{
-                        fs.unlink(path.resolve(config.pages,item.hash),()=>{
+                        fs.unlink(path.resolve(Book.config_pages,item.hash),
+                            ()=>{
                             resolve();
                         });
                     });
@@ -107,7 +119,11 @@ class Book {
                     return Promise.resolve(args);
                 }else{
                     return Promise.resolve({
-                        filepath:this._filepath
+                        config:{
+                            cache:Book.config_cache
+                          , pages:Book.config_pages
+                        }
+                      , filepath:this._filepath
                       , item:this._pages[item.id].name
                     })
                     .then(Extract.extract)

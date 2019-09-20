@@ -1,9 +1,10 @@
 const imagesize=require('image-size')
-  , path=require('path')
-  , config=require('../../../config');
+  , path=require('path');
 
 /*
  * input
+ *      config
+ *          pages
  *      hash
  * output
  *      width
@@ -12,7 +13,8 @@ const imagesize=require('image-size')
 class Resolution {
     static resolution(args){
         return new Promise((resolve,reject)=>{
-            imagesize(path.resolve(config.pages,args.hash),(error,dimensions)=>{
+            imagesize(path.resolve(args.config.pages,args.hash),
+                (error,dimensions)=>{
                 if(error){
                     reject(error);
                     return;

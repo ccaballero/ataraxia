@@ -78,7 +78,7 @@ class App extends Component {
 
     renderPage(index,width,height,sum,rotation){
         if(this.state.pages[index-1]){
-            const image='/pages/'+this.state.pages[index-1].hash
+            const image='pages/'+this.state.pages[index-1].hash
               , style1={
                     backgroundColor:'hsl('+(15+(index*50))+',100%,50%)'
                   , width:width

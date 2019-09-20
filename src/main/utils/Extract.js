@@ -1,11 +1,13 @@
 const {spawn}=require('child_process')
   , fs=require('fs')
   , path=require('path')
-  , uuidv4=require('uuid/v4')
-  , config=require('../../../config');
+  , uuidv4=require('uuid/v4');
 
 /*
  * input
+ *      config
+ *          cache
+ *          pages
  *      filepath
  *      item
  *
@@ -13,11 +15,10 @@ const {spawn}=require('child_process')
  *      hash
  */
 class Extract {
-
     static extract(args){
         return new Promise((resolve,reject)=>{
             const process=spawn('unrar',[
-                'e','-o+',args.filepath,args.item,config.cache]);
+                'e','-o+',args.filepath,args.item,args.config.cache]);
 
             let stdout=''
               , stderr='';
@@ -39,7 +40,8 @@ class Extract {
                 let old_path=/Extracting  (.*)   /.exec(stdout)[1].trim()
                   , hash=uuidv4()+path.extname(old_path);
 
-                fs.rename(old_path,path.resolve(config.pages,hash),(error)=>{
+                fs.rename(old_path,path.resolve(args.config.pages,hash),
+                    (error)=>{
                     if(error){
                         reject(error);
                         return;

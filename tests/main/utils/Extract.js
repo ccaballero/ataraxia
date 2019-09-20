@@ -4,7 +4,7 @@ const fs=require('fs')
   , path=require('path')
   , Extract=require('../../../src/main/utils/Extract')
   , List=require('../../../src/main/utils/List')
-  , config=require('../../../config');
+  , config=require('../../config');
 
 describe('Extract',()=>{
     it('case 1',(done)=>{
@@ -15,7 +15,11 @@ describe('Extract',()=>{
             return Extract.extract({
                 ...args
               , ...{
-                    item:args.list[0]
+                    config:{
+                        cache:config.cache
+                      , pages:config.pages
+                    }
+                  , item:args.list[0]
                 }
             });
         })
@@ -37,7 +41,11 @@ describe('Extract',()=>{
             return Extract.extract({
                 ...args
               , ...{
-                    item:args.list[0]
+                    config:{
+                        cache:config.cache
+                      , pages:config.pages
+                    }
+                  , item:args.list[0]
                 }
             });
         })

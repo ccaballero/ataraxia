@@ -49,14 +49,8 @@ let mainWindow
           , default:0
         }
     })
-  , book=new Book()
-  , dev=false;
-
-if(process.defaultApp||
-    /[\\/]electron-prebuilt[\\/]/.test(process.execPath)||
-    /[\\/]electron[\\/]/.test(process.execPath)){
-    dev=true;
-}
+  , env=(process.argv.indexOf('--noDevServer')===-1)?'development':'production'
+  , book=new Book(env);
 
 function init(){
     mainWindow=new BrowserWindow({
@@ -71,7 +65,7 @@ function init(){
 
     let indexPath;
 
-    if(dev&&process.argv.indexOf('--noDevServer')===-1){
+    if(env=='development'){
         indexPath=url.format({
             protocol:'http'
           , host:'localhost:2999'
@@ -94,7 +88,7 @@ function init(){
     mainWindow.once('ready-to-show',()=>{
         mainWindow.show();
 
-        if(dev){
+        if(env=='development'){
             mainWindow.webContents.openDevTools();
         }
 

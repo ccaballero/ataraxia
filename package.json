@@ -22,7 +22,7 @@
     "main": "src/main.js",
     "scripts": {
         "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 2999 --config webpack.dev.config.js",
-        "prod": "node --trace-deprecation ./node_modules/.bin/webpack --bail --env dist --config webpack.build.config.js -p && electron --noDevServer .",
+        "prod": "webpack --bail --env dist --config webpack.build.config.js -p && electron --noDevServer .",
         "build": "webpack --config webpack.build.config.js -p",
         "package": "webpack --config webpack.build.config.js -p",
         "postpackage": "electron-packager ./ --out=./builds"
@@ -33,11 +33,13 @@
         "@babel/preset-react": "^7.0.0",
         "babel-loader": "^8.0.6",
         "babel-minify-webpack-plugin": "^0.3.1",
+        "clean-webpack-plugin": "^3.0.0",
         "css-loader": "^3.2.0",
         "electron": "^6.0.9",
         "electron-packager": "^14.0.6",
         "file-loader": "^4.2.0",
         "html-webpack-plugin": "^3.2.0",
+        "make-dir-webpack-plugin": "^0.1.0",
         "mini-css-extract-plugin": "^0.8.0",
         "should": "^13.2.3",
         "style-loader": "^1.0.0",

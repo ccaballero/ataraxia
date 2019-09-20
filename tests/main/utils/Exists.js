@@ -1,7 +1,7 @@
 require('should');
 
 const Exists=require('../../../src/main/utils/Exists')
-  , config=require('../../../config');
+  , config=require('../../config');
 
 describe('Exists',()=>{
     it('positive case',(done)=>{

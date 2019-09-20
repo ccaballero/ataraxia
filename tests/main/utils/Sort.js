@@ -2,7 +2,7 @@ require('should');
 
 const List=require('../../../src/main/utils/List')
   , Sort=require('../../../src/main/utils/Sort')
-  , config=require('../../../config');
+  , config=require('../../config');
 
 describe('sort',()=>{
     it('case 1',(done)=>{
@@ -11,7 +11,7 @@ describe('sort',()=>{
         })
         .then(Sort.sort)
         .then((args)=>{
-            args.list.length.should.be.eql(188);
+            args.list.length.should.be.eql(230);
 
             done();
         });

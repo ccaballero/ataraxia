@@ -1,21 +1,16 @@
-const webpack=require('webpack')
-  , path=require('path')
+const path=require('path')
   , HtmlWebpackPlugin=require('html-webpack-plugin')
   , {spawn}=require('child_process');
 
 const SRC_DIR=path.resolve(__dirname,'src')
   , OUTPUT_DIR=path.resolve(__dirname,'dist')
-  , PUBLIC_DIR=path.resolve(__dirname,'public')
-  , defaultInclude=[
-        SRC_DIR
-      , path.resolve(__dirname,'node_modules')
-    ];
+  , PUBLIC_DIR=path.resolve(__dirname,'public');
 
 module.exports={
-    entry:SRC_DIR+'/renderer/index.js'
+    mode:'development'
+  , entry:SRC_DIR+'/renderer/index.js'
   , output:{
         path:OUTPUT_DIR
-      , publicPath:'/'
       , filename:'bundle.js'
     }
   , module:{
@@ -25,25 +20,25 @@ module.exports={
                 'style-loader'
               , 'css-loader'
             ]
-          , include:defaultInclude
         },{
             test:/\.jsx?$/
           , use:[{
                 loader:'babel-loader'
             }]
-          , include:defaultInclude
+          , include:[
+                SRC_DIR
+              , path.resolve(__dirname,'node_modules')
+            ]
         },{
             test:/\.(jpe?g|png|gif)$/
           , use:[{
                 loader:'file-loader?name=img/[name]__[hash:base64:5].[ext]'
             }]
-          , include:defaultInclude
         },{
             test:/\.(eot|svg|ttf|woff|woff2)$/
           , use:[{
                 loader:'file-loader?name=font/[name]__[hash:base64:5].[ext]'
             }]
-          , include:defaultInclude
         }]
     }
   , target:'electron-renderer'
@@ -51,9 +46,6 @@ module.exports={
         new HtmlWebpackPlugin({
             template:'public/index.html'
           , inject:'body'
-        })
-      , new webpack.DefinePlugin({
-            'process.env.NODE_ENV':JSON.stringify('development')
         })
     ]
   , devtool:'cheap-source-map'
