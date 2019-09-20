@@ -25,7 +25,7 @@
         "prod": "webpack --bail --env dist --config webpack.build.config.js -p && electron --noDevServer .",
         "build": "webpack --config webpack.build.config.js -p",
         "package": "webpack --config webpack.build.config.js -p",
-        "postpackage": "electron-packager ./ --out=./builds"
+        "postpackage": "electron-packager --overwrite ./ --out=./builds"
     },
     "devDependencies": {
         "@babel/core": "^7.6.0",

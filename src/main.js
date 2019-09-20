@@ -49,7 +49,7 @@ let mainWindow
           , default:0
         }
     })
-  , env=(process.argv.indexOf('--noDevServer')===-1)?'development':'production'
+  , env=(process.env.WEBPACK_DEV_SERVER=='true')?'development':'production'
   , book=new Book(env);
 
 function init(){
@@ -63,7 +63,8 @@ function init(){
         }
     });
 
-    let indexPath;
+    let indexPath
+      , param_path;
 
     if(env=='development'){
         indexPath=url.format({
@@ -73,6 +74,12 @@ function init(){
           , slashes:true
         });
     }else{
+        if(process.argv.indexOf('--noDevServer')!=1){
+            if(process.argv.length>1){
+                param_path=process.argv[1];
+            }
+        }
+
         indexPath=url.format({
             protocol:'file'
           , pathname:path.join(__dirname,'..','dist','index.html')
@@ -92,9 +99,17 @@ function init(){
             mainWindow.webContents.openDevTools();
         }
 
-        if(store.has('filepath')){
-            let filepath=store.get('filepath')
-              , page=store.get('page');
+        if(param_path||store.has('filepath')){
+            let filepath
+              , page;
+
+            if(param_path){
+                filepath=param_path;
+                page=0;
+            }else{
+                filepath=store.get('filepath');
+                page=store.get('page');
+            }
 
             console.log('open book: %s\npage: %s',filepath,page);
 
