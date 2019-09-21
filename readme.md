@@ -1,16 +1,25 @@
-- Ataraxia README -
+# Ataraxia README -
 
-=== About =====================================================================
+## About
 
-Ataraxia is a user-friendly, customizable image viewer. It is specifically
-designed to handle comic books. It reads images in RAR archives. It is written
-in Javascript and uses electron.
+Ataraxia is a user-friendly, customizable comic reader. It reads images in RAR
+archives. It is written in Javascript and uses Electron.
 
-=== Installation ==============================================================
+# Usage
 
-TODO
+```
+    # git clone https://github.com/ccaballero/ataraxia.git
+    # cd ataraxia
+    # npm install
 
-=== Dependencies ==============================================================
+    # to run in development mode
+    # npm run dev
+
+    # to build
+    # npm run package
+```
+
+# Dependencies
 
 Ataraxia needs unrar, and sort commands:
 
@@ -25,14 +34,8 @@ Ataraxia needs unrar, and sort commands:
     sys-apps/coreutils-8.31-r1 (/bin/sort)
 ```
 
-=== Credits ===================================================================
+# Credits
 
 Thanks to everyone who have contributed translations, suggestions, bug
 reports, and fixes.
-
-=== Contact ===================================================================
-
-Developer: Carlos E. Caballero B. <cijkb.j@gmail.com>
-
-===============================================================================
 
