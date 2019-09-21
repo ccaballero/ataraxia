@@ -58,6 +58,7 @@ function init(){
       , height:720
       , show:false
       , center:true
+      , icon:path.join(__dirname,'..','public','icon.png')
       , webPreferences:{
             nodeIntegration:true
         }
