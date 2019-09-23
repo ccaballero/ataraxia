@@ -47,7 +47,7 @@ class Reader extends Component {
     }
 
     componentWillUnmount(){
-        this._isMounted=true;
+        this._isMounted=false;
 
         window.removeEventListener('resize',this.updateWindowDimensions);
 

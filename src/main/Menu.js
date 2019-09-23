@@ -46,7 +46,6 @@ const menu=require('electron').Menu
     t => view toolbar
     w => close file
     y => view statusbar
-
  */
 
 class Menu {
