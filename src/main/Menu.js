@@ -5,6 +5,7 @@ const menu=require('electron').Menu
       , CLOSE_FILE
 //      , OPEN_COLLECTION
 //      , CLOSE_COLLECTION
+      , SETTINGS
       , QUIT
       , VIEW_TOOLBAR
       , VIEW_STATUSBAR
@@ -22,7 +23,7 @@ const menu=require('electron').Menu
       , LAST_PAGE
     }=require('../constants');
 
-/* Mnemonic:
+/* Mnemonics:
     0 => last page
     1 => first page
     2 => fit best
@@ -39,6 +40,7 @@ const menu=require('electron').Menu
     l => next page
     m => manga mode
     o => open file
+    p => settings
     q => quit
     s => save book
     t => view toolbar
@@ -72,6 +74,13 @@ class Menu {
               , accelerator:'c'
               , enabled:false
               , click:events.handle(OPEN_COLLECTION)*/
+            },{
+                type:'separator'
+            },{
+                label:'Settings'
+              , accelerator:'P'
+              , enabled:true
+              , click:events.handle(SETTINGS)
             },{
                 type:'separator'
             },{

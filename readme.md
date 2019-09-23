@@ -10,13 +10,13 @@ archives. It is written in Javascript and uses Electron.
 ```
     # git clone https://github.com/ccaballero/ataraxia.git
     # cd ataraxia
-    # npm install
+    # yarn install
 
     # to run in development mode
-    # npm run dev
+    # yarn run dev
 
     # to build
-    # npm run package
+    # yarn run package
 ```
 
 # Dependencies

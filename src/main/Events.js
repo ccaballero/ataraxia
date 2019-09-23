@@ -3,6 +3,7 @@ const {app,dialog,ipcMain,Menu}=require('electron')
   , {
         OPEN_FILE
       , CLOSE_FILE
+      , SETTINGS
       , QUIT
       , VIEW_TOOLBAR
       , VIEW_STATUSBAR
@@ -19,6 +20,7 @@ const {app,dialog,ipcMain,Menu}=require('electron')
       , NEXT_PAGE
       , LAST_PAGE
       , SET_STATE
+      , REFRESH
     }=require('../constants');
 
 class Events {
@@ -82,6 +84,10 @@ class Events {
 
         ipcMain.on(MANGA_MODE,()=>{
             return this.handle(MANGA_MODE)();
+        });
+
+        ipcMain.on(REFRESH,()=>{
+            return this.handle(REFRESH)();
         });
     }
 
@@ -253,6 +259,10 @@ class Events {
                     });
 
                     break;
+                case SETTINGS:
+                    this._mainWindow.send(SETTINGS,{});
+
+                    break;
                 case QUIT:
                     this._book.close()
                     .then(()=>{
@@ -382,6 +392,17 @@ class Events {
                     if(this._book.filepath){
                         this.goto(this._book.total-1,-1);
                     }
+
+                    break;
+                case REFRESH:
+                    this.status.bind(this)()
+                    .then((args)=>{
+                        this._mainWindow.send(SET_STATE,args);
+
+                        if(this._book.filepath){
+                            this.goto(this._book.current);
+                        }
+                    });
 
                     break;
             }

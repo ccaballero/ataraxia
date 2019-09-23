@@ -13,3 +13,8 @@ code {
         monospace;
 }
 
+button {
+    border: none;
+    outline: none;
+}
+

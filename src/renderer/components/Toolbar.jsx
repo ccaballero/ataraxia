@@ -1,5 +1,3 @@
-// jshint ignore: start
-
 import {ipcRenderer} from 'electron';
 import React,{Component} from 'react';
 import {Icon,Menu} from 'semantic-ui-react';

@@ -1,21 +1,21 @@
-// jshint ignore: start
-
-import React,{Component,Fragment} from 'react';
 import {ipcRenderer} from 'electron';
+import React,{Component} from 'react';
 
-import '../assets/css/App.css';
+import '../assets/css/Reader.css';
 
-import Toolbar from '../components/Toolbar';
-import Statusbar from '../components/Statusbar';
+import Toolbar from '../components/Toolbar.jsx';
+import Statusbar from '../components/Statusbar.jsx';
 
 import {
     SET_STATE
+  , REFRESH
 } from '../../constants';
 
-class App extends Component {
+class Reader extends Component {
     constructor(props){
         super(props);
 
+        this._isMounted=false;
         this.state={
             filepath:''
           , toolbar:true
@@ -37,27 +37,36 @@ class App extends Component {
     }
 
     componentDidMount(){
+        this._isMounted=true;
+
         this.updateWindowDimensions();
         window.addEventListener('resize',this.updateWindowDimensions);
 
         ipcRenderer.on(SET_STATE,this.handleState.bind(this));
+        ipcRenderer.send(REFRESH,{});
     }
 
     componentWillUnmount(){
+        this._isMounted=true;
+
         window.removeEventListener('resize',this.updateWindowDimensions);
 
         ipcRenderer.removeListener(SET_STATE,this.handleState.bind(this));
     }
 
     updateWindowDimensions(){
-        this.setState({
-            width:this.container.clientWidth
-          , height:this.container.clientHeight
-        });
+        if(this._isMounted){
+            this.setState({
+                width:this.container.clientWidth
+              , height:this.container.clientHeight
+            });
+        }
     }
 
     handleState(event,data){
-        this.setState(data);
+        if(this._isMounted){
+            this.setState(data);
+        }
     }
 
     renderToolbar(){
@@ -190,7 +199,7 @@ class App extends Component {
         }
 
         return (
-            <Fragment>
+            <div id='reader' className='page'>
                 {this.renderToolbar()}
                 <div className='container'
                     ref={(container)=>this.container=container}>
@@ -198,10 +207,10 @@ class App extends Component {
                     {this.renderPage(2,X2,Y2,X1+X2,rotation)}
                 </div>
                 {this.renderStatusbar()}
-            </Fragment>
+            </div>
         );
     }
 }
 
-export default App;
+export default Reader;
 

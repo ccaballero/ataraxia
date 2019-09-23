@@ -4,6 +4,7 @@ module.exports={
   , CLOSE_FILE:'close-file'
   , OPEN_COLLECTION:'open-collection'
   , CLOSE_COLLECTION:'close-collection'
+  , SETTINGS:'settings'
   , QUIT:'quit'
   , VIEW_TOOLBAR:'view-toolbar'
   , VIEW_STATUSBAR:'view-statusbar'
@@ -20,5 +21,6 @@ module.exports={
   , NEXT_PAGE:'next-page'
   , LAST_PAGE:'last-page'
   , SET_STATE:'set-state'
+  , REFRESH:'refresh'
 };
 
