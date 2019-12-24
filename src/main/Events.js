@@ -217,15 +217,15 @@ class Events {
                         title:'Open File'
                       , defaultPath:filepath
                       , buttonLabel:'Open'
-                      , filters:[{
-                            name:'CBR File'
-                          , extensions:['cbr']
-                        }]
                       , properties:['openFile']
-                    },(filepaths)=>{
-                        if(filepaths.length==1){
-                            return this.open(filepaths[0]);
+                    })
+                    .then((args)=>{
+                        if(!args.canceled&&args.filePaths.length==1){
+                            return this.open(args.filePaths[0]);
                         }
+                    })
+                    .catch((error)=>{
+                        console.log(error);
                     });
 
                     break;

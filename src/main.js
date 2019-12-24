@@ -1,56 +1,17 @@
-const {app,BrowserWindow}=require('electron')
-  , Store=require('electron-store')
+const {app,BrowserWindow,globalShortcut}=require('electron')
   , path=require('path')
   , url=require('url')
   , Events=require('./main/Events')
   , Menu=require('./main/Menu')
   , Book=require('./main/models/Book')
+  , Store=require('./main/models/Store')
   , Exists=require('./main/utils/Exists');
 
 let mainWindow
-  , event
-  , store=new Store({
-        filepath:{
-            type:'string'
-        }
-      , page:{
-            type:'number'
-          , minimum:0
-          , default:0
-        }
-      , toolbar:{
-            type:'boolean'
-          , default:true
-        }
-      , statusbar:{
-            type:'boolean'
-          , default:true
-        }
-      , fullscreen:{
-            type:'boolean'
-          , default:false
-        }
-      , doublepage:{
-            type:'boolean'
-          , default:false
-        }
-      , mangamode:{
-            type:'boolean'
-          , default:false
-        }
-      , fitmode:{
-            type:'string'
-          , default:'best'
-        }
-      , rotation:{
-            type:'number'
-          , minimum:0
-          , maximum:270
-          , default:0
-        }
-    })
+  , events
   , env=(process.env.WEBPACK_DEV_SERVER=='true')?'development':'production'
-  , book=new Book(env);
+  , book=new Book(env)
+  , store=new Store();
 
 function init(){
     mainWindow=new BrowserWindow({
@@ -88,9 +49,9 @@ function init(){
         });
     }
 
-    event=new Events(app,mainWindow,store,book);
+    events=new Events(app,mainWindow,store,book);
 
-    Menu.load(app,event);
+    Menu.load(app,events);
     mainWindow.loadURL(indexPath);
 
     mainWindow.once('ready-to-show',()=>{
@@ -119,14 +80,14 @@ function init(){
             })
             .then((args)=>{
                 if(args.check){
-                    return event.open(filepath)
+                    return events.open(filepath)
                     .then(()=>{
                         if(store.has('fullscreen')){
                             mainWindow.setFullScreen(
                                 store.get('fullscreen',false));
                         }
 
-                        return event.goto(page);
+                        return events.goto(page);
                     });
                 }else{
                     console.log('file not found');

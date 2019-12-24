@@ -54,23 +54,23 @@ class Menu {
             label:'File'
           , submenu:[{
                 label:'Open'
-              , accelerator:'o'
+              , accelerator:'O'
               , click:events.handle(OPEN_FILE)
 /*            },{
                 label:'Save'
-              , accelerator:'s'
+              , accelerator:'S'
               , enabled:false
               , click:events.handle(SAVE_FILE)*/
             },{
                 label:'Close'
-              , accelerator:'w'
+              , accelerator:'W'
               , enabled:false
               , click:events.handle(CLOSE_FILE)
             },{
                 type:'separator'
 /*            },{
                 label:'Open Collection'
-              , accelerator:'c'
+              , accelerator:'C'
               , enabled:false
               , click:events.handle(OPEN_COLLECTION)*/
             },{
@@ -84,35 +84,35 @@ class Menu {
                 type:'separator'
             },{
                 label:'Quit'
-              , accelerator:'q'
+              , accelerator:'Q'
               , click:events.handle(QUIT)
             }]
         },{
             label:'View'
           , submenu:[{
                 label:'Toolbar'
-              , accelerator:'t'
+              , accelerator:'T'
               , click:events.handle(VIEW_TOOLBAR)
             },{
                 label:'Statusbar'
-              , accelerator:'y'
+              , accelerator:'Y'
               , click:events.handle(VIEW_STATUSBAR)
             },{
                 type:'separator'
             },{
                 label:'Fullscreen'
-              , accelerator:'f'
+              , accelerator:'F'
               , click:events.handle(FULLSCREEN)
             },{
                 label:'Double page'
-              , accelerator:'d'
+              , accelerator:'D'
               , enabled:false
               , type:'checkbox'
               , checked:false
               , click:events.handle(DOUBLE_PAGE)
             },{
                 label:'Manga mode'
-              , accelerator:'m'
+              , accelerator:'M'
               , enabled:false
               , type:'checkbox'
               , click:events.handle(MANGA_MODE)
@@ -158,12 +158,12 @@ class Menu {
               , click:events.handle(FIRST_PAGE)
             },{
                 label:'Previous page'
-              , accelerator:'h'
+              , accelerator:'H'
               , enabled:false
               , click:events.handle(PREVIOUS_PAGE)
             },{
                 label:'Next page'
-              , accelerator:'l'
+              , accelerator:'L'
               , enabled:false
               , click:events.handle(NEXT_PAGE)
             },{
