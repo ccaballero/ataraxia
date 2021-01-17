@@ -101,7 +101,6 @@ function init(){
     });
 }
 
-
 app.on('ready',init);
 
 app.on('window-all-closed',()=>{
