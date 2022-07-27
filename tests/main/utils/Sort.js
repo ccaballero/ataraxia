@@ -1,32 +1,30 @@
-require('should');
+import 'should';
+import {join} from 'path';
+import List from '../../../src/main/utils/List.js';
+import Sort from '../../../src/main/utils/Sort.js';
+import configTest from '../../../config/test.js';
 
-const List=require('../../../src/main/utils/List')
-  , Sort=require('../../../src/main/utils/Sort')
-  , config=require('../../config');
+describe('Sort',()=>{
+    const config=configTest();
 
-describe('sort',()=>{
-    it('case 1',(done)=>{
-        List.list({
-            filepath:config.testcase.folder+config.testcase.books[0]
-        })
-        .then(Sort.sort)
-        .then((args)=>{
-            args.list.length.should.be.eql(230);
-
-            done();
+    it('Sort.js#1',async()=>{
+        let args=await List.list({
+            filepath:join(config.folder,config.books[0])
         });
+
+        args=await Sort.sort(args);
+
+        args.list.length.should.be.eql(18);
     });
 
-    it('case 2',(done)=>{
-        List.list({
-            filepath:config.testcase.folder+config.testcase.books[1]
-        })
-        .then(Sort.sort)
-        .then((args)=>{
-            args.list.length.should.be.eql(134);
-
-            done();
+    it('Sort.js#1',async()=>{
+        let args=await List.list({
+            filepath:join(config.folder,config.books[1])
         });
+
+        args=await Sort.sort(args);
+
+        args.list.length.should.be.eql(183);
     });
 });
 

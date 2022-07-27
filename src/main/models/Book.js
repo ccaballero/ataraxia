@@ -1,154 +1,125 @@
-const fs=require('fs')
-  , path=require('path')
-  , Exists=require('../utils/Exists')
-  , Extract=require('../utils/Extract')
-  , List=require('../utils/List')
-  , Resolution=require('../utils/Resolution')
-  , Sort=require('../utils/Sort');
+import {unlink} from 'fs/promises';
+import {resolve} from 'path';
+import Page from './Page.js';
+import Exists from '../utils/Exists.js';
+import Extract from '../utils/Extract.js';
+import List from '../utils/List.js';
+import Resolution from '../utils/Resolution.js';
+import Sort from '../utils/Sort.js';
 
-class Book {
-    constructor(env){
-        if(!!Book.instance){
-            return Book.instance;
-        }
-
-        Book.instance=this;
-
-        if(env=='development'){
-            Book.config_cache=
-                path.join(__dirname,'..','..','..','public','cache');
-            Book.config_pages=
-                path.join(__dirname,'..','..','..','public','pages');
-        }else{
-            Book.config_cache=
-                path.join(__dirname,'..','..','..','dist','cache');
-            Book.config_pages=
-                path.join(__dirname,'..','..','..','dist','pages');
-        }
-
-        return this;
+class Book{
+    constructor(cacheDir,pagesDir){
+        this._cacheDir=cacheDir;
+        this._pagesDir=pagesDir;
+        this._filepath=null;
+        this._current=-1;
+        this._pages=[];
+        this._dpages=[];
     }
 
-    load(filepath){
-        return Promise.resolve({
-            filepath:filepath
-        })
-        .then(Exists.exists)
-        .then(List.list)
-        .then(Sort.sort)
-        .then((args)=>{
-            this._filepath=args.filepath;
-            this._current=0;
-            this._pages=args.list.map((item,i)=>{
-                return {
-                    index:i
-                  , name:item
-                  , width:0
-                  , height:0
-                };
-            });
-
-            return Promise.resolve();
-        });
-    }
-
-    close(){
-        if(!this._pages){
-            return Promise.resolve();
-        }
-
-        return new Promise((resolve,reject)=>{
-            this._pages
-            .filter((item)=>{
-                return 'hash' in item;
-            })
-            .reduce((sum,item)=>{
-                return sum.then(()=>{
-                    return new Promise((resolve)=>{
-                        fs.unlink(path.resolve(Book.config_pages,item.hash),
-                            ()=>{
-                            resolve();
-                        });
-                    });
-                });
-            },Promise.resolve())
-            .then(()=>{
-                delete this._filepath;
-                delete this._pages;
-
-                resolve();
-            })
-            .catch((error)=>{
-                reject(error);
-            });
-        });
+    set filepath(filepath){
+        this._filepath=filepath;
     }
 
     get filepath(){
         return this._filepath;
     }
 
-    get total(){
-        return this._pages.length;
+    get pages(){
+        return this._pages;
     }
 
-    get current(){
-        return this._current;
+    get dpages(){
+        return this._dpages;
+    }
+
+    async load(){
+        let args=await Exists.exists({
+            filepath:this._filepath
+        });
+
+        args=await List.list(args);
+        args=await Sort.sort(args);
+
+        this._current=0;
+        this._pages=args
+        .list
+        .map((item,i)=>{
+            return new Page(i,item);
+        });
+    }
+
+    async map(){
+        for(let i=0;i<this._pages.length;i++){
+            if(!this._pages[i].hash){
+                let args=await Extract.extract({
+                    config:{
+                        cacheDir:this._cacheDir,
+                        pagesDir:this._pagesDir
+                    },
+                    filepath:this._filepath,
+                    item:this._pages[i].name
+                });
+
+                args=await Resolution.resolution(args);
+
+                this._pages[i].hash=args.hash;
+                this._pages[i].width=args.width;
+                this._pages[i].height=args.height;
+            }
+        }
+    }
+
+    index(){
+        this._dpages=[];
+
+        for(let i=0;i<this._pages.length;i++){
+            if(
+                i!==0&&
+                this._pages[i]&&
+                this._pages[i].isVertical()&&
+                this._pages[i+1]&&
+                this._pages[i+1].isVertical()
+            ){
+                this._dpages.push([
+                    this._pages[i],
+                    this._pages[i+1]
+                ]);
+
+                i++;
+            }else{
+                this._dpages.push([
+                    this._pages[i]
+                ]);
+            }
+        }
+    }
+
+    async close(){
+        for await(const page of this._pages){
+            if('hash' in page){
+                await unlink(resolve(this._pagesDir,page.hash));
+            }
+        }
+
+        this._filepath=null;
+        this._current=-1;
+        this._pages=[];
+        this._dpages=[];
     }
 
     set current(current){
         this._current=current;
     }
 
-    pages(args){
-        return args.pages.reduce((sum,item)=>{
-            return sum.then(()=>{
-                if(!('id' in item)){
-                    return Promise.resolve(args);
-                }
+    get current(){
+        return this._current;
+    }
 
-                if(item.id>=this._pages.length){
-                    return Promise.resolve(args);
-                }
-
-                if(this._pages[item.id].hash){
-                    item.hash=this._pages[item.id].hash;
-                    item.width=this._pages[item.id].width;
-                    item.height=this._pages[item.id].height;
-
-                    return Promise.resolve(args);
-                }else{
-                    return Promise.resolve({
-                        config:{
-                            cache:Book.config_cache
-                          , pages:Book.config_pages
-                        }
-                      , filepath:this._filepath
-                      , item:this._pages[item.id].name
-                    })
-                    .then(Extract.extract)
-                    .then(Resolution.resolution)
-                    .then((args1)=>{
-                        this._pages[item.id].hash=args1.hash;
-                        this._pages[item.id].width=args1.width;
-                        this._pages[item.id].height=args1.height;
-
-                        item.hash=args1.hash;
-                        item.width=args1.width;
-                        item.height=args1.height;
-
-                        return Promise.resolve(args);
-                    })
-                    .catch((error)=>{
-                        console.log(error);
-
-                        return Promise.resolve(args);
-                    });
-                }
-            });
-        },Promise.resolve());
+    get total(){
+        return this._pages.length;
     }
 }
 
-module.exports=Book;
+export default Book;
 

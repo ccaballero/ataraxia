@@ -1,13 +1,14 @@
-import {spawn} from 'child_process';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
 import {join,resolve} from 'path';
+import webpack from 'webpack';
+import {CleanWebpackPlugin} from 'clean-webpack-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
 
 const SRC_DIR=join(resolve(),'src'),
-    OUTPUT_DIR=join(resolve(),'dist'),
-    PUBLIC_DIR=join(resolve(),'public');
+    OUTPUT_DIR=join(resolve(),'dist');
 
 export default {
-    mode:'development',
+    mode:'production',
     entry:SRC_DIR+'/renderer/index.js',
     output:{
         path:OUTPUT_DIR,
@@ -18,7 +19,11 @@ export default {
             test:/\.jsx?$/,
             use:[{
                 loader:'babel-loader'
-            }]
+            }],
+            include:[
+                SRC_DIR,
+                join(resolve(),'node_modules')
+            ]
         },{
             test:/\.css$/,
             use:[
@@ -38,30 +43,25 @@ export default {
         }]
     },
     plugins:[
+        new webpack.ProgressPlugin(),
+        new CleanWebpackPlugin(),
         new HtmlWebpackPlugin({
             template:'public/index.html',
             inject:'body'
+        }),
+        new CopyPlugin({
+            patterns:[{
+                from:join(SRC_DIR,'..','public','cache'),
+                to:join(OUTPUT_DIR,'cache')
+            }]
         })
     ],
     target:'electron-renderer',
-    watch:true,
-    devtool:'cheap-source-map',
-    devServer:{
-        contentBase:PUBLIC_DIR,
-        stats:{
-            colors:true,
-            chunks:false,
-            children:false
-        },
-        before(){
-            spawn('electron',['.'],{
-                shell:true,
-                env:process.env,
-                stdio:'inherit'
-            })
-            .on('close',()=>process.exit(0))
-            .on('error',spawnError=>console.error(spawnError));
-        }
+    stats:{
+        colors:true,
+        children:false,
+        chunks:false,
+        modules:false
     }
 };
 

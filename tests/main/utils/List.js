@@ -1,29 +1,25 @@
-require('should');
-
-const List=require('../../../src/main/utils/List')
-  , config=require('../../config');
+import 'should';
+import {join} from 'path';
+import List from '../../../src/main/utils/List.js';
+import configTest from '../../../config/test.js';
 
 describe('List',()=>{
-    it('case 1',(done)=>{
-        List.list({
-            filepath:config.testcase.folder+config.testcase.books[0]
-        })
-        .then((args)=>{
-            args.list.length.should.be.eql(230);
+    const config=configTest();
 
-            done();
+    it('List.js#1',async()=>{
+        const args=await List.list({
+            filepath:join(config.folder,config.books[0])
         });
+
+        args.list.length.should.be.eql(18);
     });
 
-    it('case 2',(done)=>{
-        List.list({
-            filepath:config.testcase.folder+config.testcase.books[1]
-        })
-        .then((args)=>{
-            args.list.length.should.be.eql(134);
-
-            done();
+    it('List.js#2',async()=>{
+        const args=await List.list({
+            filepath:join(config.folder,config.books[1])
         });
+
+        args.list.length.should.be.eql(183);
     });
 });
 

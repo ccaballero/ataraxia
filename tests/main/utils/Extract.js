@@ -1,62 +1,54 @@
-require('should');
-
-const fs=require('fs')
-  , path=require('path')
-  , Extract=require('../../../src/main/utils/Extract')
-  , List=require('../../../src/main/utils/List')
-  , config=require('../../config');
+import 'should';
+import {unlink} from 'fs/promises';
+import {join,resolve} from 'path';
+import Extract from '../../../src/main/utils/Extract.js';
+import List from '../../../src/main/utils/List.js';
+import Sort from '../../../src/main/utils/Sort.js';
+import configTest from '../../../config/test.js';
 
 describe('Extract',()=>{
-    it('case 1',(done)=>{
-        List.list({
-            filepath:config.testcase.folder+config.testcase.books[0]
-        })
-        .then((args)=>{
-            return Extract.extract({
-                ...args
-              , ...{
-                    config:{
-                        cache:config.cache
-                      , pages:config.pages
-                    }
-                  , item:args.list[0]
-                }
-            });
-        })
-        .then((args)=>{
-            args.should.have.property('hash')
-                .and.be.String().and.not.empty();
+    const config=configTest();
 
-            fs.unlink(path.resolve(config.pages,args.hash),()=>{
-                done();
-            });
+    it('Extract.js#1',async()=>{
+        let args=await List.list({
+            filepath:join(config.folder,config.books[0])
         });
+
+        args=await Sort.sort(args);
+        args=await Extract.extract({
+            config:{
+                cacheDir:config.cacheDir,
+                pagesDir:config.pagesDir
+            },
+            filepath:args.filepath,
+            item:args.list[0]
+        });
+
+        args.should.have.property('hash')
+        .and.be.String().and.not.empty();
+
+        unlink(resolve(config.pagesDir,args.hash));
     });
 
-    it('case 2',(done)=>{
-        List.list({
-            filepath:config.testcase.folder+config.testcase.books[1]
-        })
-        .then((args)=>{
-            return Extract.extract({
-                ...args
-              , ...{
-                    config:{
-                        cache:config.cache
-                      , pages:config.pages
-                    }
-                  , item:args.list[0]
-                }
-            });
-        })
-        .then((args)=>{
-            args.should.have.property('hash')
-                .and.be.String().and.not.empty();
-
-            fs.unlink(path.resolve(config.pages,args.hash),()=>{
-                done();
-            });
+    it('Extract.js#2',async()=>{
+        let args=await List.list({
+            filepath:join(config.folder,config.books[1])
         });
+
+        args=await Sort.sort(args);
+        args=await Extract.extract({
+            config:{
+                cacheDir:config.cacheDir,
+                pagesDir:config.pagesDir
+            },
+            filepath:args.filepath,
+            item:args.list[0]
+        });
+
+        args.should.have.property('hash')
+        .and.be.String().and.not.empty();
+
+        unlink(resolve(config.pagesDir,args.hash));
     });
 });
 

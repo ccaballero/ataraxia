@@ -2,7 +2,11 @@ env:
     browser: true
     es6: true
     node: true
-extends: 'eslint:recommended'
+    mocha: true
+extends:
+    - 'react-app'
+    - 'plugin:jsx-a11y/recommended'
+    - 'eslint:recommended'
 globals:
     Atomics: readonly
     SharedArrayBuffer: readonly
@@ -12,27 +16,64 @@ parserOptions:
     ecmaVersion: 2018
     sourceType: module
 plugins:
-    - react
+    - 'jsx-a11y'
+    - 'react'
 rules:
+    arrow-spacing:
+        - error
+        - before: false
+          after: false
+    comma-spacing:
+        - error
+        - after: false
+    comma-style:
+        - error
+        - last
+    eol-last:
+        - error
+        - always
+    import/no-anonymous-default-export:
+        - error
+        - allowArray: true
+          allowArrowFunction: true
+          allowObject: true
     indent:
         - error
         - 4
+        - SwitchCase: 1
+          VariableDeclarator: 1
+          MemberExpression: 0
+          FunctionDeclaration:
+              body: 1
+              parameters: off
+          FunctionExpression:
+              body: 1
+              parameters: off
+    key-spacing:
+        - error
+        - afterColon: false
     linebreak-style:
         - error
         - unix
+    max-len:
+        - error
+        - code: 80
+    no-multiple-empty-lines:
+        - error
+        - max: 1
+          maxBOF: 0
+    no-trailing-spaces:
+        - error
+        - skipBlankLines: true
+    object-curly-spacing:
+        - error
     quotes:
         - error
         - single
     semi:
         - error
         - always
-    comma-style:
+    space-before-blocks:
         - error
-        - first
-        - exceptions:
-            ArrayExpression: true
-            ObjectExpression: true
-    max-len:
-        - error
-        - code: 80
+        - never
 

@@ -1,32 +1,32 @@
-const imagesize=require('image-size')
-  , path=require('path');
+import imagesize from 'image-size';
+import {resolve} from 'path';
 
 /*
  * input
  *      config
- *          pages
+ *          pagesDir
  *      hash
  * output
  *      width
  *      height
  */
-class Resolution {
-    static resolution(args){
-        return new Promise((resolve,reject)=>{
-            imagesize(path.resolve(args.config.pages,args.hash),
-                (error,dimensions)=>{
-                if(error){
-                    reject(error);
-                    return;
-                }
+class Resolution{
+    static async resolution(args){
+        try{
+            const dimensions=await imagesize(resolve(
+                args.config.pagesDir,
+                args.hash
+            ));
 
-                args.width=dimensions.width;
-                args.height=dimensions.height;
-                resolve(args);
-            });
-        });
+            args.width=dimensions.width;
+            args.height=dimensions.height;
+
+            return args;
+        }catch(error){
+            throw new Error('resolution_error');
+        }
     }
 }
 
-module.exports=Resolution;
+export default Resolution;
 

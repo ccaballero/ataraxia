@@ -1,4 +1,4 @@
-const {spawn}=require('child_process');
+import {spawn} from 'child_process';
 
 /*
  * input
@@ -7,42 +7,46 @@ const {spawn}=require('child_process');
  * output
  *      list
  */
-class List {
-    static list(args){
-        return new Promise((resolve,reject)=>{
-            const process=spawn('unrar',['lt',args.filepath]);
+class List{
+    static async list(args){
+        const process=spawn('unrar',[
+            'lt',
+            args.filepath
+        ]);
 
-            let stdout=''
-              , stderr='';
+        let stdout='',
+            stderr='';
 
-            process.stdout.on('data',(data)=>{
-                stdout+=data;
-            });
+        for await (const data of process.stdout){
+            stdout+=data;
+        }
 
-            process.stderr.on('data',(data)=>{
-                stderr+=data;
-            });
+        for await (const data of process.stderr){
+            stderr+=data;
+        }
 
-            process.on('close',(code)=>{
-                if(code!=0){
-                    reject(new Error(stderr));
-                    return;
-                }
-
-                args.list=stdout
-                    .split('\n\n')
-                    .filter((i)=>{
-                        return /Type: File/.test(i);
-                    })
-                    .map((j)=>{
-                        return /Name: (.*)/.exec(j)[1];
-                    });
-
-                resolve(args);
-            });
+        const code=await new Promise((resolve)=>{
+            process.on('close',resolve);
         });
+
+        if(code===0){
+            args.list=stdout
+            .split('\n\n')
+            .filter((i)=>{
+                return /Type: File/.test(i);
+            })
+            .map((j)=>{
+                return /Name: (.*)/.exec(j)[1];
+            });
+
+            return args;
+        }else{
+            console.log('ERROR: %s',stderr);
+
+            throw new Error('list_error');
+        }
     }
 }
 
-module.exports=List;
+export default List;
 

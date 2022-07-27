@@ -1,4 +1,4 @@
-const {spawn}=require('child_process');
+import {spawn} from 'child_process';
 
 /*
  * input
@@ -7,38 +7,39 @@ const {spawn}=require('child_process');
  * output
  *      list
  */
-class Sort {
-    static sort(args){
-        return new Promise((resolve,reject)=>{
-            const process=spawn('sort',['-V']);
+class Sort{
+    static async sort(args){
+        const process=spawn('sort',['-V']);
 
-            let stdout=''
-              , stderr='';
+        let stdout='',
+            stderr='';
 
-            process.stdin.write(args.list.join('\n'));
-            process.stdin.end();
+        process.stdin.write(args.list.join('\n'));
+        process.stdin.end();
 
-            process.stdout.on('data',(data)=>{
-                stdout+=data;
-            });
+        for await (const data of process.stdout){
+            stdout+=data;
+        }
 
-            process.stderr.on('data',(data)=>{
-                stderr+=data;
-            });
+        for await (const data of process.stderr){
+            stderr+=data;
+        }
 
-            process.on('close',(code)=>{
-                if(code!=0){
-                    reject(new Error(stderr));
-                    return;
-                }
-
-                args.list=stdout.trim().split('\n');
-
-                resolve(args);
-            });
+        const code=await new Promise((resolve)=>{
+            process.on('close',resolve);
         });
+
+        if(code===0){
+            args.list=stdout.trim().split('\n');
+
+            return args;
+        }else{
+            console.log('ERROR: %s',stderr);
+
+            throw new Error('sort_error');
+        }
     }
 }
 
-module.exports=Sort;
+export default Sort;
 

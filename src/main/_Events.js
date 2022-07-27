@@ -1,29 +1,29 @@
-const {app,dialog,ipcMain,Menu}=require('electron')
-  , dirname=require('path').dirname
-  , {
-        OPEN_FILE
-      , CLOSE_FILE
-      , SETTINGS
-      , QUIT
-      , VIEW_TOOLBAR
-      , VIEW_STATUSBAR
-      , FULLSCREEN
-      , DOUBLE_PAGE
-      , MANGA_MODE
-      , FIT_BEST
-      , FIT_WIDTH
-      , FIT_HEIGHT
-      , ROTATE_CW
-      , ROTATE_CCW
-      , FIRST_PAGE
-      , PREVIOUS_PAGE
-      , NEXT_PAGE
-      , LAST_PAGE
-      , SET_STATE
-      , REFRESH
-    }=require('../constants');
+import {app,dialog,ipcMain,Menu} from 'electron';
+import {dirname} from 'path';
+import {
+    OPEN_FILE,
+    CLOSE_FILE,
+    SETTINGS,
+    QUIT,
+    VIEW_TOOLBAR,
+    VIEW_STATUSBAR,
+    FULLSCREEN,
+    DOUBLE_PAGE,
+    MANGA_MODE,
+    FIT_BEST,
+    FIT_WIDTH,
+    FIT_HEIGHT,
+    ROTATE_CW,
+    ROTATE_CCW,
+    FIRST_PAGE,
+    PREVIOUS_PAGE,
+    NEXT_PAGE,
+    LAST_PAGE,
+    SET_STATE,
+    REFRESH
+} from '../constants';
 
-class Events {
+class Events{
     constructor(app,mainWindow,store,book){
         this._app=app;
         this._mainWindow=mainWindow;
@@ -93,14 +93,14 @@ class Events {
 
     status(){
         return Promise.resolve({
-            filepath:this._book.filepath
-          , toolbar:this._toolbar
-          , statusbar:this._statusbar
-          , fullscreen:this._fullscreen
-          , doublepage:this._doublepage
-          , mangamode:this._mangamode
-          , fitmode:this._fitmode
-          , rotation:this._rotation
+            filepath:this._book.filepath,
+            toolbar:this._toolbar,
+            statusbar:this._statusbar,
+            fullscreen:this._fullscreen,
+            doublepage:this._doublepage,
+            mangamode:this._mangamode,
+            fitmode:this._fitmode,
+            rotation:this._rotation
         });
     }
 
@@ -140,10 +140,10 @@ class Events {
             console.log(error);
 
             dialog.showMessageBox(this._mainWindow,{
-                type:'error'
-              , buttons:['OK']
-              , title:'Error'
-              , message:'The file could not be opened'
+                type:'error',
+                buttons:['OK'],
+                title:'Error',
+                message:'The file could not be opened'
             });
         });
     }
@@ -159,7 +159,7 @@ class Events {
             }];
 
             if(args.doublepage){
-                if(direction==1){
+                if(direction===1){
                     if(current<this._book.total-1){
                         this._last=current+1;
                         this._book.current=current;
@@ -174,7 +174,7 @@ class Events {
                     }
                 }
 
-                if(direction==-1){
+                if(direction===-1){
                     if(current>0){
                         this._last=current;
                         this._book.current=current-1;
@@ -204,7 +204,7 @@ class Events {
     handle(command){
         return (()=>{
             switch(command){
-                case OPEN_FILE:
+                case OPEN_FILE:{
                     let filepath=this._store.get('filepath');
 
                     if(filepath){
@@ -214,13 +214,13 @@ class Events {
                     }
 
                     dialog.showOpenDialog(this._mainWindow,{
-                        title:'Open File'
-                      , defaultPath:filepath
-                      , buttonLabel:'Open'
-                      , properties:['openFile']
+                        title:'Open File',
+                        defaultPath:filepath,
+                        buttonLabel:'Open',
+                        properties:['openFile']
                     })
                     .then((args)=>{
-                        if(!args.canceled&&args.filePaths.length==1){
+                        if(!args.canceled&&args.filePaths.length===1){
                             return this.open(args.filePaths[0]);
                         }
                     })
@@ -229,6 +229,7 @@ class Events {
                     });
 
                     break;
+                }
                 case CLOSE_FILE:
                     this._book.close()
                     .then(this.status.bind(this))
@@ -405,10 +406,12 @@ class Events {
                     });
 
                     break;
+                default:
+                    break;
             }
-        }).bind(this);
+        });
     }
 }
 
-module.exports=Events;
+export default Events;
 

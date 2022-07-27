@@ -1,4 +1,4 @@
-const fs=require('fs');
+import {access,constants} from 'fs/promises';
 
 /*
  * input
@@ -7,21 +7,19 @@ const fs=require('fs');
  * output
  *      check
  */
-class Exists {
-    static exists(args){
-        return new Promise((resolve,reject)=>{
-            fs.access(args.filepath,fs.constants.R_OK,(error)=>{
-                if(error){
-                    reject(error);
-                    return;
-                }
+class Exists{
+    static async exists(args){
+        try{
+            await access(args.filepath,constants.R_OK);
 
-                args.check=true;
-                resolve(args);
-            });
-        });
+            args.check=true;
+
+            return args;
+        }catch{
+            throw new Error('access_error');
+        }
     }
 }
 
-module.exports=Exists;
+export default Exists;
 

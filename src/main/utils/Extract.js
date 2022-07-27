@@ -1,59 +1,64 @@
-const {spawn}=require('child_process')
-  , fs=require('fs')
-  , path=require('path')
-  , uuidv4=require('uuid/v4');
+import {spawn} from 'child_process';
+import {rename} from 'fs/promises';
+import {extname,resolve} from 'path';
+import {v4} from 'uuid';
 
 /*
  * input
  *      config
- *          cache
- *          pages
+ *          cacheDir
+ *          pagesDir
  *      filepath
  *      item
  *
  * output
  *      hash
  */
-class Extract {
-    static extract(args){
-        return new Promise((resolve,reject)=>{
-            const process=spawn('unrar',[
-                'e','-o+',args.filepath,args.item,args.config.cache]);
+class Extract{
+    static async extract(args){
+        const process=spawn('unrar',[
+            'e',
+            '-o+',
+            args.filepath,       // source rar file
+            args.item,           // file inside rar file
+            args.config.cacheDir // folder to extract
+        ]);
 
-            let stdout=''
-              , stderr='';
+        let stdout='',
+            stderr='';
 
-            process.stdout.on('data',(data)=>{
-                stdout+=data;
-            });
+        for await (const data of process.stdout){
+            stdout+=data;
+        }
 
-            process.stderr.on('data',(data)=>{
-                stderr+=data;
-            });
+        for await (const data of process.stderr){
+            stderr+=data;
+        }
 
-            process.on('close',(code)=>{
-                if(code!=0){
-                    reject(new Error(stderr));
-                    return;
-                }
-
-                let old_path=/Extracting  (.*)   /.exec(stdout)[1].trim()
-                  , hash=uuidv4()+path.extname(old_path);
-
-                fs.rename(old_path,path.resolve(args.config.pages,hash),
-                    (error)=>{
-                    if(error){
-                        reject(error);
-                        return;
-                    }
-
-                    args.hash=hash;
-                    resolve(args);
-                });
-            });
+        const code=await new Promise((resolve)=>{
+            process.on('close',resolve);
         });
+
+        if(code===0){
+            const oldPath=/Extracting {2}(.*) {3}/
+                .exec(stdout)[1].trim(),
+                hash=v4()+extname(oldPath);
+
+            await rename(
+                oldPath,
+                resolve(args.config.pagesDir,hash)
+            );
+
+            args.hash=hash;
+
+            return args;
+        }else{
+            console.log('ERROR: %s',stderr);
+
+            throw new Error('extract_error');
+        }
     }
 }
 
-module.exports=Extract;
+export default Extract;
 

@@ -1,27 +1,27 @@
-require('should');
-
-const Exists=require('../../../src/main/utils/Exists')
-  , config=require('../../config');
+import 'should';
+import {join} from 'path';
+import Exists from '../../../src/main/utils/Exists.js';
+import configTest from '../../../config/test.js';
 
 describe('Exists',()=>{
-    it('positive case',(done)=>{
-        Exists.exists({
-            filepath:config.testcase.folder+config.testcase.books[0]
-        })
-        .then((args)=>{
-            args.should.have.property('check').and.be.eql(true);
-            done();
+    const config=configTest();
+
+    it('Exists.js#1',async()=>{
+        const args=await Exists.exists({
+            filepath:join(config.folder,config.books[0])
         });
+
+        args.should.have.property('check').and.be.eql(true);
     });
 
-    it('negative case',(done)=>{
-        Exists.exists({
-            filepath:config.testcase.folder+'/nofile'
-        })
-        .catch((error)=>{
-            console.log(error);
-            done();
-        });
+    it('Exists.js#2',async()=>{
+        try{
+            await Exists.exists({
+                filepath:join(config.folder,'nofile')
+            });
+        }catch(error){
+            error.message.should.be.eql('access_error');
+        }
     });
 });
 
