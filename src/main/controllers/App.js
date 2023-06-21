@@ -3,53 +3,58 @@ import Viewport from '../models/Viewport.js';
 import Store from '../store/Store.js';
 
 class App{
-    constructor(app,cacheDir,pagesDir){
+    constructor(app,config){
         this._app=app;
         this._store=new Store();
         this._viewport=new Viewport(this._store);
-        this._book=new Book(cacheDir,pagesDir);
+        this._config=config;
+        this._book=new Book(config.cacheDir,config.pagesDir);
     }
 
-    toogleToolbar(){
-        this._viewport.toolbar=!this._viewport.toolbar;
-    }
-    getToolbar(){
-        return this._viewport.toolbar;
+    getMode(){
+        return this._config.mode;
     }
 
-    toogleStatusbar(statusbar){
-        this._viewport.statusbar=!this._viewport.statusbar;
+    toogleToolBar(){
+        this._viewport.toolBar=!this._viewport.toolBar;
     }
-    getStatusbar(){
-        return this._viewport.statusbar;
-    }
-
-    toogleFullscreen(fullscreen){
-        this._viewport.fullscreen=!this._viewport.fullscreen;
-    }
-    getFullscreen(){
-        return this._viewport.fullscreen;
+    getToolBar(){
+        return this._viewport.toolBar;
     }
 
-    toogleDoublepage(doublepage){
-        this._viewport.doublepage=!this._viewport.doublepage;
+    toogleStatusBar(){
+        this._viewport.statusBar=!this._viewport.statusBar;
     }
-    getDoublepage(){
-        return this._viewport.doublepage;
-    }
-
-    toogleMangamode(mangamode){
-        this._viewport.mangamode=!this._viewport.mangamode;
-    }
-    getMangamode(){
-        return this._viewport.mangamode;
+    getStatusBar(){
+        return this._viewport.statusBar;
     }
 
-    setFitmode(fitmode){
-        this._viewport.fitmode=fitmode;
+    toogleFullScreen(){
+        this._viewport.fullScreen=!this._viewport.fullScreen;
     }
-    getFitmode(){
-        return this._viewport.fitmode;
+    getFullScreen(){
+        return this._viewport.fullScreen;
+    }
+
+    setPageMode(pageMode){
+        this._viewport.pageMode=pageMode;
+    }
+    getPageMode(){
+        return this._viewport.pageMode;
+    }
+
+    setReadMode(readMode){
+        this._viewport.readMode=readMode;
+    }
+    getReadMode(){
+        return this._viewport.readMode;
+    }
+
+    setFitMode(fitMode){
+        this._viewport.fitMode=fitMode;
+    }
+    getFitMode(){
+        return this._viewport.fitMode;
     }
 
     setRotation(rotation){
@@ -98,7 +103,7 @@ class App{
         }else{
             this._book.current--;
 
-            if(this.getDoublepage()){
+            if(this.getDoublePage()){
                 const dpage=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
@@ -111,7 +116,7 @@ class App{
                     this._book.current--;
                 }
 
-                if(this.getMangamode()){
+                if(this.getMangaMode()){
                     return dpage.reverse();
                 }else{
                     return dpage;
@@ -128,7 +133,7 @@ class App{
         if(this._book.current<this._book.total-1){
             this._book.current++;
 
-            if(this.getDoublepage()){
+            if(this.getDoublePage()){
                 const dpage=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
@@ -141,7 +146,7 @@ class App{
                     this._book.current++;
                 }
 
-                if(this.getMangamode()){
+                if(this.getMangaMode()){
                     return dpage.reverse();
                 }else{
                     return dpage;
@@ -159,7 +164,7 @@ class App{
     lastPage(){
         this._book.current=this._book.total-1;
 
-        if(this.getDoublepage()){
+        if(this.getDoublePage()){
             const dpage=this._book.dpages
             .find((_dpage)=>{
                 return _dpage

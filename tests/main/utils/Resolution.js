@@ -5,7 +5,7 @@ import Extract from '../../../src/main/utils/Extract.js';
 import List from '../../../src/main/utils/List.js';
 import Sort from '../../../src/main/utils/Sort.js';
 import Resolution from '../../../src/main/utils/Resolution.js';
-import configTest from '../../../config/test.js';
+import configTest from '../../../tests/config/app.js';
 
 describe('Resolution',()=>{
     const config=configTest();
@@ -27,8 +27,8 @@ describe('Resolution',()=>{
 
         args=await Resolution.resolution(args);
 
-        args.should.have.property('width').and.be.eql(903);
-        args.should.have.property('height').and.be.eql(1300);
+        args.should.have.property('width').and.be.eql(1100);
+        args.should.have.property('height').and.be.eql(1600);
 
         unlink(resolve(config.pagesDir,args.hash));
     });
@@ -50,8 +50,8 @@ describe('Resolution',()=>{
 
         args=await Resolution.resolution(args);
 
-        args.should.have.property('width').and.be.eql(900);
-        args.should.have.property('height').and.be.eql(1280);
+        args.should.have.property('width').and.be.eql(843);
+        args.should.have.property('height').and.be.eql(1199);
 
         unlink(resolve(config.pagesDir,args.hash));
     });

@@ -1,0 +1,49 @@
+.menuitem {
+    width: 18px;
+    height: 18px;
+    margin: 4px 3px -1px 3px;
+    padding: 0;
+}
+
+.menuitem-light {
+    border: none;
+    background-color: hsl(0,100%,100%);
+}
+
+.menuitem-dark { 
+    border: none;
+    background-color: hsl(210,3.6%,11%);
+}
+
+.menuitem-light > svg > path {
+    fill: hsl(210,3.6%,75%);
+}
+
+.menuitem-light.selected > svg > path {
+    fill: hsl(210,3.6%,15%);
+}
+
+.menuitem-light:hover > svg > path {
+    fill: hsl(210,43.6%,50%);
+}
+
+.menuitem-light.disabled > svg > path {
+    fill: hsl(210,3.6%,90%);
+}
+
+.menuitem-dark > svg > path {
+    fill: hsl(210,3.6%,30%);
+}
+
+.menuitem-dark.selected > svg > path {
+    fill: hsl(210,3.6%,100%);
+}
+
+.menuitem-dark:hover > svg > path {
+    fill: hsl(210,43.6%,50%);
+}
+
+.menuitem-dark.disabled > svg > path {
+    fill: hsl(210,3.6%,15%);
+}
+

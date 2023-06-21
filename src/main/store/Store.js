@@ -8,29 +8,29 @@ class Store extends BaseStore{
             serialize:yaml.dump,
             deserialize:yaml.load,
             schema:{
-                toolbar:{
+                toolBar:{
                     type:'boolean',
                     default:true
                 },
-                statusbar:{
+                statusBar:{
                     type:'boolean',
                     default:true
                 },
-                fullscreen:{
+                fullScreen:{
                     type:'boolean',
                     default:false
                 },
-                doublepage:{
-                    type:'boolean',
-                    default:false
-                },
-                mangamode:{
-                    type:'boolean',
-                    default:false
-                },
-                fitmode:{
+                pageMode:{
                     type:'string',
-                    default:'best'
+                    default:'doublePage'
+                },
+                readMode:{
+                    type:'string',
+                    default:'mangaMode'
+                },
+                fitMode:{
+                    type:'string',
+                    default:'fitBest'
                 },
                 rotation:{
                     type:'number',
@@ -59,6 +59,7 @@ class Store extends BaseStore{
                         type:'string'
                     }
                 },
+
                 recentFiles:{
                     type:'array',
                     items:{

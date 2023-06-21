@@ -4,7 +4,7 @@ import {join,resolve} from 'path';
 import Extract from '../../../src/main/utils/Extract.js';
 import List from '../../../src/main/utils/List.js';
 import Sort from '../../../src/main/utils/Sort.js';
-import configTest from '../../../config/test.js';
+import configTest from '../../../tests/config/app.js';
 
 describe('Extract',()=>{
     const config=configTest();

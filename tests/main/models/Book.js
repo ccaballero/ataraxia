@@ -1,13 +1,11 @@
 import should from 'should';
-import {join,resolve} from 'path';
+import {join} from 'path';
 import Book from '../../../src/main/models/Book.js';
-import configTest from '../../../config/test.js';
+import configTest from '../../../tests/config/app.js';
 
 describe('Book',()=>{
     const config=configTest(),
-        cacheDir=join(resolve(),'public','cache'),
-        pagesDir=join(resolve(),'public','pages'),
-        book=new Book(cacheDir,pagesDir);
+        book=new Book(config.cacheDir,config.pagesDir);
 
     it('Book.js#load',async()=>{
         book.filepath=join(config.folder,config.books[0]);
@@ -46,11 +44,11 @@ describe('Book',()=>{
 
         book
         .dpages
-        .forEach((dpage,i)=>{
+        .forEach((dpage)=>{
             let sum='';
 
             dpage
-            .forEach((page,i)=>{
+            .forEach((page)=>{
                 sum+=page.toString();
             });
 

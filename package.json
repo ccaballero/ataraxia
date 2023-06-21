@@ -2,87 +2,38 @@
     "name": "ataraxia",
     "version": "0.0.3",
     "description": "comic and manga reader",
-    "private": true,
+    "main": "./out/main/index.js",
     "type": "module",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ccaballero/ataraxia.git"
-    },
-    "keywords": [
-        "cbr",
-        "manga",
-        "comic",
-        "reader"
-    ],
-    "author": "Carlos E. Caballero B.",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/ccaballero/ataraxia/issues"
-    },
-    "homepage": "https://github.com/ccaballero/ataraxia#readme",
-    "main": "src/main.js",
     "scripts": {
-        "dev": "webpack server --hot --host 0.0.0.0 --port 2999 --config webpack.dev.config.js",
-        "prod": "webpack --bail --config webpack.prod.config.js --progress && electron --noDevServer .",
-        "package": "webpack --config webpack.prod.config.js --progress"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.15.8",
-        "@babel/preset-env": "^7.15.8",
-        "@babel/preset-react": "^7.14.5",
-        "babel-eslint": "^10.1.0",
-        "babel-loader": "^8.2.5",
-        "babel-minify-webpack-plugin": "^0.3.1",
-        "clean-webpack-plugin": "^4.0.0",
-        "copy-webpack-plugin": "^9.0.1",
-        "css-loader": "^6.4.0",
-        "eslint": "^8.20.0",
-        "eslint-config-react-app": "^7.0.1",
-        "eslint-plugin-flowtype": "^6.1.1",
-        "eslint-plugin-import": "^2.25.2",
-        "eslint-plugin-jsx-a11y": "^6.6.1",
-        "eslint-plugin-react": "^7.30.1",
-        "eslint-plugin-react-hooks": "^4.2.0",
-        "file-loader": "^6.2.0",
-        "html-webpack-plugin": "^5.5.0",
-        "mocha": "^10.0.0",
-        "should": "^13.2.3",
-        "style-loader": "^3.3.1",
-        "webpack": "^5.21.2",
-        "webpack-cli": "^4.5.0",
-        "webpack-dev-server": "^3.11.2"
+        "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+        "start": "electron-vite preview",
+        "dev": "electron-vite dev",
+        "build": "electron-vite build",
+        "postinstall": "electron-builder install-app-deps",
+        "build:win": "npm run build && electron-builder --win --config",
+        "build:mac": "npm run build && electron-builder --mac --config",
+        "build:linux": "npm run build && electron-builder --linux --config"
     },
     "dependencies": {
-        "electron": "^15.3.0",
-        "electron-log": "^4.4.8",
-        "electron-store": "^8.0.2",
+        "@electron-toolkit/preload": "^2.0.0",
+        "@electron-toolkit/utils": "^1.0.2",
+        "electron-store": "^8.1.0",
         "image-size": "^1.0.2",
-        "js-yaml": "^4.1.0",
-        "react": "^17.0.2",
-        "react-dom": "^17.0.2",
-        "react-i18next": "^11.12.0",
-        "react-pdf": "^5.4.1",
-        "react-router-dom": "^5.3.0",
-        "react-semantic-toasts": "^0.6.5",
-        "react-transition-group": "^4.4.2",
-        "semantic-ui-css": "^2.4.1",
-        "semantic-ui-react": "^2.0.4",
-        "uuid": "^8.3.2"
+        "uuid": "^9.0.0"
     },
-    "browserslist": {
-        "production": [
-            ">0.2%",
-            "not dead",
-            "not ie <= 11",
-            "not op_mini all"
-        ],
-        "development": [
-            "last 1 chrome version",
-            "last 1 firefox version",
-            "last 1 safari version"
-        ]
-    },
-    "eslintConfig": {
-        "extends": "react-app"
+    "devDependencies": {
+        "@electron/notarize": "^1.2.3",
+        "@vitejs/plugin-react": "^4.0.0",
+        "electron": "^24.4.1",
+        "electron-builder": "^23.6.0",
+        "electron-vite": "^1.0.23",
+        "eslint": "^8.42.0",
+        "eslint-plugin-react": "^7.32.2",
+        "mocha": "^10.2.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "should": "^13.2.3",
+        "vite": "^4.3.9",
+        "vite-plugin-svgr": "^3.2.0"
     }
 }

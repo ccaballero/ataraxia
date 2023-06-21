@@ -1,13 +1,11 @@
 import 'should';
-import {join,resolve} from 'path';
+import {join} from 'path';
 import App from '../../../src/main/controllers/App.js';
-import configTest from '../../../config/test.js';
+import configTest from '../../../tests/config/app.js';
 
 describe('App',()=>{
     const config=configTest(),
-        cacheDir=join(resolve(),'public','cache'),
-        pagesDir=join(resolve(),'public','pages'),
-        app=new App(null,cacheDir,pagesDir);
+        app=new App(null,config.cacheDir,config.pagesDir);
 
     it('App.js#toolbar',async()=>{
         const value=app.getToolbar();

@@ -1,0 +1,27 @@
+header {
+    margin: 0;
+    padding: 0;
+}
+
+header > .wrapper {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.menubar {
+    margin: 0;
+    padding: 0;
+}
+
+.menubar-light {
+    background-color: hsl(0,100%,100%);
+    border-bottom: 1px solid hsl(210,3.6%,75%);
+}
+.menubar-dark { 
+    background-color: hsl(210,3.6%,11%);
+    border-bottom: 1px solid hsl(210,3.6%,20%);
+}
+

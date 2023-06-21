@@ -2,7 +2,7 @@ import 'should';
 import {join} from 'path';
 import List from '../../../src/main/utils/List.js';
 import Sort from '../../../src/main/utils/Sort.js';
-import configTest from '../../../config/test.js';
+import configTest from '../../../tests/config/app.js';
 
 describe('Sort',()=>{
     const config=configTest();
@@ -24,7 +24,7 @@ describe('Sort',()=>{
 
         args=await Sort.sort(args);
 
-        args.list.length.should.be.eql(183);
+        args.list.length.should.be.eql(187);
     });
 });
 

@@ -1,7 +1,7 @@
 import 'should';
 import {join} from 'path';
 import List from '../../../src/main/utils/List.js';
-import configTest from '../../../config/test.js';
+import configTest from '../../../tests/config/app.js';
 
 describe('List',()=>{
     const config=configTest();
@@ -19,7 +19,7 @@ describe('List',()=>{
             filepath:join(config.folder,config.books[1])
         });
 
-        args.list.length.should.be.eql(183);
+        args.list.length.should.be.eql(187);
     });
 });
 

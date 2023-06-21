@@ -4,20 +4,17 @@ env:
     node: true
     mocha: true
 extends:
-    - 'react-app'
-    - 'plugin:jsx-a11y/recommended'
     - 'eslint:recommended'
+    - 'plugin:react/recommended'
+    - 'plugin:react/jsx-runtime'
 globals:
     Atomics: readonly
     SharedArrayBuffer: readonly
 parserOptions:
     ecmaFeatures:
         jsx: true
-    ecmaVersion: 2018
+    ecmaVersion: 2021
     sourceType: module
-plugins:
-    - 'jsx-a11y'
-    - 'react'
 rules:
     arrow-spacing:
         - error
@@ -32,11 +29,6 @@ rules:
     eol-last:
         - error
         - always
-    import/no-anonymous-default-export:
-        - error
-        - allowArray: true
-          allowArrowFunction: true
-          allowObject: true
     indent:
         - error
         - 4

@@ -1,22 +1,13 @@
-# logs
-logs
-*.log
-*npm-debug.log
-
-# swaps (vim)
-*.swp
-*.orig
-
-# dependency directories
 node_modules
+
 package-lock.json
 yarn.lock
 
-# build
-dist
-builds
+*.swp
+*.orig
+.env
 
-*.npmrc
-*tmp
-*.nyc_output
+dist
+out
+*.log*
 

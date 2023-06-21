@@ -1,61 +1,61 @@
 class Viewport{
     constructor(store){
-        this._toolbar=store.get('toolbar');
-        this._statusbar=store.get('statusbar');
-        this._fullscreen=store.get('fullscreen');
-        this._doublepage=store.get('doublepage');
-        this._mangamode=store.get('mangamode');
-        this._fitmode=store.get('fitmode');
+        this._toolBar=store.get('toolBar');
+        this._statusBar=store.get('statusBar');
+        this._fullScreen=store.get('fullScreen');
+        this._pageMode=store.get('pageMode');
+        this._readMode=store.get('readMode');
+        this._fitMode=store.get('fitMode');
         this._rotation=store.get('rotation');
     }
 
-    set toolbar(toolbar){
-        this._toolbar=toolbar;
+    set toolBar(toolBar){
+        this._toolBar=toolBar;
     }
 
-    get toolbar(){
-        return this._toolbar;
+    get toolBar(){
+        return this._toolBar;
     }
 
-    set statusbar(statusbar){
-        this._statusbar=statusbar;
+    set statusBar(statusBar){
+        this._statusBar=statusBar;
     }
 
-    get statusbar(){
-        return this._statusbar;
+    get statusBar(){
+        return this._statusBar;
     }
 
-    set fullscreen(fullscreen){
-        this._fullscreen=fullscreen;
+    set fullScreen(fullScreen){
+        this._fullScreen=fullScreen;
     }
 
-    get fullscreen(){
-        return this._fullscreen;
+    get fullScreen(){
+        return this._fullScreen;
     }
 
-    set doublepage(doublepage){
-        this._doublepage=doublepage;
+    set modePage(modePage){
+        this._modePage=modePage;
     }
 
-    get doublepage(){
-        return this._doublepage;
+    get modePage(){
+        return this._modePage;
     }
 
-    set mangamode(mangamode){
-        this._mangamode=mangamode;
+    set readMode(readMode){
+        this._readMode=readMode;
     }
 
-    get mangamode(){
-        return this._mangamode;
+    get readMode(){
+        return this._readMode;
     }
 
-    // best, width, height
-    set fitmode(fitmode){
-        this._fitmode=fitmode;
+    // fitBest, fitWidth, fitHeight
+    set fitMode(fitMode){
+        this._fitMode=fitMode;
     }
 
-    get fitmode(){
-        return this._fitmode;
+    get fitMode(){
+        return this._fitMode;
     }
 
     // [(0º), (90ª), (180ª), (270º)]
