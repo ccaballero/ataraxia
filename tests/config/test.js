@@ -2,8 +2,8 @@ import {join,resolve} from 'path';
 
 export default ()=>{
     return {
-        cacheDir:join(resolve(),'resources','cache'),
-        pagesDir:join(resolve(),'resources','pages'),
+        cacheDir:join(resolve(),'src','renderer','public','cache'),
+        pagesDir:join(resolve(),'src','renderer','public','pages'),
         folder:'/home/jacobian/Documentos/Mangas',
         books:[
             'waiting/1997 - One Piece_/1056.cbr',

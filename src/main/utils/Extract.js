@@ -8,7 +8,7 @@ import {v4} from 'uuid';
  *      config
  *          cacheDir
  *          pagesDir
- *      filepath
+ *      filePath
  *      item
  *
  * output
@@ -19,7 +19,7 @@ class Extract{
         const process=spawn('unrar',[
             'e',
             '-o+',
-            args.filepath,       // source rar file
+            args.filePath,       // source rar file
             args.item,           // file inside rar file
             args.config.cacheDir // folder to extract
         ]);
@@ -43,6 +43,13 @@ class Extract{
             const oldPath=/Extracting {2}(.*) {3}/
                 .exec(stdout)[1].trim(),
                 hash=v4()+extname(oldPath);
+
+            console.log(
+                '%s -> %s',
+                oldPath,
+                args.config.pagesDir,
+                hash
+            );
 
             await rename(
                 oldPath,

@@ -1,14 +1,14 @@
 import should from 'should';
 import {join} from 'path';
 import Book from '../../../src/main/models/Book.js';
-import configTest from '../../../tests/config/app.js';
+import configTest from '../../../tests/config/test.js';
 
 describe('Book',()=>{
     const config=configTest(),
         book=new Book(config.cacheDir,config.pagesDir);
 
     it('Book.js#load',async()=>{
-        book.filepath=join(config.folder,config.books[0]);
+        book.filePath=join(config.folder,config.books[0]);
 
         await book.load();
 
@@ -59,7 +59,7 @@ describe('Book',()=>{
     it('Book.js#close',async()=>{
         await book.close();
 
-        should.not.exists(book.filepath);
+        should.not.exists(book.filePath);
         book.pages.should.be.Array().and.be.length(0);
         book.current.should.be.eql(-1);
     });

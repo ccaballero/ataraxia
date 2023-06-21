@@ -3,7 +3,6 @@
     "version": "0.0.3",
     "description": "comic and manga reader",
     "main": "./out/main/index.js",
-    "type": "module",
     "scripts": {
         "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
         "start": "electron-vite preview",

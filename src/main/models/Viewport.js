@@ -33,12 +33,12 @@ class Viewport{
         return this._fullScreen;
     }
 
-    set modePage(modePage){
-        this._modePage=modePage;
+    set pageMode(pageMode){
+        this._pageMode=pageMode;
     }
 
-    get modePage(){
-        return this._modePage;
+    get pageMode(){
+        return this._pageMode;
     }
 
     set readMode(readMode){

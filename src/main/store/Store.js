@@ -65,7 +65,7 @@ class Store extends BaseStore{
                     items:{
                         type:'object',
                         properties:{
-                            filepath:{
+                            filePath:{
                                 type:'string'
                             },
                             page:{

@@ -64,8 +64,8 @@ class App{
         return this._viewport.rotation;
     }
 
-    async openFile(filepath){
-        this._book.filepath=filepath;
+    async openFile(filePath){
+        this._book.filePath=filePath;
 
         await this._book.load();
         await this._book.map();
@@ -103,7 +103,7 @@ class App{
         }else{
             this._book.current--;
 
-            if(this.getDoublePage()){
+            if(this.getPageMode()==='pageMode'){
                 const dpage=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
@@ -133,7 +133,7 @@ class App{
         if(this._book.current<this._book.total-1){
             this._book.current++;
 
-            if(this.getDoublePage()){
+            if(this.getPageMode()==='pageMode'){
                 const dpage=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
@@ -164,7 +164,7 @@ class App{
     lastPage(){
         this._book.current=this._book.total-1;
 
-        if(this.getDoublePage()){
+        if(this.getPageMode()==='pageMode'){
             const dpage=this._book.dpages
             .find((_dpage)=>{
                 return _dpage

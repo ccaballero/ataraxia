@@ -2,7 +2,7 @@ import {spawn} from 'child_process';
 
 /*
  * input
- *      filepath
+ *      filePath
  *
  * output
  *      list
@@ -11,7 +11,7 @@ class List{
     static async list(args){
         const process=spawn('unrar',[
             'lt',
-            args.filepath
+            args.filePath
         ]);
 
         let stdout='',

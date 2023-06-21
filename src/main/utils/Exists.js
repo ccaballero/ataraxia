@@ -2,7 +2,7 @@ import {access,constants} from 'fs/promises';
 
 /*
  * input
- *      filepath
+ *      filePath
  *
  * output
  *      check
@@ -10,7 +10,7 @@ import {access,constants} from 'fs/promises';
 class Exists{
     static async exists(args){
         try{
-            await access(args.filepath,constants.R_OK);
+            await access(args.filePath,constants.R_OK);
 
             args.check=true;
 

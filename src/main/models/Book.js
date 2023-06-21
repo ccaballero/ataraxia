@@ -11,18 +11,18 @@ class Book{
     constructor(cacheDir,pagesDir){
         this._cacheDir=cacheDir;
         this._pagesDir=pagesDir;
-        this._filepath=null;
+        this._filePath=null;
         this._current=-1;
         this._pages=[];
         this._dpages=[];
     }
 
-    set filepath(filepath){
-        this._filepath=filepath;
+    set filePath(filePath){
+        this._filePath=filePath;
     }
 
-    get filepath(){
-        return this._filepath;
+    get filePath(){
+        return this._filePath;
     }
 
     get pages(){
@@ -35,7 +35,7 @@ class Book{
 
     async load(){
         let args=await Exists.exists({
-            filepath:this._filepath
+            filePath:this._filePath
         });
 
         args=await List.list(args);
@@ -57,7 +57,7 @@ class Book{
                         cacheDir:this._cacheDir,
                         pagesDir:this._pagesDir
                     },
-                    filepath:this._filepath,
+                    filePath:this._filePath,
                     item:this._pages[i].name
                 });
 
@@ -102,7 +102,7 @@ class Book{
             }
         }
 
-        this._filepath=null;
+        this._filePath=null;
         this._current=-1;
         this._pages=[];
         this._dpages=[];

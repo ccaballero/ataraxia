@@ -1,64 +1,64 @@
 import 'should';
 import {join} from 'path';
 import App from '../../../src/main/controllers/App.js';
-import configTest from '../../../tests/config/app.js';
+import configTest from '../../../tests/config/test.js';
 
 describe('App',()=>{
     const config=configTest(),
-        app=new App(null,config.cacheDir,config.pagesDir);
+        app=new App(null,config);
 
-    it('App.js#toolbar',async()=>{
-        const value=app.getToolbar();
-
-        value.should.be.Boolean();
-
-        app.toogleToolbar();
-        app.getToolbar().should.be.eql(!value);
-    });
-
-    it('App.js#statusbar',async()=>{
-        const value=app.getStatusbar();
+    it('App.js#toolBar',async()=>{
+        const value=app.getToolBar();
 
         value.should.be.Boolean();
 
-        app.toogleStatusbar();
-        app.getStatusbar().should.be.eql(!value);
+        app.toogleToolBar();
+        app.getToolBar().should.be.eql(!value);
     });
 
-    it('App.js#fullscreen',async()=>{
-        const value=app.getFullscreen();
+    it('App.js#statusBar',async()=>{
+        const value=app.getStatusBar();
 
         value.should.be.Boolean();
 
-        app.toogleFullscreen();
-        app.getFullscreen().should.be.eql(!value);
+        app.toogleStatusBar();
+        app.getStatusBar().should.be.eql(!value);
     });
 
-    it('App.js#doublepage',async()=>{
-        const value=app.getDoublepage();
+    it('App.js#fullScreen',async()=>{
+        const value=app.getFullScreen();
 
         value.should.be.Boolean();
 
-        app.toogleDoublepage();
-        app.getDoublepage().should.be.eql(!value);
+        app.toogleFullScreen();
+        app.getFullScreen().should.be.eql(!value);
     });
 
-    it('App.js#mangamode',async()=>{
-        const value=app.getMangamode();
-
-        value.should.be.Boolean();
-
-        app.toogleMangamode();
-        app.getMangamode().should.be.eql(!value);
-    });
-
-    it('App.js#fitmode',async()=>{
-        const value=app.getFitmode();
+    it('App.js#pageMode',async()=>{
+        const value=app.getPageMode();
 
         value.should.be.String();
 
-        app.setFitmode('width');
-        app.getFitmode().should.be.eql('width');
+        app.setPageMode('doublePage');
+        app.getPageMode().should.be.eql('doublePage');
+    });
+
+    it('App.js#readMode',async()=>{
+        const value=app.getReadMode();
+
+        value.should.be.String();
+
+        app.setReadMode('mangaMode');
+        app.getReadMode().should.be.eql('mangaMode');
+    });
+
+    it('App.js#fitMode',async()=>{
+        const value=app.getFitMode();
+
+        value.should.be.String();
+
+        app.setFitMode('fitWidth');
+        app.getFitMode().should.be.eql('fitWidth');
     });
 
     it('App.js#rotation',async()=>{
@@ -71,14 +71,14 @@ describe('App',()=>{
     });
 
     it('App.js#openFile',async()=>{
-        const filepath=join(config.folder,config.books[0]);
+        const filePath=join(config.folder,config.books[0]);
 
-        await app.openFile(filepath);
+        await app.openFile(filePath);
     });
 
     it('App.js#navigation(desc)(single)',async()=>{
-        app.toogleDoublepage();
-        app.toogleMangamode();
+        app.setPageMode('singlePage');
+        app.setReadMode('mangaPage');
 
         let viewer=app.firstPage(),
             loop=true;
@@ -126,7 +126,7 @@ describe('App',()=>{
     });
 
     it('App.js#navigation(desc)(double)',async()=>{
-        app.toogleDoublepage();
+        app.setPageMode('doublePage');
 
         let viewer=app.firstPage(),
             loop=true;
