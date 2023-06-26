@@ -44,12 +44,12 @@ class Extract{
                 .exec(stdout)[1].trim(),
                 hash=v4()+extname(oldPath);
 
-            console.log(
+            /*console.log(
                 '%s -> %s',
                 oldPath,
                 args.config.pagesDir,
                 hash
-            );
+            );*/
 
             await rename(
                 oldPath,

@@ -20,10 +20,10 @@ class StatusBar extends Component {
                         <span>
                             {this.props.pages
                             .map((v)=>{
-                                return v.index;
+                                return v.i+1;
                             })
                             .join(', ')}
-                            {this.props.pages&&' / '}
+                            {this.props.pages.length===0?'':' / '}
                             {this.props.total}
                         </span>
                     </div>
@@ -33,17 +33,18 @@ class StatusBar extends Component {
                     <div className='column'>
                         {this.props.pages
                         .map((page,i)=>{
-                            const proportion=
+                            /*const proportion=
                             this.props.viewport[i].width*100/page.width;
 
                             return page.width+'×'+page.height+
-                            ' ('+(Math.round(proportion*100)/100)+'%)';
+                            ' ('+(Math.round(proportion*100)/100)+'%)';*/
+                            return 0;
                         })
                         .join(' | ')}
                         &nbsp;
                     </div>
                     <div className='column'>
-                        {this.props.filePath}
+                        {this.props.message||this.props.filePath}
                     </div>
                 </div>
             </footer>

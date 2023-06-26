@@ -1,4 +1,4 @@
-import React,{Component,Fragment} from 'react';
+import React,{Component} from 'react';
 import MenuBar from './components/MenuBar.jsx';
 import Reader from './components/Reader.jsx';
 import StatusBar from './components/StatusBar.jsx';
@@ -11,34 +11,50 @@ class App extends Component {
     constructor(props){
         super(props);
 
+        this._isMounted=false;
         this.state={
-            data:{
-                /*filePath:'',
-                pages:[{
-                    index:0
-                }],
-                viewport:[{
-                    width:100,
-                    height:100
-                }],
-                total:0*/
-            },
+            data:{},
             ui:{}
         };
+
+        this.updateWindowDimensions=this.updateWindowDimensions.bind(this);
     }
 
     componentDidMount(){
-        ipcRenderer.on('state',this.handle.bind(this));
+        this._isMounted=true;
 
+        this.updateWindowDimensions();
+        window.addEventListener('resize',this.updateWindowDimensions);
+
+        ipcRenderer.on('state',this.handle.bind(this));
         ipcRenderer.send('state',{});
     }
 
     componentWillUnmount(){
+        this._isMounted=false;
+
+        window.removeEventListener('resize',this.updateWindowDimensions);
+
         ipcRenderer.removeListener('state',this.handle.bind(this));
     }
 
+    updateWindowDimensions(){
+        if(this._isMounted){
+            this.setState(Merge.mergeDeep(this.state,{
+                data:{
+                    viewport:{
+                        width:this.container.clientWidth,
+                        height:this.container.clientHeight
+                    }
+                }
+            }));
+        }
+    }
+
     handle(event,data){
-        this.setState(Merge.mergeDeep(this.state,data));
+        if(this._isMounted){
+            this.setState(Merge.mergeDeep(this.state,data));
+        }
     }
 
     eventClick(event){
@@ -90,7 +106,10 @@ class App extends Component {
 
     render(){
         return (
-            <Fragment>
+            <div
+                className='container'
+                ref={(container)=>this.container=container}
+            >
                 {
                     this.state.ui.toolBar&&
                     <MenuBar
@@ -100,13 +119,16 @@ class App extends Component {
                         readMode={this.state.ui.readMode}
                         openedFile={!!this.state.data.filePath}
                         eventClick={this.eventClick}
-                        className='block'
                     />
                 }
                 <Reader
                     mode={this.state.ui.mode}
                     toolBar={this.state.ui.toolBar}
                     statusBar={this.state.ui.statusBar}
+                    pages={this.state.data.pages||[]}
+                    viewport={this.state.data.viewport}
+                    rotation={this.state.ui.rotation}
+                    fitMode={this.state.ui.fitMode}
                 />
                 {
                     this.state.ui.statusBar&&
@@ -119,7 +141,7 @@ class App extends Component {
                         filePath={this.state.data.filePath}
                     />
                 }
-            </Fragment>
+            </div>
         );
     }
 }

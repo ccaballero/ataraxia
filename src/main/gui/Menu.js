@@ -12,7 +12,7 @@ import {
     8 => fit width
     9 => fit height
 
-    F => fullscreen
+    F => fullScreen
 
     [ => rotate cw
     ] => rotate ccw
@@ -28,8 +28,8 @@ import {
     S => settings
     Q => quit
 
-    V => toogle toolbar
-    B => toogle statusbar
+    V => toogle toolBar
+    B => toogle statusBar
  */
 
 class Menu{

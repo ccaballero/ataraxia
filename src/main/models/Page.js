@@ -57,6 +57,15 @@ class Page{
             '('+this._index+')▬':
             '('+this._index+')▮';
     }
+
+    toJSON(){
+        return {
+            index:this.index,
+            hash:this.hash,
+            width:this.width,
+            height:this.height
+        };
+    }
 }
 
 export default Page;

@@ -67,8 +67,14 @@ class Events{
                 });
 
                 break;
-            case 'openFile':{
+            case 'openFile':
                 (async()=>{
+                    this._mainWindow.send('state',{
+                        data:{
+                            message:'Open a file selector ...'
+                        }
+                    });
+
                     const filePath=app.getPath('home'),
                         args=await dialog.showOpenDialog(this._mainWindow,{
                             title:'Open File',
@@ -86,7 +92,6 @@ class Events{
                 })();
 
                 break;
-            }
             case 'closeFile':
                 (async()=>{
                     return this.close();
@@ -130,81 +135,119 @@ class Events{
             case 'fullScreen':
                 this._controller.toogleFullScreen();
 
+                this._mainWindow.setFullScreen(
+                    this._controller.getFullScreen()
+                );
                 this._mainWindow.send('state',{
                     ui:{
                         fullScreen:this._controller.getFullScreen()
                     }
                 });
-                this._mainWindow.setFullScreen(
-                    this._controller.getFullScreen()
-                );
 
                 break;
             case 'singlePage':
-                // TODO: console.log('Single Page');
-
-                break;
             case 'doublePage':
-                // TODO: console.log('Double Page');
+                this._controller.setPageMode(command);
+
+                this._mainWindow.send('state',{
+                    ui:{
+                        pageMode:this._controller.getPageMode()
+                    }
+                });
 
                 break;
             case 'comicMode':
-                // TODO: console.log('Comic Mode');
-
-                break;
             case 'mangaMode':
-                // TODO: console.log('Manga Mode');
+                this._controller.setReadMode(command);
+
+                this._mainWindow.send('state',{
+                    ui:{
+                        readMode:this._controller.getReadMode()
+                    }
+                });
 
                 break;
             case 'fitBest':
-                // TODO: console.log('Fit Best Mode');
-
-                break;
             case 'fitWidth':
-                // TODO: console.log('Fit Width Mode');
-
-                break;
             case 'fitHeight':
-                // TODO: console.log('Fit Height Mode');
+                this._controller.setFitMode(command);
+
+                this._mainWindow.send('state',{
+                    ui:{
+                        fitMode:this._controller.getFitMode()
+                    }
+                });
 
                 break;
             case 'rotationCW':
-                // TODO: console.log('Rotate 90 Degrees CW');
+                this._controller.setRotation(
+                    (this._controller.getRotation()+90)%360
+                );
+
+                this._mainWindow.send('state',{
+                    ui:{
+                        rotation:this._controller.getRotation()
+                    }
+                });
 
                 break;
             case 'rotationCCW':
-                // TODO: console.log('Rotate 90 Degrees CCW');
+                this._controller.setRotation(
+                    (this._controller.getRotation()-90)%360
+                );
+
+                this._mainWindow.send('state',{
+                    ui:{
+                        rotation:this._controller.getRotation()
+                    }
+                });
 
                 break;
             case 'firstPage':
                 (async()=>{
-                    const viewer=this._controller.firstPage();
-
-                    console.log('-->',viewer);
+                    this._mainWindow.send('state',{
+                        data:{
+                            pages:this._controller.firstPage()
+                        }
+                    });
                 })();
 
                 break;
             case 'previousPage':
                 (async()=>{
-                    const viewer=this._controller.previousPage();
-
-                    console.log('-->',viewer);
+                    try{
+                        this._mainWindow.send('state',{
+                            data:{
+                                pages:this._controller.previousPage()
+                            }
+                        });
+                    }catch(error){
+                        console.error(error);
+                    }
                 })();
 
                 break;
             case 'nextPage':
                 (async()=>{
-                    const viewer=this._controller.nextPage();
-
-                    console.log('-->',viewer);
+                    try{
+                        this._mainWindow.send('state',{
+                            data:{
+                                pages:this._controller.nextPage()
+                            }
+                        });
+                    }catch(error){
+                        console.error(error);
+                    }
                 })();
 
                 break;
             case 'lastPage':
                 (async()=>{
-                    const viewer=this._controller.lastPage();
-
-                    console.log('-->',viewer);
+                    this._mainWindow.send('state',{
+                        data:{
+                            pages:this._controller.lastPage()
+                        }
+                    });
                 })();
 
                 break;
@@ -236,17 +279,16 @@ class Events{
             menu.items[2].submenu.items[2].enabled=true;
             menu.items[2].submenu.items[3].enabled=true;
 
-            const viewer=this._controller.firstPage();
-
-            console.log('-->',viewer);
-
             this._mainWindow.send('state',{
                 data:{
+                    pages:this._controller.firstPage(),
+                    total:this._controller.book.total,
+                    message:'',
                     filePath:filePath
                 }
             });
         }catch(error){
-            console.log(error);
+            console.error(error);
 
             dialog.showMessageBox(this._mainWindow,{
                 type:'error',
@@ -278,7 +320,12 @@ class Events{
         menu.items[2].submenu.items[3].enabled=false;
 
         this._mainWindow.send('state',{
-            data:{}
+            data:{
+                pages:null,
+                total:null,
+                message:'Closed file',
+                filePath:null
+            }
         });
     }
 }

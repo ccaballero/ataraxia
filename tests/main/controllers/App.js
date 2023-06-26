@@ -78,9 +78,9 @@ describe('App',()=>{
 
     it('App.js#navigation(desc)(single)',async()=>{
         app.setPageMode('singlePage');
-        app.setReadMode('mangaPage');
+        app.setReadMode('comicMode');
 
-        let viewer=app.firstPage(),
+        let viewer=app.firstPage(false),
             loop=true;
 
         while(loop){
@@ -95,15 +95,20 @@ describe('App',()=>{
                     viewer.map(v=>v.toString()).join('|')
                 );
 
-                viewer=app.nextPage();
+                viewer=app.nextPage(false);
             }catch(error){
+                error.message.should.be.eql('next_error');
+
                 loop=false;
             }
         }
     });
 
     it('App.js#navigation(asc)(single)',async()=>{
-        let viewer=app.lastPage(),
+        app.setPageMode('singlePage');
+        app.setReadMode('comicMode');
+
+        let viewer=app.lastPage(false),
             loop=true;
 
         while(loop){
@@ -118,17 +123,20 @@ describe('App',()=>{
                     viewer.map(v=>v.toString()).join('|')
                 );
 
-                viewer=app.previousPage();
+                viewer=app.previousPage(false);
             }catch(error){
+                error.message.should.be.eql('previous_error');
+
                 loop=false;
             }
         }
     });
 
-    it('App.js#navigation(desc)(double)',async()=>{
+    it('App.js#navigation(desc)(double)(comic)',async()=>{
         app.setPageMode('doublePage');
+        app.setReadMode('comicMode');
 
-        let viewer=app.firstPage(),
+        let viewer=app.firstPage(false),
             loop=true;
 
         while(loop){
@@ -157,15 +165,20 @@ describe('App',()=>{
                     );
                 }
 
-                viewer=app.nextPage();
+                viewer=app.nextPage(false);
             }catch(error){
+                error.message.should.be.eql('next_error');
+
                 loop=false;
             }
         }
     });
 
-    it('App.js#navigation(asc)(double)',async()=>{
-        let viewer=app.lastPage(),
+    it('App.js#navigation(desc)(double)(manga)',async()=>{
+        app.setPageMode('doublePage');
+        app.setReadMode('mangaMode');
+
+        let viewer=app.firstPage(false),
             loop=true;
 
         while(loop){
@@ -183,7 +196,7 @@ describe('App',()=>{
                 }else{
                     viewer.length.should.be.eql(2);
                     viewer[0].index.should.be.eql(app.book.current);
-                    viewer[1].index.should.be.eql(app.book.current+1);
+                    viewer[1].index.should.be.eql(app.book.current-1);
 
                     console.log(
                         'progress: %s-%s/%s [%s]',
@@ -194,11 +207,169 @@ describe('App',()=>{
                     );
                 }
 
-                viewer=app.previousPage();
+                viewer=app.nextPage(false);
             }catch(error){
+                error.message.should.be.eql('next_error');
+
                 loop=false;
             }
         }
+    });
+
+    it('App.js#navigation(asc)(double)(comic)',async()=>{
+        app.setPageMode('doublePage');
+        app.setReadMode('comicMode');
+
+        let viewer=app.lastPage(false),
+            loop=true;
+
+        while(loop){
+            try{
+                if(viewer.length===1){
+                    viewer.length.should.be.eql(1);
+                    viewer[0].index.should.be.eql(app.book.current);
+
+                    console.log(
+                        'progress: %s/%s [%s]',
+                        app.book.current,
+                        app.book.total,
+                        viewer.map(v=>v.toString()).join('|')
+                    );
+                }else{
+                    viewer.length.should.be.eql(2);
+                    viewer[0].index.should.be.eql(app.book.current-1);
+                    viewer[1].index.should.be.eql(app.book.current);
+
+                    console.log(
+                        'progress: %s-%s/%s [%s]',
+                        app.book.current-1,
+                        app.book.current,
+                        app.book.total,
+                        viewer.map(v=>v.toString()).join('|')
+                    );
+                }
+
+                viewer=app.previousPage(false);
+            }catch(error){
+                error.message.should.be.eql('previous_error');
+
+                loop=false;
+            }
+        }
+    });
+
+    it('App.js#navigation(asc)(double)(manga)',async()=>{
+        app.setPageMode('doublePage');
+        app.setReadMode('mangaMode');
+
+        let viewer=app.lastPage(false),
+            loop=true;
+
+        while(loop){
+            try{
+                if(viewer.length===1){
+                    viewer.length.should.be.eql(1);
+                    viewer[0].index.should.be.eql(app.book.current);
+
+                    console.log(
+                        'progress: %s/%s [%s]',
+                        app.book.current,
+                        app.book.total,
+                        viewer.map(v=>v.toString()).join('|')
+                    );
+                }else{
+                    viewer.length.should.be.eql(2);
+                    viewer[0].index.should.be.eql(app.book.current);
+                    viewer[1].index.should.be.eql(app.book.current-1);
+
+                    console.log(
+                        'progress: %s-%s/%s [%s]',
+                        app.book.current-1,
+                        app.book.current,
+                        app.book.total,
+                        viewer.map(v=>v.toString()).join('|')
+                    );
+                }
+
+                viewer=app.previousPage(false);
+            }catch(error){
+                error.message.should.be.eql('previous_error');
+
+                loop=false;
+            }
+        }
+    });
+
+    it('App.js#navigation(random)(random)',async()=>{
+        app.setPageMode('doublePage');
+        app.setReadMode('mangaMode');
+
+        let viewer=app.firstPage(false);
+
+        viewer.length.should.be.eql(1);
+        viewer[0].index.should.be.eql(app.book.current);
+
+        console.log(
+            'progress: %s/%s [%s]',
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
+
+        app.setPageMode('singlePage');
+        viewer=app.nextPage(false);
+
+        viewer.length.should.be.eql(1);
+        viewer[0].index.should.be.eql(app.book.current);
+
+        console.log(
+            'progress: %s/%s [%s]',
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
+
+        app.setPageMode('doublePage');
+        viewer=app.nextPage(false);
+
+        viewer[0].index.should.be.eql(app.book.current);
+        viewer[1].index.should.be.eql(app.book.current-1);
+
+        console.log(
+            'progress: %s-%s/%s [%s]',
+            app.book.current-1,
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
+
+        app.setReadMode('comicMode');
+        viewer=app.nextPage(false);
+
+        viewer[0].index.should.be.eql(app.book.current-1);
+        viewer[1].index.should.be.eql(app.book.current);
+
+        console.log(
+            'progress: %s-%s/%s [%s]',
+            app.book.current-1,
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
+
+        app.setReadMode('mangaMode');
+        viewer=app.currentPage(false);
+
+        viewer[0].index.should.be.eql(app.book.current);
+        viewer[1].index.should.be.eql(app.book.current-1);
+
+        console.log(
+            'progress: %s-%s/%s [%s]',
+            app.book.current-1,
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
     });
 
     it('App.js#closeFile',async()=>{

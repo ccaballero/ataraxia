@@ -6,61 +6,61 @@ describe('Viewport',()=>{
     const store=new Store(),
         viewport=new Viewport(store);
 
-    it('Viewport.js#toolbar',async()=>{
+    it('Viewport.js#toolBar',async()=>{
         const value=true;
 
-        viewport.toolbar=value;
-        viewport.toolbar.should.be.eql(value);
+        viewport.toolBar=value;
+        viewport.toolBar.should.be.eql(value);
 
-        viewport.toolbar=!value;
-        viewport.toolbar.should.be.eql(!value);
+        viewport.toolBar=!value;
+        viewport.toolBar.should.be.eql(!value);
     });
 
-    it('Viewport.js#statusbar',async()=>{
+    it('Viewport.js#statusBar',async()=>{
         const value=true;
 
-        viewport.statusbar=value;
-        viewport.statusbar.should.be.eql(value);
+        viewport.statusBar=value;
+        viewport.statusBar.should.be.eql(value);
 
-        viewport.statusbar=!value;
-        viewport.statusbar.should.be.eql(!value);
+        viewport.statusBar=!value;
+        viewport.statusBar.should.be.eql(!value);
     });
 
-    it('Viewport.js#fullscreen',async()=>{
+    it('Viewport.js#fullScreen',async()=>{
         const value=true;
 
-        viewport.fullscreen=value;
-        viewport.fullscreen.should.be.eql(value);
+        viewport.fullScreen=value;
+        viewport.fullScreen.should.be.eql(value);
 
-        viewport.fullscreen=!value;
-        viewport.fullscreen.should.be.eql(!value);
+        viewport.fullScreen=!value;
+        viewport.fullScreen.should.be.eql(!value);
     });
 
-    it('Viewport.js#doublepage',async()=>{
-        const value=true;
+    it('Viewport.js#pageMode',async()=>{
+        const value='singlePage';
 
-        viewport.doublepage=value;
-        viewport.doublepage.should.be.eql(value);
+        viewport.pageMode=value;
+        viewport.pageMode.should.be.eql(value);
 
-        viewport.doublepage=!value;
-        viewport.doublepage.should.be.eql(!value);
+        viewport.pageMode=!value;
+        viewport.pageMode.should.be.eql(!value);
     });
 
-    it('Viewport.js#mangamode',async()=>{
-        const value=true;
+    it('Viewport.js#mangaMode',async()=>{
+        const value='mangaMode';
 
-        viewport.mangamode=value;
-        viewport.mangamode.should.be.eql(value);
+        viewport.mangaMode=value;
+        viewport.mangaMode.should.be.eql(value);
 
-        viewport.mangamode=!value;
-        viewport.mangamode.should.be.eql(!value);
+        viewport.mangaMode=!value;
+        viewport.mangaMode.should.be.eql(!value);
     });
 
-    it('Viewport.js#fitmode',async()=>{
-        const value='best';
+    it('Viewport.js#fitMode',async()=>{
+        const value='fitBest';
 
-        viewport.fitmode=value;
-        viewport.fitmode.should.be.eql(value);
+        viewport.fitMode=value;
+        viewport.fitMode.should.be.eql(value);
     });
 
     it('Viewport.js#rotation',async()=>{

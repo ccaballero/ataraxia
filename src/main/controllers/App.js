@@ -18,6 +18,7 @@ class App{
     toogleToolBar(){
         this._viewport.toolBar=!this._viewport.toolBar;
     }
+
     getToolBar(){
         return this._viewport.toolBar;
     }
@@ -25,6 +26,7 @@ class App{
     toogleStatusBar(){
         this._viewport.statusBar=!this._viewport.statusBar;
     }
+
     getStatusBar(){
         return this._viewport.statusBar;
     }
@@ -32,6 +34,7 @@ class App{
     toogleFullScreen(){
         this._viewport.fullScreen=!this._viewport.fullScreen;
     }
+
     getFullScreen(){
         return this._viewport.fullScreen;
     }
@@ -39,6 +42,7 @@ class App{
     setPageMode(pageMode){
         this._viewport.pageMode=pageMode;
     }
+
     getPageMode(){
         return this._viewport.pageMode;
     }
@@ -46,6 +50,7 @@ class App{
     setReadMode(readMode){
         this._viewport.readMode=readMode;
     }
+
     getReadMode(){
         return this._viewport.readMode;
     }
@@ -53,6 +58,7 @@ class App{
     setFitMode(fitMode){
         this._viewport.fitMode=fitMode;
     }
+
     getFitMode(){
         return this._viewport.fitMode;
     }
@@ -60,6 +66,7 @@ class App{
     setRotation(rotation){
         this._viewport.rotation=rotation;
     }
+
     getRotation(){
         return this._viewport.rotation;
     }
@@ -69,7 +76,7 @@ class App{
 
         await this._book.load();
         await this._book.map();
-        
+
         this._book.index();
     }
 
@@ -89,22 +96,22 @@ class App{
         return this._book;
     }
 
-    firstPage(){
+    firstPage(json=true){
         this._book.current=0;
 
         return [
-            this._book.pages[this._book.current]
+            json?
+                this._book.pages[this._book.current].toJSON():
+                this._book.pages[this._book.current]
         ];
     }
 
-    previousPage(){
+    previousPage(json=true){
         if(this._book.current===0){
             throw new Error('previous_error');
         }else{
-            this._book.current--;
-
-            if(this.getPageMode()==='pageMode'){
-                const dpage=this._book.dpages
+            if(this.getPageMode()==='doublePage'){
+                const dpage1=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
                     .find((page)=>{
@@ -112,29 +119,9 @@ class App{
                     })!==undefined;
                 });
 
-                if(dpage.length===2){
-                    this._book.current--;
-                }
+                this._book.current-=dpage1.length;
 
-                if(this.getMangaMode()){
-                    return dpage.reverse();
-                }else{
-                    return dpage;
-                }
-            }else{
-                return [
-                    this._book.pages[this._book.current]
-                ];
-            }
-        }
-    }
-
-    nextPage(){
-        if(this._book.current<this._book.total-1){
-            this._book.current++;
-
-            if(this.getPageMode()==='pageMode'){
-                const dpage=this._book.dpages
+                const dpage2=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
                     .find((page)=>{
@@ -142,29 +129,41 @@ class App{
                     })!==undefined;
                 });
 
-                if(dpage.length===2){
-                    this._book.current++;
-                }
+                this._book.current=dpage2
+                .reduce((sum,i)=>{
+                    return Math.max(i.index,sum);
+                },0);
 
-                if(this.getMangaMode()){
-                    return dpage.reverse();
+                if(this.getReadMode()==='mangaMode'){
+                    return dpage2
+                    .toReversed()
+                    .map((page)=>{
+                        return json?
+                            page.toJSON():
+                            page;
+                    });
                 }else{
-                    return dpage;
+                    return dpage2
+                    .map((page)=>{
+                        return json?
+                            page.toJSON():
+                            page;
+                    });
                 }
             }else{
+                this._book.current--;
+
                 return [
-                    this._book.pages[this._book.current]
+                    json?
+                        this._book.pages[this._book.current].toJSON():
+                        this._book.pages[this._book.current]
                 ];
             }
-        }else{
-            throw new Error('next_error');
         }
     }
 
-    lastPage(){
-        this._book.current=this._book.total-1;
-
-        if(this.getPageMode()==='pageMode'){
+    currentPage(json=true){
+        if(this.getPageMode()==='doublePage'){
             const dpage=this._book.dpages
             .find((_dpage)=>{
                 return _dpage
@@ -173,10 +172,112 @@ class App{
                 })!==undefined;
             });
 
-            return dpage;
+            if(this.getReadMode()==='mangaMode'){
+                return dpage
+                .toReversed()
+                .map((page)=>{
+                    return json?
+                        page.toJSON():
+                        page;
+                });
+            }else{
+                return dpage
+                .map((page)=>{
+                    return json?
+                        page.toJSON():
+                        page;
+                });
+            }
         }else{
             return [
-                this._book.pages[this._book.current]
+                json?
+                    this._book.pages[this._book.current].toJSON():
+                    this._book.pages[this._book.current]
+            ];
+        }
+    }
+
+    nextPage(json=true){
+        if(this._book.current<this._book.total-1){
+            if(this.getPageMode()==='doublePage'){
+                this._book.current++;
+
+                const dpage2=this._book.dpages
+                .find((_dpage)=>{
+                    return _dpage
+                    .find((page)=>{
+                        return page.index===this._book.current;
+                    })!==undefined;
+                });
+
+                this._book.current=dpage2
+                .reduce((sum,i)=>{
+                    return Math.max(i.index,sum);
+                },0);
+
+                if(this.getReadMode()==='mangaMode'){
+                    return dpage2
+                    .toReversed()
+                    .map((page)=>{
+                        return json?
+                            page.toJSON():
+                            page;
+                    });
+                }else{
+                    return dpage2
+                    .map((page)=>{
+                        return json?
+                            page.toJSON():
+                            page;
+                    });
+                }
+            }else{
+                this._book.current++;
+
+                return [
+                    json?
+                        this._book.pages[this._book.current].toJSON():
+                        this._book.pages[this._book.current]
+                ];
+            }
+        }else{
+            throw new Error('next_error');
+        }
+    }
+
+    lastPage(json){
+        this._book.current=this._book.total-1;
+
+        if(this.getPageMode()==='doublePage'){
+            const dpage=this._book.dpages
+            .find((_dpage)=>{
+                return _dpage
+                .find((page)=>{
+                    return page.index===this._book.current;
+                })!==undefined;
+            });
+
+            if(this.getReadMode()==='mangaMode'){
+                return dpage
+                .toReversed()
+                .map((page)=>{
+                    return json?
+                        page.toJSON():
+                        page;
+                });
+            }else{
+                return dpage
+                .map((page)=>{
+                    return json?
+                        page.toJSON():
+                        page;
+                });
+            }
+        }else{
+            return [
+                json?
+                    this._book.pages[this._book.current].toJSON():
+                    this._book.pages[this._book.current]
             ];
         }
     }

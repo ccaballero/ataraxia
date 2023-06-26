@@ -1,4 +1,4 @@
-#root {
+#root, .container {
     margin: 0;
     padding: 0;
     position: absolute;
@@ -8,7 +8,7 @@
     right: 0;
 }
 
-#root > footer {
+.container > footer {
     position: absolute;
     bottom: 0;
     left: 0;
