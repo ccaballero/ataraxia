@@ -33,6 +33,7 @@ class Viewport{
         return this._fullScreen;
     }
 
+    // singleMode, doubleMode
     set pageMode(pageMode){
         this._pageMode=pageMode;
     }
@@ -41,6 +42,7 @@ class Viewport{
         return this._pageMode;
     }
 
+    // comicMode, mangaMode
     set readMode(readMode){
         this._readMode=readMode;
     }

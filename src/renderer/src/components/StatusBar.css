@@ -30,11 +30,11 @@ footer.statusbar-dark > .wrapper > .column {
 }
 
 footer > .wrapper > .column:nth-child(1) {
-    width: 8.0rem;
+    width: 5.0rem;
 }
 
 footer > .wrapper > .column:nth-child(2) {
-    width: 4.0rem;
+    width: 3.0rem;
 }
 
 footer > .wrapper > .column:nth-child(3) {
@@ -56,7 +56,7 @@ footer > .wrapper > .column:nth-child(4) {
     border-top: 1px solid hsl(210,3.6%,75%);
 }
 .statusbar-dark { 
-    color: hsl(210,3.6%,30%);
+    color: hsl(210,3.6%,50%);
     background-color: hsl(210,3.6%,11%);
     border-top: 1px solid hsl(210,3.6%,20%);
 }

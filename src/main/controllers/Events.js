@@ -150,6 +150,9 @@ class Events{
                 this._controller.setPageMode(command);
 
                 this._mainWindow.send('state',{
+                    data:{
+                        pages:this._controller.currentPage()
+                    },
                     ui:{
                         pageMode:this._controller.getPageMode()
                     }
@@ -161,6 +164,9 @@ class Events{
                 this._controller.setReadMode(command);
 
                 this._mainWindow.send('state',{
+                    data:{
+                        pages:this._controller.currentPage()
+                    },
                     ui:{
                         readMode:this._controller.getReadMode()
                     }

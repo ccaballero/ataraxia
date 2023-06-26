@@ -245,7 +245,7 @@ class App{
         }
     }
 
-    lastPage(json){
+    lastPage(json=true){
         this._book.current=this._book.total-1;
 
         if(this.getPageMode()==='doublePage'){
