@@ -19,7 +19,7 @@ const types=[
     'comicMode'
 ];
 
-class MenuItem extends Component {
+class MenuItem extends Component{
     constructor(props){
         super(props);
     }

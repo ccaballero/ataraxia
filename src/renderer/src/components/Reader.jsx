@@ -1,7 +1,7 @@
 import React,{Component} from 'react';
 import './Reader.css';
 
-class Reader extends Component {
+class Reader extends Component{
     constructor(props){
         super(props);
     }

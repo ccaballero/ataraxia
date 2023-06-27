@@ -2,7 +2,7 @@ import React,{Component} from 'react';
 import MenuItem from './MenuItem.jsx';
 import './MenuBar.css';
 
-class MenuBar extends Component {
+class MenuBar extends Component{
     constructor(props){
         super(props);
     }
@@ -88,7 +88,7 @@ class MenuBar extends Component {
                             mode={this.props.mode}
                             type={
                                 this.props.pageMode==='doublePage'?
-                                'doublePage':'singlePage'
+                                    'doublePage':'singlePage'
                             }
                             eventClick={this.props.eventClick}
                             disabled={!this.props.openedFile}
@@ -99,7 +99,7 @@ class MenuBar extends Component {
                             mode={this.props.mode}
                             type={
                                 this.props.readMode==='mangaMode'?
-                                'mangaMode':'comicMode'
+                                    'mangaMode':'comicMode'
                             }
                             eventClick={this.props.eventClick}
                             disabled={!this.props.openedFile}

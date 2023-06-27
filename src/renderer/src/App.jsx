@@ -7,7 +7,7 @@ import './App.css';
 
 const ipcRenderer=window.electron.ipcRenderer;
 
-class App extends Component {
+class App extends Component{
     constructor(props){
         super(props);
 
