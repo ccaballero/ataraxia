@@ -1,13 +1,14 @@
 import 'should';
 import {join} from 'path';
 import List from '../../../src/main/utils/List.js';
-import configTest from '../../../tests/config/test.js';
+import configTest from '../../config/test.js';
 
 describe('List',()=>{
     const config=configTest();
 
     it('List.js#1',async()=>{
         const args=await List.list({
+            command:config.commands.rar,
             filePath:join(config.folder,config.books[0])
         });
 
@@ -16,6 +17,7 @@ describe('List',()=>{
 
     it('List.js#2',async()=>{
         const args=await List.list({
+            command:config.commands.rar,
             filePath:join(config.folder,config.books[1])
         });
 

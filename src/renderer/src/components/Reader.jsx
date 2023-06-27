@@ -16,7 +16,7 @@ class Reader extends Component {
                     width:width,
                     height:height,
                     marginTop:Height>height?(Height-height)/2:0,
-                    marginLeft:(index===0&&Width>sum)?(Width-sum)/2:0
+                    marginLeft:(index===0&&Width>sum)?(Width-sum)/2:0,
                 },
                 style2={
                     width:rotation%180===0?width:height,

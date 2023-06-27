@@ -1,7 +1,7 @@
 import 'should';
 import {join} from 'path';
 import Exists from '../../../src/main/utils/Exists.js';
-import configTest from '../../../tests/config/test.js';
+import configTest from '../../config/test.js';
 
 describe('Exists',()=>{
     const config=configTest();

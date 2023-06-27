@@ -5,6 +5,7 @@ import {v4} from 'uuid';
 
 /*
  * input
+ *      command
  *      config
  *          cacheDir
  *          pagesDir
@@ -16,7 +17,7 @@ import {v4} from 'uuid';
  */
 class Extract{
     static async extract(args){
-        const process=spawn('unrar',[
+        const process=spawn(args.command,[
             'e',
             '-o+',
             args.filePath,       // source rar file

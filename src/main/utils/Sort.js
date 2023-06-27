@@ -2,6 +2,7 @@ import {spawn} from 'child_process';
 
 /*
  * input
+ *      command
  *      list
  *
  * output
@@ -9,7 +10,9 @@ import {spawn} from 'child_process';
  */
 class Sort{
     static async sort(args){
-        const process=spawn('sort',['-V']);
+        const process=spawn(args.command,[
+            '-V'
+        ]);
 
         let stdout='',
             stderr='';

@@ -1,18 +1,41 @@
+import config from '../config/app.js';
 import Book from '../models/Book.js';
 import Viewport from '../models/Viewport.js';
 import Store from '../store/Store.js';
 
 class App{
-    constructor(app,config){
+    constructor(app){
         this._app=app;
+
+        this._config=config();
         this._store=new Store();
+
+        if(!this._store.get('commands.rar')){
+            this._store.set('commands.rar',this._config.commands.rar);
+        }
+
+        if(!this._store.get('commands.sort')){
+            this._store.set('commands.sort',this._config.commands.sort);
+        }
+
         this._viewport=new Viewport(this._store);
-        this._config=config;
-        this._book=new Book(config.cacheDir,config.pagesDir);
+        this._book=new Book(
+            this._store,
+            this._config.cacheDir,
+            this._config.pagesDir
+        );
+    }
+
+    get store(){
+        return this._store;
+    }
+
+    setMode(mode){
+        return this._store.set('mode',mode);
     }
 
     getMode(){
-        return this._config.mode;
+        return this._store.get('mode');
     }
 
     toogleToolBar(){
@@ -81,6 +104,24 @@ class App{
     }
 
     async closeFile(){
+        let list=this._store.get('recentFiles',[]);
+
+        const index=list
+        .findIndex((item)=>{
+            return item.filePath===this._book.filePath;
+        });
+
+        if(index===-1){
+            list.push({
+                filePath:this._book.filePath,
+                page:this._book.page
+            });
+        }else{
+            list[index].page=this._book.page;
+        }
+
+        this._store.set('recentFiles',list.slice(-5));
+
         await this._book.close();
     }
 

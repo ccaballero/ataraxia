@@ -33,7 +33,19 @@ import {
  */
 
 class Menu{
-    static load(event){
+    static load(event,store){
+        let recentFiles=store
+        .get('recentFiles',[])
+        .map((file,i)=>{
+            return {
+                label:file.filePath,
+                enabled:true,
+                click:()=>{
+                    return event.handler('recentFile:'+i);
+                }
+            };
+        });
+
         MenuUI.setApplicationMenu(MenuUI.buildFromTemplate([{
             label:'File',
             submenu:[{
@@ -66,6 +78,8 @@ class Menu{
                     return event.handler('settings');
                 }
             },{
+                type:'separator'
+            },...recentFiles,{
                 type:'separator'
             },{
                 label:'Quit',

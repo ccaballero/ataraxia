@@ -1,11 +1,17 @@
 import should from 'should';
 import {join} from 'path';
 import Book from '../../../src/main/models/Book.js';
-import configTest from '../../../tests/config/test.js';
+import Store from '../../../src/main/store/Store.js';
+import configTest from '../../config/test.js';
 
 describe('Book',()=>{
     const config=configTest(),
-        book=new Book(config.cacheDir,config.pagesDir);
+        store=new Store();
+
+    store.set('commands.rar',config.commands.rar);
+    store.set('commands.sort',config.commands.sort);
+
+    const book=new Book(store,config.cacheDir,config.pagesDir);
 
     it('Book.js#load',async()=>{
         book.filePath=join(config.folder,config.books[0]);

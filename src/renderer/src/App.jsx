@@ -44,7 +44,9 @@ class App extends Component {
                 data:{
                     viewport:{
                         width:this.container.clientWidth,
-                        height:this.container.clientHeight
+                        height:this.container.clientHeight+
+                            (this.state.ui.toolBar?-26:0)+
+                            (this.state.ui.statusBar?-20:0)
                     }
                 }
             }));
@@ -54,6 +56,26 @@ class App extends Component {
     handle(event,data){
         if(this._isMounted){
             this.setState(Merge.mergeDeep(this.state,data));
+
+            if(
+                data&&
+                data.ui&&
+                (
+                    ('toolBar' in data.ui)||
+                    ('statusBar' in data.ui)
+                )
+            ){
+                this.setState(Merge.mergeDeep(this.state,{
+                    data:{
+                        viewport:{
+                            width:this.container.clientWidth,
+                            height:this.container.clientHeight+
+                                (this.state.ui.toolBar?-26:0)+
+                                (this.state.ui.statusBar?-20:0)
+                        }
+                    }
+                }));
+            }
         }
     }
 

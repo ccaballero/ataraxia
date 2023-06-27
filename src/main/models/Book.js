@@ -8,7 +8,8 @@ import Resolution from '../utils/Resolution.js';
 import Sort from '../utils/Sort.js';
 
 class Book{
-    constructor(cacheDir,pagesDir){
+    constructor(store,cacheDir,pagesDir){
+        this._store=store;
         this._cacheDir=cacheDir;
         this._pagesDir=pagesDir;
         this._filePath=null;
@@ -38,8 +39,15 @@ class Book{
             filePath:this._filePath
         });
 
-        args=await List.list(args);
-        args=await Sort.sort(args);
+        args=await List.list({
+            ...args,
+            command:this._store.get('commands.rar')
+        });
+
+        args=await Sort.sort({
+            ...args,
+            command:this._store.get('commands.sort')
+        });
 
         this._current=0;
         this._pages=args
@@ -53,6 +61,7 @@ class Book{
         for(let i=0;i<this._pages.length;i++){
             if(!this._pages[i].hash){
                 let args=await Extract.extract({
+                    command:this._store.get('commands.rar'),
                     config:{
                         cacheDir:this._cacheDir,
                         pagesDir:this._pagesDir

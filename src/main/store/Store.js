@@ -8,6 +8,10 @@ class Store extends BaseStore{
             serialize:yaml.dump,
             deserialize:yaml.load,
             schema:{
+                mode:{
+                    type:'string',
+                    default:'light'
+                },
                 toolBar:{
                     type:'boolean',
                     default:true
@@ -43,12 +47,10 @@ class Store extends BaseStore{
                     type:'object',
                     properties:{
                         rar:{
-                            type:'string',
-                            default:'rar'
+                            type:'string'
                         },
                         sort:{
-                            type:'string',
-                            default:'sort'
+                            type:'string'
                         }
                     }
                 },

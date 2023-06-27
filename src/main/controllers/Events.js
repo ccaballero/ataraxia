@@ -1,4 +1,5 @@
 import {app,dialog,ipcMain,Menu} from 'electron';
+import {dirname} from 'path';
 
 class Events{
     constructor(controller,mainWindow){
@@ -51,7 +52,9 @@ class Events{
     }
 
     handler(command){
-        switch(command){
+        const [action,param]=command.split(':');
+
+        switch(action){
             case 'state':
                 this._mainWindow.send('state',{
                     ui:{
@@ -75,13 +78,20 @@ class Events{
                         }
                     });
 
-                    const filePath=app.getPath('home'),
-                        args=await dialog.showOpenDialog(this._mainWindow,{
-                            title:'Open File',
-                            defaultPath:filePath,
-                            buttonLabel:'Open',
-                            properties:['openFile']
-                        });
+                    let filePath=this._controller.book.filePath;
+
+                    if(filePath){
+                        filePath=dirname(filePath);
+                    }else{
+                        filePath=app.getPath('home');
+                    }
+
+                    const args=await dialog.showOpenDialog(this._mainWindow,{
+                        title:'Open File',
+                        defaultPath:filePath,
+                        buttonLabel:'Open',
+                        properties:['openFile']
+                    });
 
                     if(
                         !args.canceled&&
@@ -104,6 +114,18 @@ class Events{
                 break;
             case 'settings':
                 // TODO: console.log('Settings');
+
+                break;
+            case 'recentFile':
+                (async()=>{
+                    if(this._controller.book.filepath){
+                        await this.close();
+                    }
+
+                    const list=this._controller.store.get('recentFiles');
+
+                    return this.open(list[param].filePath);
+                })();
 
                 break;
             case 'quit':

@@ -1,13 +1,12 @@
 import {app,shell,BrowserWindow} from 'electron';
 import {join} from 'path';
 import {electronApp,optimizer,is} from '@electron-toolkit/utils';
-import configApp from './config/app.js';
 import App from './controllers/App.js';
 import Events from './controllers/Events.js';
 import Menu from './gui/Menu.js';
 import icon from '../../resources/icon.png?asset';
 
-const controller=new App(app,configApp());
+const controller=new App(app);
 
 function createWindow(){
     const mainWindow=new BrowserWindow({
@@ -39,7 +38,7 @@ function createWindow(){
         };
     });
 
-    Menu.load(events);
+    Menu.load(events,controller.store);
 
     if(
         is.dev&&
