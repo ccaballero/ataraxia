@@ -1,3 +1,5 @@
+import {mkdirSync} from 'fs';
+import {is} from '@electron-toolkit/utils';
 import config from '../config/app.js';
 import Book from '../models/Book.js';
 import Viewport from '../models/Viewport.js';
@@ -19,11 +21,19 @@ class App{
         }
 
         this._viewport=new Viewport(this._store);
-        this._book=new Book(
-            this._store,
-            this._config.cacheDir,
-            this._config.pagesDir
-        );
+
+        let cacheDir=this._config.cacheDir,
+            pagesDir=this._config.pagesDir;
+
+        if(!is.dev){
+            cacheDir='/tmp/ataraxia-cache';
+            pagesDir='/tmp/ataraxia-pages';
+
+            mkdirSync(cacheDir);
+            mkdirSync(pagesDir);
+        }
+
+        this._book=new Book(this._store,cacheDir,pagesDir);
     }
 
     get store(){

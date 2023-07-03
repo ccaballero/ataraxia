@@ -8,7 +8,10 @@ class Reader extends Component{
 
     renderPage(index,width,height,sum,rotation){
         if(this.props.pages[index-1]){
-            const image='pages/'+this.props.pages[index-1].hash,
+            const hash=this.props.pages[index-1].hash,
+                image=this.props.dev?
+                    'pages/'+hash:
+                    'file:///tmp/ataraxia-pages/'+hash,
                 Width=this.props.viewport.width,
                 Height=this.props.viewport.height,
                 style1={

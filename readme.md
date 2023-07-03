@@ -15,35 +15,10 @@ It is written in Javascript and uses Electron.
     # yarn install
 
     # to run in development mode
-    # yarn run dev
+    # yarn dev
 
     # to build
-    # yarn run package
-```
-
-# Install
-
-```bash
-$ yarn
-```
-
-# Development
-
-```bash
-$ yarn dev
-```
-
-## Build
-
-```bash
-# For windows
-$ yarn build:win
-
-# For macOS
-$ yarn build:mac
-
-# For Linux
-$ yarn build:linux
+    # yarn build
 ```
 
 # Dependencies

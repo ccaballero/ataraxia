@@ -144,6 +144,7 @@ class App extends Component{
                     />
                 }
                 <Reader
+                    dev={this.state.ui.dev}
                     mode={this.state.ui.mode}
                     toolBar={this.state.ui.toolBar}
                     statusBar={this.state.ui.statusBar}

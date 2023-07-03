@@ -1,4 +1,5 @@
 import {app,dialog,ipcMain,Menu} from 'electron';
+import {is} from '@electron-toolkit/utils';
 import {dirname} from 'path';
 
 class Events{
@@ -58,6 +59,7 @@ class Events{
             case 'state':
                 this._mainWindow.send('state',{
                     ui:{
+                        dev:is.dev,
                         mode:this._controller.getMode(),
                         fitMode:this._controller.getFitMode(),
                         pageMode:this._controller.getPageMode(),
