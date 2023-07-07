@@ -5,7 +5,7 @@ import configTest from '../../../tests/config/test.js';
 
 describe('App',()=>{
     const config=configTest(),
-        app=new App(null,config);
+        app=new App(null,{dev:true});
 
     it('App.js#toolBar',async()=>{
         const value=app.getToolBar();
@@ -366,6 +366,40 @@ describe('App',()=>{
         console.log(
             'progress: %s-%s/%s [%s]',
             app.book.current-1,
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
+    });
+
+    it('App.js#goToPage(single)',async()=>{
+        app.setPageMode('singlePage');
+
+        const viewer=app.goToPage(10,false);
+
+        viewer.length.should.be.eql(1);
+        viewer[0].index.should.be.eql(app.book.current);
+
+        console.log(
+            'progress: %s/%s [%s]',
+            app.book.current,
+            app.book.total,
+            viewer.map(v=>v.toString()).join('|')
+        );
+    });
+
+    it('App.js#goToPage(double)',async()=>{
+        app.setPageMode('doublePage');
+        app.setReadMode('mangaMode');
+
+        const viewer=app.goToPage(3,false);
+
+        viewer.length.should.be.eql(2);
+        viewer[0].index.should.be.eql(app.book.current+1);
+        viewer[1].index.should.be.eql(app.book.current);
+
+        console.log(
+            'progress: %s/%s [%s]',
             app.book.current,
             app.book.total,
             viewer.map(v=>v.toString()).join('|')

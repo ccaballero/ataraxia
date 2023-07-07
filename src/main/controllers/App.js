@@ -1,12 +1,11 @@
 import {mkdirSync} from 'fs';
-import {is} from '@electron-toolkit/utils';
 import config from '../config/app.js';
 import Book from '../models/Book.js';
 import Viewport from '../models/Viewport.js';
 import Store from '../store/Store.js';
 
 class App{
-    constructor(app){
+    constructor(app,is){
         this._app=app;
 
         this._config=config();
@@ -105,6 +104,10 @@ class App{
     }
 
     async openFile(filePath){
+        if(this._book.filePath){
+            await this.closeFile();
+        }
+
         this._book.filePath=filePath;
 
         await this._book.load();
@@ -124,10 +127,15 @@ class App{
         if(index===-1){
             list.push({
                 filePath:this._book.filePath,
-                page:this._book.page
+                page:this._book.current
             });
         }else{
-            list[index].page=this._book.page;
+            list.splice(index,1);
+
+            list.push({
+                filePath:this._book.filePath,
+                page:this._book.current
+            });
         }
 
         this._store.set('recentFiles',list.slice(-5));
@@ -245,6 +253,48 @@ class App{
                     this._book.pages[this._book.current].toJSON():
                     this._book.pages[this._book.current]
             ];
+        }
+    }
+
+    goToPage(page=0,json=true){
+        if(
+            0<=page&&
+            page<this._book.total
+        ){
+            this._book.current=page;
+
+            if(this.getPageMode()==='doublePage'){
+                const dpage=this._book.dpages
+                .find((_dpage)=>{
+                    return _dpage
+                    .find((page)=>{
+                        return page.index===this._book.current;
+                    })!==undefined;
+                });
+
+                if(this.getReadMode()==='mangaMode'){
+                    return dpage
+                    .toReversed()
+                    .map((page)=>{
+                        return json?
+                            page.toJSON():
+                            page;
+                    });
+                }else{
+                    return dpage
+                    .map((page)=>{
+                        return json?
+                            page.toJSON():
+                            page;
+                    });
+                }
+            }else{
+                return [
+                    json?
+                        this._book.pages[this._book.current].toJSON():
+                        this._book.pages[this._book.current]
+                ];
+            }
         }
     }
 

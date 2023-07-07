@@ -6,7 +6,7 @@ import Events from './controllers/Events.js';
 import Menu from './gui/Menu.js';
 import icon from '../../resources/icon.png?asset';
 
-const controller=new App(app);
+const controller=new App(app,is);
 
 function createWindow(){
     const mainWindow=new BrowserWindow({

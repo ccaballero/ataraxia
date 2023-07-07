@@ -99,14 +99,14 @@ class Events{
                         !args.canceled&&
                         args.filePaths.length===1
                     ){
-                        return this.open(args.filePaths[0]);
+                        return this.openFile(args.filePaths[0],0);
                     }
                 })();
 
                 break;
             case 'closeFile':
                 (async()=>{
-                    return this.close();
+                    return this.closeFile();
                 })();
 
                 break;
@@ -120,13 +120,12 @@ class Events{
                 break;
             case 'recentFile':
                 (async()=>{
-                    if(this._controller.book.filepath){
-                        await this.close();
-                    }
-
                     const list=this._controller.store.get('recentFiles');
 
-                    return this.open(list[param].filePath);
+                    return this.openFile(
+                        list[param].filePath,
+                        list[param].page
+                    );
                 })();
 
                 break;
@@ -284,12 +283,8 @@ class Events{
         }
     }
 
-    async open(filePath){
+    async openFile(filePath,page=0){
         try{
-            if(this._controller.book.filepath){
-                await this._controller.closeFile();
-            }
-
             await this._controller.openFile(filePath);
 
             let menu=Menu.getApplicationMenu();
@@ -311,7 +306,7 @@ class Events{
 
             this._mainWindow.send('state',{
                 data:{
-                    pages:this._controller.firstPage(),
+                    pages:this._controller.goToPage(page),
                     total:this._controller.book.total,
                     message:'',
                     filePath:filePath
@@ -329,7 +324,7 @@ class Events{
         }
     }
 
-    async close(){
+    async closeFile(){
         await this._controller.closeFile();
 
         let menu=Menu.getApplicationMenu();

@@ -36,6 +36,7 @@ class Menu{
     static load(event,store){
         let recentFiles=store
         .get('recentFiles',[])
+        .reverse()
         .map((file,i)=>{
             return {
                 label:file.filePath,
