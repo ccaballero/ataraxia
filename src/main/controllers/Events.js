@@ -283,7 +283,7 @@ class Events{
         }
     }
 
-    async openFile(filePath,page=0){
+    async openFile(filePath,page=1){
         try{
             await this._controller.openFile(filePath);
 

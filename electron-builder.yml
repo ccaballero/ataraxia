@@ -1,16 +1,14 @@
-appId: com.electron.app
+appId: org.ataraxia
 productName: ataraxia
 directories:
     buildResources: build
 files:
-    - '!**/.vscode/*'
     - '!src/*'
     - '!electron.vite.config.{js,ts,mjs,cjs}'
-    - '!{.eslintignore,.eslintrc.cjs,dev-app-update.yml,CHANGELOG.md,README.md}'
+    - '!{.eslintignore,.eslintrc.cjs,dev-app-update.yml,changelog.md,readme.md}'
     - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
 asarUnpack:
     - resources/**
-afterSign: build/notarize.js
 win:
     executableName: ataraxia
 nsis:
@@ -29,15 +27,15 @@ dmg:
     artifactName: ${name}-${version}.${ext}
 linux:
     target:
-        - AppImage
-        - snap
-        - deb
-    maintainer: electronjs.org
-    category: Utility
+        - tar.bz2
+    maintainer: cijkb.j@gmail.com
+    icon: resources/icon.png
+    category: Graphics
 appImage:
     artifactName: ${name}-${version}.${ext}
 npmRebuild: false
 publish:
-    provider: generic
-    url: https://example.com/auto-updates
+    provider: github
+    repo: ataraxia
+    releaseType: release
 

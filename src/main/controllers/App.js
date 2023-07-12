@@ -1,4 +1,4 @@
-import {mkdirSync} from 'fs';
+import {existsSync,mkdirSync} from 'node:fs';
 import config from '../config/app.js';
 import Book from '../models/Book.js';
 import Viewport from '../models/Viewport.js';
@@ -28,8 +28,13 @@ class App{
             cacheDir='/tmp/ataraxia-cache';
             pagesDir='/tmp/ataraxia-pages';
 
-            mkdirSync(cacheDir);
-            mkdirSync(pagesDir);
+            if(!existsSync(cacheDir)){
+                mkdirSync(cacheDir);
+            }
+
+            if(!existsSync(pagesDir)){
+                mkdirSync(pagesDir);
+            }
         }
 
         this._book=new Book(this._store,cacheDir,pagesDir);
@@ -380,6 +385,23 @@ class App{
                     this._book.pages[this._book.current].toJSON():
                     this._book.pages[this._book.current]
             ];
+        }
+    }
+
+    restoreSession(event,is){
+        if(
+            !is.dev&&
+            process.argv.length>1
+        ){
+            event.openFile(process.argv[1],1);
+        }else{
+            const list=this._store.get('recentFiles',[]);
+
+            if(list.length!==0){
+                const item=list[list.length-1];
+
+                event.openFile(item.filePath,item.page);
+            }
         }
     }
 }

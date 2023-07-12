@@ -39,6 +39,7 @@ function createWindow(){
     });
 
     Menu.load(events,controller.store);
+    controller.restoreSession(events,is);
 
     if(
         is.dev&&
