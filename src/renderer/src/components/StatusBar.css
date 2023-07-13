@@ -30,7 +30,7 @@ footer.statusbar-dark > .wrapper > .column {
 }
 
 footer > .wrapper > .column:nth-child(1) {
-    width: 5.0rem;
+    width: 8.0rem;
 }
 
 footer > .wrapper > .column:nth-child(2) {
@@ -38,7 +38,7 @@ footer > .wrapper > .column:nth-child(2) {
 }
 
 footer > .wrapper > .column:nth-child(3) {
-    width: 18.0rem;
+    width: 22.0rem;
 }
 
 footer > .wrapper > .column:nth-child(4) {
