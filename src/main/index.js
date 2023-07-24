@@ -1,12 +1,12 @@
 import {app,shell,BrowserWindow} from 'electron';
 import {join} from 'path';
 import {electronApp,optimizer,is} from '@electron-toolkit/utils';
-import App from './controllers/App.js';
-import Events from './controllers/Events.js';
+import WindowController from './controller/WindowController.js';
+import EventController from './controller/EventController.js';
 import Menu from './gui/Menu.js';
 import icon from '../../resources/icon.png?asset';
 
-const controller=new App(app,is);
+const windowController=new WindowController(app,is);
 
 function createWindow(){
     const mainWindow=new BrowserWindow({
@@ -21,11 +21,17 @@ function createWindow(){
                 sandbox:false
             }
         }),
-        events=new Events(controller,mainWindow);
+        eventController=new EventController(windowController,mainWindow);
+
+    Menu.load(eventController,windowController.store);
 
     mainWindow
     .on('ready-to-show',()=>{
         mainWindow.show();
+
+        setTimeout(()=>{
+            eventController.handler('restore');
+        },2000);
     });
 
     mainWindow
@@ -37,9 +43,6 @@ function createWindow(){
             action:'deny'
         };
     });
-
-    Menu.load(events,controller.store);
-    controller.restoreSession(events,is);
 
     if(
         is.dev&&
@@ -74,7 +77,7 @@ app
 app
 .on('window-all-closed',async()=>{
     if(process.platform!=='darwin'){
-        await controller.quit();
+        await windowController.quit();
     }
 });
 

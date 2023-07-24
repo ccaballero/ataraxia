@@ -3,10 +3,10 @@ import {
 } from 'electron';
 
 /* Mnemonics:
-    1 => first page
-    2 => previous page
-    3 => next page
-    4 => last page
+    H => first page
+    J => previous page
+    K => next page
+    L => last page
 
     7 => fit best
     8 => fit width
@@ -33,7 +33,7 @@ import {
  */
 
 class Menu{
-    static load(event,store){
+    static load(eventController,store){
         let recentFiles=store
         .get('recentFiles',[])
         .reverse()
@@ -42,7 +42,7 @@ class Menu{
                 label:file.filePath,
                 enabled:true,
                 click:()=>{
-                    return event.handler('recentFile:'+i);
+                    return eventController.handler('recentFile:'+i);
                 }
             };
         });
@@ -53,14 +53,14 @@ class Menu{
                 label:'Open',
                 accelerator:'O',
                 click:()=>{
-                    return event.handler('openFile');
+                    return eventController.handler('openFile');
                 }
             },{
                 label:'Close',
                 accelerator:'W',
                 enabled:false,
                 click:()=>{
-                    return event.handler('closeFile');
+                    return eventController.handler('closeFile');
                 }
             },{
                 type:'separator'
@@ -69,14 +69,14 @@ class Menu{
                 accelerator:'C',
                 enabled:true,
                 click:()=>{
-                    return event.handler('collection');
+                    return eventController.handler('collection');
                 }
             },{
                 label:'Settings',
                 accelerator:'S',
                 enabled:true,
                 click:()=>{
-                    return event.handler('settings');
+                    return eventController.handler('settings');
                 }
             },{
                 type:'separator'
@@ -86,7 +86,7 @@ class Menu{
                 label:'Quit',
                 accelerator:'Q',
                 click:()=>{
-                    return event.handler('quit');
+                    return eventController.handler('quit');
                 }
             }]
         },{
@@ -95,13 +95,13 @@ class Menu{
                 label:'ToolBar',
                 accelerator:'V',
                 click:()=>{
-                    return event.handler('toolBar');
+                    return eventController.handler('toolBar');
                 }
             },{
                 label:'StatusBar',
                 accelerator:'B',
                 click:()=>{
-                    return event.handler('statusBar');
+                    return eventController.handler('statusBar');
                 }
             },{
                 type:'separator'
@@ -109,7 +109,7 @@ class Menu{
                 label:'FullScreen',
                 accelerator:'F',
                 click:()=>{
-                    return event.handler('fullScreen');
+                    return eventController.handler('fullScreen');
                 }
             },{
                 label:'Single Page',
@@ -118,7 +118,7 @@ class Menu{
                 type:'checkbox',
                 checked:false,
                 click:()=>{
-                    return event.handler('singlePage');
+                    return eventController.handler('singlePage');
                 }
             },{
                 label:'Double Page',
@@ -127,7 +127,7 @@ class Menu{
                 type:'checkbox',
                 checked:false,
                 click:()=>{
-                    return event.handler('doublePage');
+                    return eventController.handler('doublePage');
                 }
             },{
                 label:'Comic Mode',
@@ -135,7 +135,7 @@ class Menu{
                 enabled:false,
                 type:'checkbox',
                 click:()=>{
-                    return event.handler('comicMode');
+                    return eventController.handler('comicMode');
                 }
             },{
                 label:'Manga Mode',
@@ -143,7 +143,7 @@ class Menu{
                 enabled:false,
                 type:'checkbox',
                 click:()=>{
-                    return event.handler('mangaMode');
+                    return eventController.handler('mangaMode');
                 }
             },{
                 type:'separator'
@@ -153,7 +153,7 @@ class Menu{
                 enabled:false,
                 type:'radio',
                 click:()=>{
-                    return event.handler('fitBest');
+                    return eventController.handler('fitBest');
                 }
             },{
                 label:'Fit Width Mode',
@@ -161,7 +161,7 @@ class Menu{
                 enabled:false,
                 type:'radio',
                 click:()=>{
-                    return event.handler('fitWidth');
+                    return eventController.handler('fitWidth');
                 }
             },{
                 label:'Fit Height Mode',
@@ -169,7 +169,7 @@ class Menu{
                 enabled:false,
                 type:'radio',
                 click:()=>{
-                    return event.handler('fitHeight');
+                    return eventController.handler('fitHeight');
                 }
             },{
                 type:'separator'
@@ -178,45 +178,45 @@ class Menu{
                 accelerator:'[',
                 enabled:false,
                 click:()=>{
-                    return event.handler('rotationCW');
+                    return eventController.handler('rotationCW');
                 }
             },{
                 label:'Rotate 90 Degrees CCW',
                 accelerator:']',
                 enabled:false,
                 click:()=>{
-                    return event.handler('rotationCCW');
+                    return eventController.handler('rotationCCW');
                 }
             }]
         },{
             label:'Navigation',
             submenu:[{
                 label:'First Page',
-                accelerator:'1',
+                accelerator:'H',
                 enabled:false,
                 click:()=>{
-                    return event.handler('firstPage');
+                    return eventController.handler('firstPage');
                 }
             },{
                 label:'Previous Page',
-                accelerator:'2',
+                accelerator:'J',
                 enabled:false,
                 click:()=>{
-                    return event.handler('previousPage');
+                    return eventController.handler('previousPage');
                 }
             },{
                 label:'Next Page',
-                accelerator:'3',
+                accelerator:'K',
                 enabled:false,
                 click:()=>{
-                    return event.handler('nextPage');
+                    return eventController.handler('nextPage');
                 }
             },{
                 label:'Last Page',
-                accelerator:'4',
+                accelerator:'L',
                 enabled:false,
                 click:()=>{
-                    return event.handler('lastPage');
+                    return eventController.handler('lastPage');
                 }
             }]
         }]));

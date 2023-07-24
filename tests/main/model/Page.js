@@ -1,5 +1,5 @@
 import 'should';
-import Page from '../../../src/main/models/Page.js';
+import Page from '../../../src/main/model/Page.js';
 
 describe('Page',()=>{
     const page=new Page();

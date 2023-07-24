@@ -1,7 +1,7 @@
 import 'should';
 import {join} from 'path';
-import List from '../../../src/main/utils/List.js';
-import Sort from '../../../src/main/utils/Sort.js';
+import List from '../../../src/main/util/List.js';
+import Sort from '../../../src/main/util/Sort.js';
 import configTest from '../../config/test.js';
 
 describe('Sort',()=>{

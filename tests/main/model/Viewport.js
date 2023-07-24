@@ -1,6 +1,6 @@
 import 'should';
 import Store from '../../../src/main/store/Store.js';
-import Viewport from '../../../src/main/models/Viewport.js';
+import Viewport from '../../../src/main/model/Viewport.js';
 
 describe('Viewport',()=>{
     const store=new Store(),

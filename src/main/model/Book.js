@@ -1,11 +1,11 @@
 import {unlink} from 'fs/promises';
 import {resolve} from 'path';
 import Page from './Page.js';
-import Exists from '../utils/Exists.js';
-import Extract from '../utils/Extract.js';
-import List from '../utils/List.js';
-import Resolution from '../utils/Resolution.js';
-import Sort from '../utils/Sort.js';
+import Exists from '../util/Exists.js';
+import Extract from '../util/Extract.js';
+import List from '../util/List.js';
+import Resolution from '../util/Resolution.js';
+import Sort from '../util/Sort.js';
 
 class Book{
     constructor(store,cacheDir,pagesDir){

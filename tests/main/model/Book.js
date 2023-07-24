@@ -1,6 +1,6 @@
 import should from 'should';
 import {join} from 'path';
-import Book from '../../../src/main/models/Book.js';
+import Book from '../../../src/main/model/Book.js';
 import Store from '../../../src/main/store/Store.js';
 import configTest from '../../config/test.js';
 

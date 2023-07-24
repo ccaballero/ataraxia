@@ -2,9 +2,9 @@ import {app,dialog,ipcMain,Menu} from 'electron';
 import {is} from '@electron-toolkit/utils';
 import {dirname} from 'path';
 
-class Events{
-    constructor(controller,mainWindow){
-        this._controller=controller;
+class EventController{
+    constructor(windowController,mainWindow){
+        this._controller=windowController;
         this._mainWindow=mainWindow;
 
         ipcMain.on('state',()=>{
@@ -60,14 +60,14 @@ class Events{
                 this._mainWindow.send('state',{
                     ui:{
                         dev:is.dev,
-                        mode:this._controller.getMode(),
-                        fitMode:this._controller.getFitMode(),
-                        pageMode:this._controller.getPageMode(),
-                        readMode:this._controller.getReadMode(),
-                        fullScreen:this._controller.getFullScreen(),
-                        rotation:this._controller.getRotation(),
-                        toolBar:this._controller.getToolBar(),
-                        statusBar:this._controller.getStatusBar()
+                        mode:this._controller.mode,
+                        fitMode:this._controller.fitMode,
+                        pageMode:this._controller.pageMode,
+                        readMode:this._controller.readMode,
+                        fullScreen:this._controller.fullScreen,
+                        rotation:this._controller.rotation,
+                        toolBar:this._controller.toolBar,
+                        statusBar:this._controller.statusBar
                     }
                 });
 
@@ -99,14 +99,114 @@ class Events{
                         !args.canceled&&
                         args.filePaths.length===1
                     ){
-                        return this.openFile(args.filePaths[0],0);
+                        try{
+                            const data=await this._controller.openFile(
+                                args.filePaths[0],
+                                0,
+                                Menu.getApplicationMenu()
+                            );
+
+                            this._mainWindow.send('state',{
+                                ...data,
+                                message:'',
+                                filePath:filePath
+                            });
+                        }catch(error){
+                            console.error(error);
+
+                            dialog.showMessageBox(this._mainWindow,{
+                                type:'error',
+                                buttons:['OK'],
+                                title:'Error',
+                                message:'The file could not be opened'
+                            });
+                        }
                     }
                 })();
 
                 break;
             case 'closeFile':
                 (async()=>{
-                    return this.closeFile();
+                    await this._controller.closeFile(
+                        Menu.getApplicationMenu()
+                    );
+
+                    this._mainWindow.send('state',{
+                        data:{
+                            pages:null,
+                            total:null,
+                            message:'Closed file',
+                            filePath:null
+                        }
+                    });
+                })();
+
+                break;
+            case 'restore':
+                (async()=>{
+                    this._mainWindow.send('state',{
+                        data:{
+                            message:'Restoring previous session ...'
+                        }
+                    });
+
+                    if(
+                        !is.dev&&
+                        process.argv.length>1
+                    ){
+                        try{
+                            const data=await this._controller.openFile(
+                                process.argv[1],
+                                0,
+                                Menu.getApplicationMenu()
+                            );
+
+                            this._mainWindow.send('state',{
+                                ...data,
+                                message:'',
+                                filePath:process.argv[1]
+                            });
+                        }catch(error){
+                            console.error(error);
+
+                            dialog.showMessageBox(this._mainWindow,{
+                                type:'error',
+                                buttons:['OK'],
+                                title:'Error',
+                                message:'The file could not be opened'
+                            });
+                        }
+                    }else{
+                        const list=this._controller.store.get('recentFiles',[]);
+
+                        if(list.length!==0){
+                            const item=list[list.length-1];
+
+                            try{
+                                const data=await this._controller.openFile(
+                                    item.filePath,
+                                    item.page,
+                                    Menu.getApplicationMenu()
+                                );
+
+                                this._mainWindow.send('state',{
+                                    ...data,
+                                    message:'',
+                                    filePath:item.filePath
+                                });
+
+                            }catch(error){
+                                console.error(error);
+
+                                dialog.showMessageBox(this._mainWindow,{
+                                    type:'error',
+                                    buttons:['OK'],
+                                    title:'Error',
+                                    message:'The file could not be opened'
+                                });
+                            }
+                        }
+                    }
                 })();
 
                 break;
@@ -120,11 +220,14 @@ class Events{
                 break;
             case 'recentFile':
                 (async()=>{
-                    const list=this._controller.store.get('recentFiles');
+                    const list=this._controller.store
+                    .get('recentFiles',[])
+                    .reverse();
 
-                    return this.openFile(
+                    return this._controller.openFile(
                         list[param].filePath,
-                        list[param].page
+                        list[param].page,
+                        Menu.getApplicationMenu()
                     );
                 })();
 
@@ -140,7 +243,7 @@ class Events{
 
                 this._mainWindow.send('state',{
                     ui:{
-                        toolBar:this._controller.getToolBar()
+                        toolBar:this._controller.toolBar
                     }
                 });
 
@@ -150,7 +253,7 @@ class Events{
 
                 this._mainWindow.send('state',{
                     ui:{
-                        statusBar:this._controller.getStatusBar()
+                        statusBar:this._controller.statusBar
                     }
                 });
 
@@ -158,40 +261,39 @@ class Events{
             case 'fullScreen':
                 this._controller.toogleFullScreen();
 
-                this._mainWindow.setFullScreen(
-                    this._controller.getFullScreen()
-                );
                 this._mainWindow.send('state',{
                     ui:{
-                        fullScreen:this._controller.getFullScreen()
+                        fullScreen:this._controller.fullScreen
                     }
                 });
+
+                this._mainWindow.setFullScreen(this._controller.fullScreen);
 
                 break;
             case 'singlePage':
             case 'doublePage':
-                this._controller.setPageMode(command);
+                this._controller.pageMode=command;
 
                 this._mainWindow.send('state',{
                     data:{
                         pages:this._controller.currentPage()
                     },
                     ui:{
-                        pageMode:this._controller.getPageMode()
+                        pageMode:this._controller.pageMode
                     }
                 });
 
                 break;
             case 'comicMode':
             case 'mangaMode':
-                this._controller.setReadMode(command);
+                this._controller.readMode=command;
 
                 this._mainWindow.send('state',{
                     data:{
                         pages:this._controller.currentPage()
                     },
                     ui:{
-                        readMode:this._controller.getReadMode()
+                        readMode:this._controller.readMode
                     }
                 });
 
@@ -199,35 +301,31 @@ class Events{
             case 'fitBest':
             case 'fitWidth':
             case 'fitHeight':
-                this._controller.setFitMode(command);
+                this._controller.fitMode=command;
 
                 this._mainWindow.send('state',{
                     ui:{
-                        fitMode:this._controller.getFitMode()
+                        fitMode:this._controller.fitMode
                     }
                 });
 
                 break;
             case 'rotationCW':
-                this._controller.setRotation(
-                    (this._controller.getRotation()+90)%360
-                );
+                this._controller.rotation=(this._controller.rotation+90)%360;
 
                 this._mainWindow.send('state',{
                     ui:{
-                        rotation:this._controller.getRotation()
+                        rotation:this._controller.rotation
                     }
                 });
 
                 break;
             case 'rotationCCW':
-                this._controller.setRotation(
-                    (this._controller.getRotation()-90)%360
-                );
+                this._controller.rotation=(this._controller.rotation-90)%360;
 
                 this._mainWindow.send('state',{
                     ui:{
-                        rotation:this._controller.getRotation()
+                        rotation:this._controller.rotation
                     }
                 });
 
@@ -282,78 +380,7 @@ class Events{
                 break;
         }
     }
-
-    async openFile(filePath,page=1){
-        try{
-            await this._controller.openFile(filePath);
-
-            let menu=Menu.getApplicationMenu();
-
-            menu.items[0].submenu.items[1].enabled=true;
-            menu.items[1].submenu.items[4].enabled=true;
-            menu.items[1].submenu.items[5].enabled=true;
-            menu.items[1].submenu.items[6].enabled=true;
-            menu.items[1].submenu.items[7].enabled=true;
-            menu.items[1].submenu.items[9].enabled=true;
-            menu.items[1].submenu.items[10].enabled=true;
-            menu.items[1].submenu.items[11].enabled=true;
-            menu.items[1].submenu.items[13].enabled=true;
-            menu.items[1].submenu.items[14].enabled=true;
-            menu.items[2].submenu.items[0].enabled=true;
-            menu.items[2].submenu.items[1].enabled=true;
-            menu.items[2].submenu.items[2].enabled=true;
-            menu.items[2].submenu.items[3].enabled=true;
-
-            this._mainWindow.send('state',{
-                data:{
-                    pages:this._controller.goToPage(page),
-                    total:this._controller.book.total,
-                    message:'',
-                    filePath:filePath
-                }
-            });
-        }catch(error){
-            console.error(error);
-
-            dialog.showMessageBox(this._mainWindow,{
-                type:'error',
-                buttons:['OK'],
-                title:'Error',
-                message:'The file could not be opened'
-            });
-        }
-    }
-
-    async closeFile(){
-        await this._controller.closeFile();
-
-        let menu=Menu.getApplicationMenu();
-
-        menu.items[0].submenu.items[1].enabled=false;
-        menu.items[1].submenu.items[4].enabled=false;
-        menu.items[1].submenu.items[5].enabled=false;
-        menu.items[1].submenu.items[6].enabled=false;
-        menu.items[1].submenu.items[7].enabled=false;
-        menu.items[1].submenu.items[9].enabled=false;
-        menu.items[1].submenu.items[10].enabled=false;
-        menu.items[1].submenu.items[11].enabled=false;
-        menu.items[1].submenu.items[13].enabled=false;
-        menu.items[1].submenu.items[14].enabled=false;
-        menu.items[2].submenu.items[0].enabled=false;
-        menu.items[2].submenu.items[1].enabled=false;
-        menu.items[2].submenu.items[2].enabled=false;
-        menu.items[2].submenu.items[3].enabled=false;
-
-        this._mainWindow.send('state',{
-            data:{
-                pages:null,
-                total:null,
-                message:'Closed file',
-                filePath:null
-            }
-        });
-    }
 }
 
-export default Events;
+export default EventController;
 

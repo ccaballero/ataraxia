@@ -1,10 +1,10 @@
 import {existsSync,mkdirSync} from 'node:fs';
 import config from '../config/app.js';
-import Book from '../models/Book.js';
-import Viewport from '../models/Viewport.js';
+import Book from '../model/Book.js';
+import Viewport from '../model/Viewport.js';
 import Store from '../store/Store.js';
 
-class App{
+class WindowController{
     constructor(app,is){
         this._app=app;
 
@@ -40,23 +40,59 @@ class App{
         this._book=new Book(this._store,cacheDir,pagesDir);
     }
 
-    get store(){
-        return this._store;
+    set mode(mode){
+        this._store.set('mode',mode);
     }
 
-    setMode(mode){
-        return this._store.set('mode',mode);
-    }
-
-    getMode(){
+    get mode(){
         return this._store.get('mode');
+    }
+
+    set fitMode(fitMode){
+        this._viewport.fitMode=fitMode;
+    }
+
+    get fitMode(){
+        return this._viewport.fitMode;
+    }
+
+    set pageMode(pageMode){
+        this._viewport.pageMode=pageMode;
+    }
+
+    get pageMode(){
+        return this._viewport.pageMode;
+    }
+
+    set readMode(readMode){
+        this._viewport.readMode=readMode;
+    }
+
+    get readMode(){
+        return this._viewport.readMode;
+    }
+
+    toogleFullScreen(){
+        this._viewport.fullScreen=!this._viewport.fullScreen;
+    }
+
+    get fullScreen(){
+        return this._viewport.fullScreen;
+    }
+
+    set rotation(rotation){
+        this._viewport.rotation=rotation;
+    }
+
+    get rotation(){
+        return this._viewport.rotation;
     }
 
     toogleToolBar(){
         this._viewport.toolBar=!this._viewport.toolBar;
     }
 
-    getToolBar(){
+    get toolBar(){
         return this._viewport.toolBar;
     }
 
@@ -64,51 +100,19 @@ class App{
         this._viewport.statusBar=!this._viewport.statusBar;
     }
 
-    getStatusBar(){
+    get statusBar(){
         return this._viewport.statusBar;
     }
 
-    toogleFullScreen(){
-        this._viewport.fullScreen=!this._viewport.fullScreen;
+    get book(){
+        return this._book;
     }
 
-    getFullScreen(){
-        return this._viewport.fullScreen;
+    get store(){
+        return this._store;
     }
 
-    setPageMode(pageMode){
-        this._viewport.pageMode=pageMode;
-    }
-
-    getPageMode(){
-        return this._viewport.pageMode;
-    }
-
-    setReadMode(readMode){
-        this._viewport.readMode=readMode;
-    }
-
-    getReadMode(){
-        return this._viewport.readMode;
-    }
-
-    setFitMode(fitMode){
-        this._viewport.fitMode=fitMode;
-    }
-
-    getFitMode(){
-        return this._viewport.fitMode;
-    }
-
-    setRotation(rotation){
-        this._viewport.rotation=rotation;
-    }
-
-    getRotation(){
-        return this._viewport.rotation;
-    }
-
-    async openFile(filePath){
+    async openFile(filePath,page=0,menu){
         if(this._book.filePath){
             await this.closeFile();
         }
@@ -119,9 +123,31 @@ class App{
         await this._book.map();
 
         this._book.index();
+
+        if(menu){
+            menu.items[0].submenu.items[1].enabled=true;
+            menu.items[1].submenu.items[4].enabled=true;
+            menu.items[1].submenu.items[5].enabled=true;
+            menu.items[1].submenu.items[6].enabled=true;
+            menu.items[1].submenu.items[7].enabled=true;
+            menu.items[1].submenu.items[9].enabled=true;
+            menu.items[1].submenu.items[10].enabled=true;
+            menu.items[1].submenu.items[11].enabled=true;
+            menu.items[1].submenu.items[13].enabled=true;
+            menu.items[1].submenu.items[14].enabled=true;
+            menu.items[2].submenu.items[0].enabled=true;
+            menu.items[2].submenu.items[1].enabled=true;
+            menu.items[2].submenu.items[2].enabled=true;
+            menu.items[2].submenu.items[3].enabled=true;
+        }
+
+        return {
+            pages:this.goToPage(page),
+            total:this.book.total,
+        };
     }
 
-    async closeFile(){
+    async closeFile(menu){
         let list=this._store.get('recentFiles',[]);
 
         const index=list
@@ -146,6 +172,23 @@ class App{
         this._store.set('recentFiles',list.slice(-5));
 
         await this._book.close();
+
+        if(menu){
+            menu.items[0].submenu.items[1].enabled=false;
+            menu.items[1].submenu.items[4].enabled=false;
+            menu.items[1].submenu.items[5].enabled=false;
+            menu.items[1].submenu.items[6].enabled=false;
+            menu.items[1].submenu.items[7].enabled=false;
+            menu.items[1].submenu.items[9].enabled=false;
+            menu.items[1].submenu.items[10].enabled=false;
+            menu.items[1].submenu.items[11].enabled=false;
+            menu.items[1].submenu.items[13].enabled=false;
+            menu.items[1].submenu.items[14].enabled=false;
+            menu.items[2].submenu.items[0].enabled=false;
+            menu.items[2].submenu.items[1].enabled=false;
+            menu.items[2].submenu.items[2].enabled=false;
+            menu.items[2].submenu.items[3].enabled=false;
+        }
     }
 
     async quit(){
@@ -154,10 +197,6 @@ class App{
         if(this._app){
             this._app.quit();
         }
-    }
-
-    get book(){
-        return this._book;
     }
 
     firstPage(json=true){
@@ -174,7 +213,7 @@ class App{
         if(this._book.current===0){
             throw new Error('previous_error');
         }else{
-            if(this.getPageMode()==='doublePage'){
+            if(this.pageMode==='doublePage'){
                 const dpage1=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
@@ -198,7 +237,7 @@ class App{
                     return Math.max(i.index,sum);
                 },0);
 
-                if(this.getReadMode()==='mangaMode'){
+                if(this.readMode==='mangaMode'){
                     return dpage2
                     .toReversed()
                     .map((page)=>{
@@ -227,7 +266,7 @@ class App{
     }
 
     currentPage(json=true){
-        if(this.getPageMode()==='doublePage'){
+        if(this.pageMode==='doublePage'){
             const dpage=this._book.dpages
             .find((_dpage)=>{
                 return _dpage
@@ -236,7 +275,7 @@ class App{
                 })!==undefined;
             });
 
-            if(this.getReadMode()==='mangaMode'){
+            if(this.readMode==='mangaMode'){
                 return dpage
                 .toReversed()
                 .map((page)=>{
@@ -268,7 +307,7 @@ class App{
         ){
             this._book.current=page;
 
-            if(this.getPageMode()==='doublePage'){
+            if(this.pageMode==='doublePage'){
                 const dpage=this._book.dpages
                 .find((_dpage)=>{
                     return _dpage
@@ -277,7 +316,7 @@ class App{
                     })!==undefined;
                 });
 
-                if(this.getReadMode()==='mangaMode'){
+                if(this.readMode==='mangaMode'){
                     return dpage
                     .toReversed()
                     .map((page)=>{
@@ -305,7 +344,7 @@ class App{
 
     nextPage(json=true){
         if(this._book.current<this._book.total-1){
-            if(this.getPageMode()==='doublePage'){
+            if(this.pageMode==='doublePage'){
                 this._book.current++;
 
                 const dpage2=this._book.dpages
@@ -321,7 +360,7 @@ class App{
                     return Math.max(i.index,sum);
                 },0);
 
-                if(this.getReadMode()==='mangaMode'){
+                if(this.readMode==='mangaMode'){
                     return dpage2
                     .toReversed()
                     .map((page)=>{
@@ -354,7 +393,7 @@ class App{
     lastPage(json=true){
         this._book.current=this._book.total-1;
 
-        if(this.getPageMode()==='doublePage'){
+        if(this.pageMode==='doublePage'){
             const dpage=this._book.dpages
             .find((_dpage)=>{
                 return _dpage
@@ -363,7 +402,7 @@ class App{
                 })!==undefined;
             });
 
-            if(this.getReadMode()==='mangaMode'){
+            if(this.readMode==='mangaMode'){
                 return dpage
                 .toReversed()
                 .map((page)=>{
@@ -387,24 +426,7 @@ class App{
             ];
         }
     }
-
-    restoreSession(event,is){
-        if(
-            !is.dev&&
-            process.argv.length>1
-        ){
-            event.openFile(process.argv[1],1);
-        }else{
-            const list=this._store.get('recentFiles',[]);
-
-            if(list.length!==0){
-                const item=list[list.length-1];
-
-                event.openFile(item.filePath,item.page);
-            }
-        }
-    }
 }
 
-export default App;
+export default WindowController;
 

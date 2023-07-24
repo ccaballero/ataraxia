@@ -55,6 +55,7 @@ class App extends Component{
 
     handle(event,data){
         if(this._isMounted){
+            console.log('data ->',data);
             this.setState(Merge.mergeDeep(this.state,data));
 
             if(

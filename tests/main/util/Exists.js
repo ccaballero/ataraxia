@@ -1,6 +1,6 @@
 import 'should';
 import {join} from 'path';
-import Exists from '../../../src/main/utils/Exists.js';
+import Exists from '../../../src/main/util/Exists.js';
 import configTest from '../../config/test.js';
 
 describe('Exists',()=>{
