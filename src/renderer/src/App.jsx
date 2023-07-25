@@ -27,6 +27,7 @@ class App extends Component{
         window.addEventListener('resize',this.updateWindowDimensions);
 
         ipcRenderer.on('state',this.handle.bind(this));
+
         ipcRenderer.send('state',{});
     }
 
@@ -55,8 +56,8 @@ class App extends Component{
 
     handle(event,data){
         if(this._isMounted){
-            console.log('data ->',data);
             this.setState(Merge.mergeDeep(this.state,data));
+            console.log(JSON.stringify(data,null,'\t'));
 
             if(
                 data&&

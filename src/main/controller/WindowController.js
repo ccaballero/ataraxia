@@ -114,7 +114,7 @@ class WindowController{
 
     async openFile(filePath,page=0,menu){
         if(this._book.filePath){
-            await this.closeFile();
+            await this.closeFile(menu);
         }
 
         this._book.filePath=filePath;

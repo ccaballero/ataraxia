@@ -14,7 +14,7 @@ function createWindow(){
             height:768,
             show:false,
             center:true,
-            autoHideMenuBar:true,
+            autoHideMenuBar:false,
             ...(process.platform==='linux'?{icon}:{}),
             webPreferences:{
                 preload:join(__dirname,'../preload/index.js'),
@@ -31,7 +31,7 @@ function createWindow(){
 
         setTimeout(()=>{
             eventController.handler('restore');
-        },2000);
+        },1000);
     });
 
     mainWindow

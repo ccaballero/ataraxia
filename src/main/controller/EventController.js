@@ -107,9 +107,11 @@ class EventController{
                             );
 
                             this._mainWindow.send('state',{
-                                ...data,
-                                message:'',
-                                filePath:filePath
+                                data:{
+                                    ...data,
+                                    message:'',
+                                    filePath:args.filePaths[0]
+                                }
                             });
                         }catch(error){
                             console.error(error);
@@ -162,9 +164,11 @@ class EventController{
                             );
 
                             this._mainWindow.send('state',{
-                                ...data,
-                                message:'',
-                                filePath:process.argv[1]
+                                data:{
+                                    ...data,
+                                    message:'',
+                                    filePath:process.argv[1]
+                                }
                             });
                         }catch(error){
                             console.error(error);
@@ -190,9 +194,11 @@ class EventController{
                                 );
 
                                 this._mainWindow.send('state',{
-                                    ...data,
-                                    message:'',
-                                    filePath:item.filePath
+                                    data:{
+                                        ...data,
+                                        message:'',
+                                        filePath:item.filePath
+                                    }
                                 });
 
                             }catch(error){
@@ -224,11 +230,31 @@ class EventController{
                     .get('recentFiles',[])
                     .reverse();
 
-                    return this._controller.openFile(
-                        list[param].filePath,
-                        list[param].page,
-                        Menu.getApplicationMenu()
-                    );
+                    try{
+                        const data=await this._controller.openFile(
+                            list[param].filePath,
+                            list[param].page,
+                            Menu.getApplicationMenu()
+                        );
+
+                        this._mainWindow.send('state',{
+                            data:{
+                                ...data,
+                                message:'',
+                                filePath:list[param].filePath
+                            }
+                        });
+
+                    }catch(error){
+                        console.error(error);
+
+                        dialog.showMessageBox(this._mainWindow,{
+                            type:'error',
+                            buttons:['OK'],
+                            title:'Error',
+                            message:'The file could not be opened'
+                        });
+                    }
                 })();
 
                 break;
