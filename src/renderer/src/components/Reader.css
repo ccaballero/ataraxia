@@ -1,0 +1,46 @@
+.reader {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    right: 0;
+}
+
+.reader > .wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no-wrap;
+    justify-content: center;
+    align-items: stretch;
+    align-content: stretch;
+}
+
+.reader-light {
+    background-color: hsl(210,3.6%,100%);
+}
+
+.reader-dark {
+    background-color: hsl(210,3.6%,11%);
+}
+
+.reader-toolbar {
+    top: 27px;
+}
+
+.reader-no-toolbar {
+    top: 0px;
+}
+
+.reader-statusbar {
+    bottom: 20px;
+}
+
+.reader-no-statusbar {
+    bottom: 0px;
+}
+

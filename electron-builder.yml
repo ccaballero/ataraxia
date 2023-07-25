@@ -1,0 +1,41 @@
+appId: org.ataraxia
+productName: ataraxia
+directories:
+    buildResources: build
+files:
+    - '!src/*'
+    - '!electron.vite.config.{js,ts,mjs,cjs}'
+    - '!{.eslintignore,.eslintrc.cjs,dev-app-update.yml,changelog.md,readme.md}'
+    - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
+asarUnpack:
+    - resources/**
+win:
+    executableName: ataraxia
+nsis:
+    artifactName: ${name}-${version}-setup.${ext}
+    shortcutName: ${productName}
+    uninstallDisplayName: ${productName}
+    createDesktopShortcut: always
+mac:
+    entitlementsInherit: build/entitlements.mac.plist
+    extendInfo:
+        - NSCameraUsageDescription: Application requests access to the device's camera.
+        - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
+        - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+        - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+dmg:
+    artifactName: ${name}-${version}.${ext}
+linux:
+    target:
+        - tar.bz2
+    maintainer: cijkb.j@gmail.com
+    icon: resources/icon.png
+    category: Graphics
+appImage:
+    artifactName: ${name}-${version}.${ext}
+npmRebuild: false
+publish:
+    provider: github
+    repo: ataraxia
+    releaseType: release
+

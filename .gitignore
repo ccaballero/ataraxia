@@ -1,8 +1,14 @@
 node_modules
-*npm-debug.log
-dist/
-builds/
 
 package-lock.json
 yarn.lock
+
+*.swp
+*.orig
+.env
+
+build
+dist
+out
+*.log*
 

@@ -2,25 +2,33 @@ env:
     browser: true
     es6: true
     node: true
+    mocha: true
 extends:
-    - 'react-app'
-    - 'plugin:jsx-a11y/recommended'
     - 'eslint:recommended'
+    - 'plugin:react/recommended'
+    - 'plugin:react/jsx-runtime'
 globals:
     Atomics: readonly
     SharedArrayBuffer: readonly
 parserOptions:
     ecmaFeatures:
         jsx: true
-    ecmaVersion: 2018
+    ecmaVersion: 2021
     sourceType: module
-plugins:
-    - 'jsx-a11y'
-    - 'react'
 rules:
+    arrow-spacing:
+        - error
+        - before: false
+          after: false
+    comma-spacing:
+        - error
+        - after: false
     comma-style:
         - error
         - last
+    eol-last:
+        - error
+        - always
     indent:
         - error
         - 4
@@ -33,6 +41,9 @@ rules:
           FunctionExpression:
               body: 1
               parameters: off
+    key-spacing:
+        - error
+        - afterColon: false
     linebreak-style:
         - error
         - unix
@@ -46,6 +57,8 @@ rules:
     no-trailing-spaces:
         - error
         - skipBlankLines: true
+    object-curly-spacing:
+        - error
     quotes:
         - error
         - single

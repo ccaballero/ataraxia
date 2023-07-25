@@ -1,68 +1,38 @@
 {
     "name": "ataraxia",
-    "version": "0.0.1",
-    "private": true,
+    "version": "0.0.3",
     "description": "comic and manga reader",
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/ccaballero/ataraxia.git"
-    },
-    "keywords": [
-        "cbr",
-        "manga",
-        "comic",
-        "reader"
-    ],
+    "main": "./out/main/index.js",
     "author": "Carlos E. Caballero B.",
-    "license": "ISC",
-    "bugs": {
-        "url": "https://github.com/ccaballero/ataraxia/issues"
-    },
-    "homepage": "https://github.com/ccaballero/ataraxia#readme",
-    "main": "src/main.js",
     "scripts": {
-        "dev": "webpack-dev-server --hot --host 0.0.0.0 --port 2999 --config webpack.dev.config.js",
-        "prod": "webpack --bail --env dist --config webpack.build.config.js -p && electron --noDevServer .",
-        "build": "webpack --config webpack.build.config.js -p",
-        "package": "webpack --config webpack.build.config.js -p",
-        "postpackage": "electron-packager --overwrite ./ --out=./builds"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.7.4",
-        "@babel/preset-env": "^7.7.4",
-        "@babel/preset-react": "^7.7.4",
-        "babel-loader": "^8.0.6",
-        "babel-minify-webpack-plugin": "^0.3.1",
-        "clean-webpack-plugin": "^3.0.0",
-        "css-loader": "^3.2.0",
-        "electron": "^7.1.2",
-        "electron-packager": "^14.1.1",
-        "file-loader": "^5.0.2",
-        "html-webpack-plugin": "^3.2.0",
-        "make-dir-webpack-plugin": "^0.1.0",
-        "mini-css-extract-plugin": "^0.8.0",
-        "should": "^13.2.3",
-        "style-loader": "^1.0.1",
-        "webpack": "^4.41.2",
-        "webpack-cli": "^3.3.10",
-        "webpack-dev-server": "^3.9.0"
+        "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
+        "start": "electron-vite preview",
+        "dev": "electron-vite dev",
+        "build": "electron-vite build",
+        "postinstall": "electron-builder install-app-deps",
+        "build:win": "npm run build && electron-builder --win --config",
+        "build:mac": "npm run build && electron-builder --mac --config",
+        "build:linux": "npm run build && electron-builder --linux --config"
     },
     "dependencies": {
-        "electron-store": "^5.1.0",
-        "image-size": "^0.8.3",
-        "react": "^16.12.0",
-        "react-dom": "^16.12.0",
-        "react-router-dom": "^5.1.2",
-        "react-transition-group": "^4.3.0",
-        "semantic-ui-css": "^2.4.1",
-        "semantic-ui-offline": "^2.4.1",
-        "semantic-ui-react": "^0.88.1",
-        "uuid": "^3.3.3"
+        "@electron-toolkit/preload": "^2.0.0",
+        "@electron-toolkit/utils": "^1.0.2",
+        "electron-store": "^8.1.0",
+        "image-size": "^1.0.2",
+        "uuid": "^9.0.0"
     },
-    "browserslist": [
-        ">0.2%",
-        "not dead",
-        "not ie <= 11",
-        "not op_mini all"
-    ]
+    "devDependencies": {
+        "@vitejs/plugin-react": "^4.0.3",
+        "electron": "^25.2.0",
+        "electron-builder": "^24.4.0",
+        "electron-vite": "^1.0.24",
+        "eslint": "^8.44.0",
+        "eslint-plugin-react": "^7.32.2",
+        "mocha": "^10.2.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "should": "^13.2.3",
+        "vite": "^4.4.2",
+        "vite-plugin-svgr": "^3.2.0"
+    }
 }
