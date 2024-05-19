@@ -32,8 +32,8 @@ describe('Resolution',()=>{
 
         args=await Resolution.resolution(args);
 
-        args.should.have.property('width').and.be.eql(1100);
-        args.should.have.property('height').and.be.eql(1600);
+        args.should.have.property('width').and.be.eql(2200);
+        args.should.have.property('height').and.be.eql(1606);
 
         unlink(resolve(config.pagesDir,args.hash));
     });

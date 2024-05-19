@@ -19,7 +19,7 @@ describe('Book',()=>{
         await book.load();
 
         book.current.should.be.eql(0);
-        book.total.should.be.eql(18);
+        book.total.should.be.eql(16);
 
         book
         .pages

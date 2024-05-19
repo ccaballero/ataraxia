@@ -107,7 +107,9 @@ class Book{
     async close(){
         for await(const page of this._pages){
             if('hash' in page){
-                await unlink(resolve(this._pagesDir,page.hash));
+                if(page.hash){
+                    await unlink(resolve(this._pagesDir,page.hash));
+                }
             }
         }
 

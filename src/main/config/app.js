@@ -5,7 +5,7 @@ export default ()=>{
         cacheDir:join(resolve(),'src','renderer','public','cache'),
         pagesDir:join(resolve(),'src','renderer','public','pages'),
         commands:{
-            rar:'/usr/bin/unrar',
+            rar:'/opt/bin/unrar',
             sort:'/usr/bin/sort'
         }
     };

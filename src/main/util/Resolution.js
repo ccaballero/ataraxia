@@ -23,6 +23,8 @@ class Resolution{
 
             return args;
         }catch(error){
+            console.log(error);
+
             throw new Error('resolution_error');
         }
     }

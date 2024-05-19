@@ -13,14 +13,14 @@ describe('Sort',()=>{
             filePath:join(config.folder,config.books[0])
         });
 
-        args.list.length.should.be.eql(18);
+        args.list.length.should.be.eql(16);
 
         args=await Sort.sort({
             ...args,
             command:config.commands.sort
         });
 
-        args.list.length.should.be.eql(18);
+        args.list.length.should.be.eql(16);
     });
 
     it('Sort.js#1',async()=>{

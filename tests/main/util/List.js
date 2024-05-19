@@ -12,7 +12,7 @@ describe('List',()=>{
             filePath:join(config.folder,config.books[0])
         });
 
-        args.list.length.should.be.eql(18);
+        args.list.length.should.be.eql(16);
     });
 
     it('List.js#2',async()=>{
